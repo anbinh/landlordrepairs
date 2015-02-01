@@ -1,0 +1,29 @@
+.bigtext {
+	font-size: 120%;
+}
+#slide-5 {
+	height: 100%;
+}
+#skrollable-plusCss {
+	background-position: 50% 0px;
+}
+.big-text-110 {
+	font-size: 110%;
+}
+#content-section-a-plusCss {
+	background-color: #FFF;
+}
+.container-row-plusCss {
+	margin-top: 4%; 
+	margin-bottom: 4%;
+}
+.color-53A524 {
+	color: #53A524;
+}
+#content-section-b-plusCss {
+	background-color: #53A524;
+}
+.appear-clearly-text {
+	position: absolute;
+	z-index: 1;
+}

@@ -1,0 +1,18 @@
+body {
+  font-family: "helvetica neue", helvetica, sans-serif;
+}
+.box-FAQ  {
+  background: #e67e22;
+  color: white;
+  padding: 20px;
+}
+.draw {
+  display: none;
+  background: white;
+  border: 1px solid #c3c3c3;
+  padding: 20px;
+  color:#000;
+}
+.text-color-2ecc71 {
+	color: #2ecc71
+}
