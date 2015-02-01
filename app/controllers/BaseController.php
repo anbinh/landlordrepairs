@@ -212,7 +212,7 @@ class BaseController extends Controller {
 	}
 	
 	public function getForgetpass() {
-		return View::make('home.forgetpass');
+		return View::make('pages.forgetpass');
 	}
 	
 	
@@ -262,11 +262,11 @@ class BaseController extends Controller {
 					
 			}
 			//redirect to changepass alert
-			return Redirect::route('restore-page')->withErrors($v)->with("changepass", "0");
+			return Redirect::to('forgetpass')->withErrors($v)->with("changepass", "0");
 	
 		} else {
 	
-			return Redirect::route('restore-page')->withErrors($v);
+			return Redirect::to('forgetpass')->withErrors($v);
 	
 		}
 	}
