@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -253,3 +254,30 @@ Route::get('postjob',array ('as'=>'postjob-page', function()
 	return View::make('pages.postjob');
 }));
 Route::post('postjob', 'BaseController@postPostjob');
+//-----TEST PHONE------//
+Route::post('text', function()
+{
+	// Get form inputs
+	$number = Input::get('phoneNumber');
+	$message = Input::get('message');
+
+	// Create an authenticated client for the Twilio API
+	$client = new Services_Twilio('AC381cdea9a54fd69ae1254fff289c08a7', 'f4bdb2f2a0e9acbc7649eee3a2f42fb3');
+
+	// Use the Twilio REST API client to send a text message
+	$m = $client->account->messages->sendMessage(
+			'+12242053337', // the text will be sent from your Twilio number
+			$number, // the phone number the text will be sent to
+			$message // the body of the text message
+	);
+
+	// Return the message object to the browser as JSON
+	return $m;
+});
+
+Route::get('test', function()
+{
+	return View::make('pages.test');
+});
+
+//---------------------//

@@ -9,7 +9,9 @@
 	"type" : "project",
 	"require" : {
 		"laravel/framework" : "4.2.*",
-		"hybridauth/hybridauth" : "dev-master"
+		"hybridauth/hybridauth" : "dev-master",
+		"twilio/sdk" : "~3.12",
+		"iron-io/iron_mq": "dev-master"
 	},
 	"autoload" : {
 		"classmap" : [
