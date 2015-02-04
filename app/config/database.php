@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'landlord',
-			'username'  => 'root',
-			'password'  => '',
+			'host'      => '10.168.1.83',
+			'database'  => 'landlord1_data',
+			'username'  => 'landlord1_data',
+			'password'  => 'myrepairs008',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
@@ -66,8 +66,8 @@ return array(
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
-			'database' => 'database',
-			'username' => 'root',
+			'database' => 'forge',
+			'username' => 'forge',
 			'password' => '',
 			'charset'  => 'utf8',
 			'prefix'   => '',
@@ -111,7 +111,7 @@ return array(
 
 	'redis' => array(
 
-		'cluster' => true,
+		'cluster' => false,
 
 		'default' => array(
 			'host'     => '127.0.0.1',

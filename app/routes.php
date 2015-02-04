@@ -1,4 +1,3 @@
-
 <?php
 
 /*
@@ -224,7 +223,8 @@ Route::group(array('before'=>'check-language'), function(){
 //-------------------------//
  */
 Route::get('/',array('as'=>'landing-page', function()
-{
+{      Session::set('hao','en');
+        
 	return View::make('pages.home');
 }));
 
@@ -279,5 +279,7 @@ Route::get('test', function()
 {
 	return View::make('pages.test');
 });
-
+Route::group(array('prefix' => 'api/v1'), function(){
+	Route::resource('users', 'UserController');
+});
 //---------------------//

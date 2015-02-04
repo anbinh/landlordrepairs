@@ -136,8 +136,8 @@ class BaseController extends Controller {
 				$to      = Input::get('email');
 				$subject = 'Welcome';
 				$message = View::make('emails.signup', $data)->render();
-				$headers = 'From: admin@homeez.com' . "\r\n" .
-						'Reply-To: admin@homeez.com' . "\r\n" .
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
 						'X-Mailer: PHP/' . phpversion() . "\r\n" .
 						'MIME-Version: 1.0' . "\r\n" .
 						'Content-Type: text/html; charset=ISO-8859-1\r\n';
@@ -252,8 +252,8 @@ class BaseController extends Controller {
 				$to      = Input::get('email');
 				$subject = 'Change password';
 				$message = View::make('emails.changepass', $data)->render();
-				$headers = 'From: admin@homeez.com' . "\r\n" .
-						'Reply-To: admin@homeez.com' . "\r\n" .
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
 						'X-Mailer: PHP/' . phpversion() . "\r\n" .
 						'MIME-Version: 1.0' . "\r\n" .
 						'Content-Type: text/html; charset=ISO-8859-1\r\n';
@@ -301,8 +301,8 @@ class BaseController extends Controller {
 				$to      = $data['email'];
 				$subject = 'Your new password';
 				$message = View::make('emails.newpass', $data)->render();
-				$headers = 'From: admin@homeez.com' . "\r\n" .
-						'Reply-To: admin@homeez.com' . "\r\n" .
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
 						'X-Mailer: PHP/' . phpversion() . "\r\n" .
 						'MIME-Version: 1.0' . "\r\n" .
 						'Content-Type: text/html; charset=ISO-8859-1\r\n';
