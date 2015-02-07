@@ -240,16 +240,16 @@
 			
 			      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
 					<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
-<div id="calendar">
-  <input id = "date"type="date" name="date" value="0" />
-</div>
-
-<!-- large date display -->
-
-									
-<br clear="all"/>
+					<div id="calendar">
+					  <input id = "date"type="date" name="date" value="0" />
+					</div>
 					
-						<p class="larger center color-53A524" id = "submit-div">Register</p>
+					<!-- large date display -->
+					
+														
+					<br clear="all"/>
+					
+						<p class="larger center color-53A524" id = "submit-div">User's Infomation</p>
 						@if($errors->any())
 							<div class="alert alert-danger alert-dismissable">
 				                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -288,27 +288,27 @@
 							
 							
 							
-<!-- make it happen -->
-<script>
-$(function() {
-// initialize dateinput
-$(":date").dateinput( {
-
-	// closing is not possible
-	onHide: function()  {
-		return false;
-	},
+						<!-- make it happen -->
+						<script>
+						$(function() {
+						// initialize dateinput
+						$(":date").dateinput( {
+						
+							// closing is not possible
+							onHide: function()  {
+								return false;
+							},
 
 	
 	
-// set initial value and show dateinput when page loads
-}).data("dateinput").setValue(0).show();
-});
-function test(){
-alert($('#date').val());
-}
-</script>
-<script>
+							// set initial value and show dateinput when page loads
+							}).data("dateinput").setValue(0).show();
+							});
+							function test(){
+							alert($('#date').val());
+							}
+							</script>
+							<script>
 										$(document).ready(function(){
 											
 											$("#calendar").hide();
