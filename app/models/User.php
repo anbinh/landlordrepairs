@@ -22,49 +22,5 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 * @var array
 	 */
 	protected $hidden = array('password', 'remember_token');
-	 public function getByPage($page = 1, $limit = 3)
-	    {
-	      $results = new StdClass;
-	      $results->page = $page;
-	      $results->limit = $limit;
-	      $results->totalItems = 0;
-	      $results->items = array();
-	     
-	      $users = User::skip($limit*($page-1))->take($limit)->get();
-	     
-	      $results->totalItems = User::count();
-	      $results->items = $users->all();
-	     
-	      return $results;
-	    }
-	public function getRememberToken()
-	{
-		return $this->remember_token;
-	}
-
-	public function setRememberToken($value)
-	{
-		$this->remember_token = $value;
-	}
-
-	public function getRememberTokenName()
-	{
-		return 'remember_token';
-	}
-	
-	public function getRememberToken()
-	{
-		return $this->remember_token;
-	}
-
-	public function setRememberToken($value)
-	{
-		$this->remember_token = $value;
-	}
-
-	public function getRememberTokenName()
-	{
-		return 'remember_token';
-	}
 
 }
