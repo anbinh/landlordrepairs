@@ -81,7 +81,7 @@ class BaseController extends Controller {
 	
 		$input = Input::all();
 	
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email', 'password' => 'required|confirmed');
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
 	
 		$v = Validator::make($input, $rules);
 	

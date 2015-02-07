@@ -282,4 +282,10 @@ Route::get('test', function()
 Route::group(array('prefix' => 'api/v1'), function(){
 	Route::resource('users', 'UserController');
 });
+
+Route::get('/calendar',array('as'=>'calendar', function()
+{     
+        
+	return View::make('pages.calendar');
+}));
 //---------------------//

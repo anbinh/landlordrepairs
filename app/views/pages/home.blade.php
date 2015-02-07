@@ -2,20 +2,39 @@
 @section('content')	
 
     <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <img class="img-responsive" src="http://ironsummitmedia.github.io/startbootstrap-freelancer/img/profile.png" alt="">
-                    <div class="intro-text">
-                        <span class="name">Landlord</span>
-                        <hr class="star-light">
-                        <span class="skills">Landlord - Landlord - Landlord</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+        <section class="success" id="login">
+<div class="content-section-a" id = "content-section-a-plusCss">
+			<div class="container">
+				<div class="row container-row-plusCss">
+					<div class="col-lg-5 col-sm-6">
+						
+						<div class="clearfix"></div>
+						<h2 class="section-heading" style = "text-align: center;">Landlords</h2>
+						<hr class="section-heading-spacer">
+						<p class="lead" style = "text-align: center;">Tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam </p>
+					<div class="col-lg-8 col-lg-offset-2 text-center">
+	                    <a href="#" class="btn btn-lg btn-outline">
+	                        <i class="fa"></i> Find Landlords 
+	                    </a>
+	                </div>
+					</div>
+					<div class="col-lg-5 col-lg-offset-2 col-sm-6">
+						
+						<div class="clearfix"></div>
+						<h2 class="section-heading" style = "text-align: center;">Builders </h2>
+						<hr class="section-heading-spacer">
+						<p class="lead" style = "text-align: center;">Tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam </p>
+						<div class="col-lg-8 col-lg-offset-2 text-center">
+	                    <a href="#" class="btn btn-lg btn-outline">
+	                        <i class="fa"></i> Find Jobs 
+	                    </a>
+	                </div>
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+	</section>
 
     <!-- register Grid Section -->
     <section id="register">
@@ -50,6 +69,26 @@
 			</div>       
     </section>
 
+	
+	   <section id="register">
+        
+            <div class="content-section-b" id = "content-section-b-plusCss">
+			<div class="container">
+				<div class="row container-row-plusCss">
+					<div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+						<hr class="section-heading-spacer">
+						<div class="clearfix"></div>
+						<h2 class="section-heading">Landlords</h2>
+						<p class="lead">tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam by <a target="_blank" href="http://miratik.com/">Miratik </a></p>
+					</div>
+					<div class="col-lg-5 col-sm-pull-6  col-sm-6">
+						<img class="img-responsive" src="http://homeez.miratik.com/home_page/img/Clean_House.jpg" alt="">
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+    </section>	
     <!-- login Section -->
     <section class="success" id="login">
         <div class="container">

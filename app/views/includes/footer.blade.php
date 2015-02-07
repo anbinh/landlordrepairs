@@ -58,7 +58,12 @@ ul.social-buttons li a:active {
         <div class="container" >
             <div class="row">
                 <div class="col-md-4">
-                    <span class="copyright footer_tag" >Copyright &copy;Miratik 2014</span>
+                   <ul class="list-inline quicklinks">
+                        <li><a href="#" class = "footer_tag">Landlords FAQ</a>
+                        </li>
+                        <li><a href="#" class = "footer_tag"> Builders FAQ</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-inline social-buttons">
@@ -72,9 +77,11 @@ ul.social-buttons li a:active {
                 </div>
                 <div class="col-md-4">
                     <ul class="list-inline quicklinks">
-                        <li><a href="#" class = "footer_tag">Privacy Policy</a>
+                        <li><a href="#" class = "footer_tag">P&P</a>
                         </li>
-                        <li><a href="#" class = "footer_tag">Terms of Use</a>
+                        <li><a href="#" class = "footer_tag">About us </a>
+                        </li>
+                        <li><a href="#" class = "footer_tag"> Contact Us </a>
                         </li>
                     </ul>
                 </div>

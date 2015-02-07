@@ -1,6 +1,7 @@
 @extends('layouts.default')
 @section('content')	
 <div class="row" style = "margin-top: 10%; margin-bottom: 80px;">
+
     <div class="col-md-4 col-md-offset-4">
         <div class="login-panel panel panel-default">
             <div class="panel-heading">
@@ -40,14 +41,15 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "price" type="text" class="form-control" required placeholder = 'Price'>
+									<input name = "price" type="text" class="form-control" required placeholder = 'Price (£)'>
 									
 								</div>			
 							</div>
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local" type="text" class="form-control" required placeholder = 'Location'>
+									<input name = "local" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_demo" type="text" class="form-control" required placeholder = 'City or Country'>
 									
 								</div>			
 							</div>
@@ -108,7 +110,7 @@
 						    <input type="hidden" id = "lat" name = "lat">
 							<input type="hidden" id = "lng" name = "lng">
 							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
-							<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+							
 						    <script>
 							// This example adds a search box to a map, using the Google Place Autocomplete
 							// feature. People can enter geographical searches. The search box will return a
@@ -214,9 +216,9 @@
 										    <input class = "hide-date" type="radio" name="timeoption"  value="Flexible" checked>
 										    Flexible
 										  </label>
-										   <label>
+										   <label style = "text-decoration: underline; color: red;">
 										    <input class = "hide-date" type="radio" name="timeoption"  value="Within_48_hours">
-										    Within 48 hours
+										    Emergency Job
 										  </label>
 										  <label>
 										    <input class = "show-date" type="radio" name="timeoption"  value="Specific">
@@ -224,21 +226,63 @@
 										    Specific day
 										  </label>
 									</div>
-									<script>
+									
+									
+												
+			 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
+			  
+			
+			  <!-- dateinput styling -->
+			
+			      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+					<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
+<div id="calendar">
+  <input id = "date"type="date" name="date" value="0" />
+</div>
+
+<!-- large date display -->
+
+									
+<br clear="all"/>
+
+<!-- make it happen -->
+<script>
+$(function() {
+// initialize dateinput
+$(":date").dateinput( {
+
+	// closing is not possible
+	onHide: function()  {
+		return false;
+	},
+
+	
+	
+// set initial value and show dateinput when page loads
+}).data("dateinput").setValue(0).show();
+});
+function test(){
+alert($('#date').val());
+}
+</script>
+<script>
 										$(document).ready(function(){
-											$("#date").hide();
+											$("#calendar").hide();
+											$("#calroot").hide();
+											$("#submit-div").css("margin-top", '0px');
 										    $(".hide-date").click(function(){
-										        $("#date").hide();
+										      $("#calendar").hide();
+										      $("#calroot").hide();
+										      $("#submit-div").css("margin-top", '0px');
 										    });
 										    $(".show-date").click(function(){
-										        $("#date").show();
+										        $("#calendar").show();
+										        $("#calroot").show();
+										        $("#submit-div").css("margin-top", '350px');
 										    });
+										    
 										});
 									</script>
-									
-									<div id = "date">
-										<input name = "date" type="date" class="form-control" placeholder = 'date' value = "no-date">
-									</div>
 									
 								</div>			
 							</div>
@@ -253,13 +297,14 @@
 							
 						</div>
 						
-						<div class="form-fields-wrapper">
+						<div class="form-fields-wrapper" id = "submit-div">
 							<div class="form-steps-bottom"></div>
 							
 							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Post" id = "btn-submit" id = "btn-submit">
 						</div>
-					</div>
 				</form>
+					</div>
+				
 			</div>
         </div>
     </div>
