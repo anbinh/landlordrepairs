@@ -2,10 +2,10 @@
 @section('content')	
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <div class="login-panel panel panel-default">
+        <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
-                <h3 class="panel-title">Register</h3>
-                <a> Tradespeople Here</a>
+                <h3 class="panel-title" style = "text-align: center">Register</h3>
+                <a href = "#"><p style = "text-align: center"> Tradespeople Here</p></a>
             </div>
             <div class="panel-body">
 				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
@@ -49,7 +49,12 @@
 									
 								</div>			
 							</div>
-							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<p style = "font-size: 1em;">Location</p>
+									
+								</div>			
+							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									<input name = "local" type="text" class="form-control" required placeholder = 'Post code'>
