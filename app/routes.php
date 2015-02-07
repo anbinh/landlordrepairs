@@ -283,3 +283,17 @@ Route::group(array('prefix' => 'api/v1'), function(){
 	Route::resource('users', 'UserController');
 });
 //---------------------//
+Route::get('admin', 'AdminController@getIndex');
+Route::get('admin/setting', 'AdminController@getSetting');
+Route::post('admin/setting', 'AdminController@postSetting');
+Route::get('admin/profile', 'AdminController@getProfile');
+Route::post('admin/profile', 'AdminController@postProfile');
+
+Route::get('admin/users', 'AdminController@getUsers');
+Route::get('admin/users/page/{page}', 'AdminController@getUsers');
+Route::get('admin/deluser/{user_id}', 'AdminController@delUser');
+Route::get('admin/edituser/{user_id}', 'AdminController@getEditUser');
+Route::post('admin/edituser/{user_id}', array('uses' => 'AdminController@postEditUser'));
+Route::post('admin/changeuserpass/{user_id}', array('as' => 'admin.changeuserpass', 'uses' => 'AdminController@postChangePass'));
+Route::get('admin/adduser', 'AdminController@getAddUser');
+Route::post('admin/adduser', 'AdminController@postAddUser');
