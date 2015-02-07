@@ -13,7 +13,7 @@
                 @if(Session::get("emailfirst") == "1")
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    An email is sent to your email address. please click the link to verify your email account before you can login.
+                    An email is sent to your email address. please click the link to verify your email account and phone number before you can login.
                 </div>
                 @endif
                 @if(Session::get("success") == "0")
@@ -25,7 +25,7 @@
                 @if(Session::get("confirmed") == "1")
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Email Verification success. Now you can login.
+                    Verification success. Now you can login.
                 </div>
                 @elseif(Session::get("confirmed") == "0")
                 <div class="alert alert-danger alert-dismissable">

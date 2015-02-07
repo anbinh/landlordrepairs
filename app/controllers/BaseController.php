@@ -87,7 +87,7 @@ class BaseController extends Controller {
 	
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
-	
+		for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122)))); 
 		if($v->passes())
 		{
 			$password = $input['password'];
@@ -99,6 +99,7 @@ class BaseController extends Controller {
 			$user->password = $password;
 			$user->phone_number = $input['phone_number'];
 			$user->email_confirm = $newcode;
+			$user->phone_confirm = $newcode_phone;
 			$user->role = '0';
 			$user->save();
 				
@@ -121,7 +122,7 @@ class BaseController extends Controller {
 			//Send confirmation email
 			$data = array(
 					'email'     => $input['email'],
-					'clickUrl'  => URL::to('/') . '/confirm/' . $newcode
+					'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
 			);
 			 
 			//---new send email----//
@@ -145,6 +146,23 @@ class BaseController extends Controller {
 				mail($to, $subject, $message, $headers);
 	
 			}
+			
+			//----send sms----//
+			//$number = Input::get('phoneNumber');
+			$message = $newcode_phone ;//Input::get('message');
+			//$to_phone_number = Input::get('phone_number');
+			$to_phone_number = '+84937163522';
+			
+			// Create an authenticated client for the Twilio API
+			$client = new Services_Twilio('AC381cdea9a54fd69ae1254fff289c08a7', 'f4bdb2f2a0e9acbc7649eee3a2f42fb3');
+		
+			// Use the Twilio REST API client to send a text message
+			$m = $client->account->messages->sendMessage(
+					'+12242053337', // the text will be sent from your Twilio number
+					$to_phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			//----------------//
 			//redirect to confirmation alert
 			return Redirect::to('login')->with("emailfirst", "1");
 	
@@ -199,13 +217,13 @@ class BaseController extends Controller {
 			$user->email_confirm = '';
 			$user->save();
 	
-			Auth::login( User::find($uid) );
+			//Auth::login( User::find($uid) );
 	
-			return Redirect::to('login')->with("confirmed", "1");
+			return Redirect::to('phoneconfirm')->with("phone_confirm", "1");
 	
 		} else {
 	
-			return Redirect::to('login')->with("confirmed", "0");
+			return Redirect::to('login')->with("phone_confirm", "0");
 	
 		}
 	
@@ -355,5 +373,58 @@ class BaseController extends Controller {
 		$job->save();
 		return View::make('pages.postjob');
 	}
+	//------------------------test-------------------
+	public function redirectpconfirm( $id_code )
+	{
+	if ( $user_info = User::where('email_confirm', '=', $id_code)->first() )
+		{   Session::put('id_code', $id_code);//Session::get('job_id');
+			return Redirect::to('pconfirm')->with("phone_confirm", "1");
+	
+		} else {
+			return Redirect::to('pconfirm')->with("phone_confirm", "0");
+	
+		}
+	
+	}
+	
+	public function getpconfirm()
+	{
+	return View::make('pages.pconfirm');
+	
+	}
+	
+	public function postpconfirm()
+	{ 
+		$input = Input::all();
+		$id_code = Session::get('id_code');
+		$phoneconfirm = $input['phoneconfirm'];
+		if ($id_code != null) {
+			if ( $user = User::where('email_confirm', '=', $id_code)->first() )
+			{
+				//var_dump ($user->phone_confirm);die;
+				if ($user->phone_confirm == $phoneconfirm ) {
+					Session::forget('id_code');
+					$user->phone_confirm = '';
+					$user->email_confirm = '';
+					$user->save();
+					return Redirect::to('login')->with("confirmed", "1");
+				} else {
+				 	return Redirect::to('pconfirm')->with("phone_confirm", "0");
+				}
+				
+	
+			} else {
+				return Redirect::to('pconfirm')->with("phone_confirm", "0");
+			}
+		} else {
+			return Redirect::to('pconfirm')->with("phone_confirm", "0");
+		}
+	}
+	
+	
+	
 
 }
+
+
+

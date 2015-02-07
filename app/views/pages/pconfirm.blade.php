@@ -8,12 +8,12 @@
                 <h3 class="panel-title">Confirm phone number</h3>
             </div>
             <div class="panel-body">
-
-                {{ Form::open(array('url' => 'phoneconfirm')) }}
+			
+                {{ Form::open(array('url' => 'pconfirm')) }}
                 @if(Session::get("phone_confirm") == "0")
                 <div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Wrong confirm phone number11
+                    Wrong link
                 </div>
                 @endif
                 @if(Session::get("phone_confirm") == "1")
