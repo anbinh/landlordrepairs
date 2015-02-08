@@ -709,26 +709,26 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "0.3.9",
+            "version": "0.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1"
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.0.0"
             },
             "require-dev": {
-                "phing/phing": "2.7.*",
-                "phpunit/phpunit": "4.0.*",
-                "sami/sami": "1.*",
-                "squizlabs/php_codesniffer": "1.*"
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "~4.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
             },
             "suggest": {
                 "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
@@ -803,7 +803,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-11-10 03:08:59"
+            "time": "2015-01-28 21:50:33"
         },
         {
             "name": "predis/predis",

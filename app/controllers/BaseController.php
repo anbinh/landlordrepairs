@@ -151,14 +151,15 @@ class BaseController extends Controller {
 			//$number = Input::get('phoneNumber');
 			$message = $newcode_phone ;//Input::get('message');
 			//$to_phone_number = Input::get('phone_number');
-			$to_phone_number = '+84937163522';
+			//$to_phone_number = '+84937163522';
+			$to_phone_number=$input['phone_number'];
 			
 			// Create an authenticated client for the Twilio API
-			$client = new Services_Twilio('AC381cdea9a54fd69ae1254fff289c08a7', 'f4bdb2f2a0e9acbc7649eee3a2f42fb3');
+			$client = new Services_Twilio('AC461fe2ea8ef7e0a8a864bb3a982142f7', 'd94d47547950d199f065f365a51111a4');
 		
 			// Use the Twilio REST API client to send a text message
 			$m = $client->account->messages->sendMessage(
-					'+12242053337', // the text will be sent from your Twilio number
+					'+441544430006', // the text will be sent from your Twilio number
 					$to_phone_number, // the phone number the text will be sent to
 					$message // the body of the text message
 			);
