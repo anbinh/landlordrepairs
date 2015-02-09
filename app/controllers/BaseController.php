@@ -81,8 +81,9 @@ class BaseController extends Controller {
 	
 		$input = Input::all();
 	
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
-	
+			    
+		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
 		$v = Validator::make($input, $rules);
 	
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
@@ -153,7 +154,12 @@ class BaseController extends Controller {
 			//$to_phone_number = Input::get('phone_number');
 			//$to_phone_number = '+84937163522';
 			$to_phone_number=$input['phone_number'];
+			$number = $input['phone_number'];
+			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
 			
+			if (!preg_match( $regex, $number )) {
+				return Redirect::to('register')->with("is_phone_number", "0");
+			} 
 			// Create an authenticated client for the Twilio API
 			$client = new Services_Twilio('AC461fe2ea8ef7e0a8a864bb3a982142f7', 'd94d47547950d199f065f365a51111a4');
 		

@@ -2,6 +2,19 @@
 @section('content')	
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
+    			@if($errors->any())
+					<div class="alert alert-danger alert-dismissable">
+		                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		                 {{ implode('', $errors->all('<li class="error">:message</li>')) }}
+		         	</div>
+		
+				@endif
+				@if(Session::get("is_phone_number") == "0")
+                 <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    The phone number is invalid, please type agian
+                </div>
+                @endif
         <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
                 <h3 class="panel-title" style = "text-align: center">Register</h3>
@@ -67,7 +80,7 @@
 							<style>
 						      #map-canvas {
 						        height: 300px;
-								width: 400px;
+								width: 380px;
 						        
 						      }
 						      .controls {
@@ -255,13 +268,7 @@
 					<br clear="all"/>
 					
 						<p class="larger center color-53A524" id = "submit-div">User's Infomation</p>
-						@if($errors->any())
-							<div class="alert alert-danger alert-dismissable">
-				                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				                 {{ implode('', $errors->all('<li class="error">:message</li>')) }}
-				         	</div>
-				
-						@endif
+						
 						<div class="form-fields-wrapper">
 							<div class="pad-top">
 								<div class="form-control-wrapper" id = "form-control-wrapper-plusCss" >

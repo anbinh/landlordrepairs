@@ -58,7 +58,7 @@
 							<style>
 						      #map-canvas {
 						        height: 300px;
-								width: 400px;
+								width: 380px;
 						        
 						      }
 						      .controls {
