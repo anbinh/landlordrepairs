@@ -150,6 +150,7 @@ class BaseController extends Controller {
 			$job->lng = $input['lng'];
 			$job->user_id = $userpostjob->id;
 			$job->status = 'openjob';
+			$job->property = $input['property'];
 			$job->category = $input['category'];
 			$job->save();
 			//Session::put('job_id', $job->id);Session::get('job_id');
@@ -387,6 +388,7 @@ class BaseController extends Controller {
 		
 		$job->user_id = $userpostjob->id;
 		$job->status = 'openjob';
+		$job->property = $input['property'];
 		$job->category = $input['category'];
 		$job->save();
 		return View::make('pages.postjob');
