@@ -66,7 +66,9 @@ class BaseController extends Controller {
 	
 	
 	public function getRegister()
-	{
+	{  	if (Session::has('phone_code')){
+			Session::forget('phone_code');
+		}
 		if(Auth::check()) {
 			return Redirect::route('landing-page');
 		}
@@ -74,7 +76,7 @@ class BaseController extends Controller {
 	}
 	
 	public function postRegister()
-	{
+	{   
 		if(Auth::check()) {
 			return Redirect::route('landing-page');
 		}
@@ -85,12 +87,43 @@ class BaseController extends Controller {
 		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
 		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
 		$v = Validator::make($input, $rules);
-	
+			//----send sms----//
+			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+			//$number = Input::get('phoneNumber');
+			$newcode_phone = strtoupper($newcode_phone);
+			$message = $newcode_phone ;//Input::get('message');
+			//$to_phone_number = Input::get('phone_number');
+			//$to_phone_number = '+84937163522';
+			$country_phone_code = $input['country_code'];
+			$to_phone_number = $input['phone_number'];
+			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
+			
+			if (!preg_match( $regex, $to_phone_number )) {
+				return Redirect::to('register')->with("is_phone_number", "0");
+			}
+			$to_phone_number = substr($to_phone_number, 1);
+			$to_phone_number =  $country_phone_code.$to_phone_number;
+			// Create an authenticated client for the Twilio API
+			/*$client = new Services_Twilio('AC3f7525a996d50d183bd224359c325c6f', '58ac53caa01777973e2931776a61a8f9');
+			$to_phone_number = '+15005550006';
+			// Use the Twilio REST API client to send a text message
+			$m = $client->account->messages->sendMessage(
+					'+15005550006', // the text will be sent from your Twilio number
+					$to_phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			); echo $m; die;*/
+			$sid = 'AC3f7525a996d50d183bd224359c325c6f';
+			$token = "58ac53caa01777973e2931776a61a8f9"; 
+			$client = new Services_Twilio($sid, $token);
+			$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
+
+			//----------------//
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
-		for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122)))); 
+		 
+		
 		if($v->passes())
-		{
+		{	
 			$password = $input['password'];
 			$password = Hash::make($password);
 	
@@ -98,7 +131,7 @@ class BaseController extends Controller {
 			$user->username = $input['username'];
 			$user->email = $input['email'];
 			$user->password = $password;
-			$user->phone_number = $input['phone_number'];
+			$user->phone_number = $to_phone_number;
 			$user->email_confirm = $newcode;
 			$user->phone_confirm = $newcode_phone;
 			$user->role = '0';
@@ -147,30 +180,8 @@ class BaseController extends Controller {
 				mail($to, $subject, $message, $headers);
 	
 			}
-			
-			//----send sms----//
-			//$number = Input::get('phoneNumber');
-			$message = $newcode_phone ;//Input::get('message');
-			//$to_phone_number = Input::get('phone_number');
-			//$to_phone_number = '+84937163522';
-			$to_phone_number=$input['phone_number'];
-			$number = $input['phone_number'];
-			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
-			
-			if (!preg_match( $regex, $number )) {
-				return Redirect::to('register')->with("is_phone_number", "0");
-			} 
-			// Create an authenticated client for the Twilio API
-			$client = new Services_Twilio('AC461fe2ea8ef7e0a8a864bb3a982142f7', 'd94d47547950d199f065f365a51111a4');
-		
-			// Use the Twilio REST API client to send a text message
-			$m = $client->account->messages->sendMessage(
-					'+441544430006', // the text will be sent from your Twilio number
-					$to_phone_number, // the phone number the text will be sent to
-					$message // the body of the text message
-			);
-			//----------------//
 			//redirect to confirmation alert
+			Session::put('phone_code', $newcode_phone);
 			return Redirect::to('login')->with("emailfirst", "1");
 	
 		} else {
@@ -194,7 +205,7 @@ class BaseController extends Controller {
 		$user = User::where('id', '=', Auth::user()->id)->first();
 		
 		
-		if ($user->phone_confirm == $input['phoneconfirm']){
+		if ($user->phone_confirm == strtoupper($input['phoneconfirm'])){
 			//clear phone_confirm
 			
 			return Redirect::to('phoneconfirm')->with("phone_confirm", "0");
@@ -404,7 +415,7 @@ class BaseController extends Controller {
 	{ 
 		$input = Input::all();
 		$id_code = Session::get('id_code');
-		$phoneconfirm = $input['phoneconfirm'];
+		$phoneconfirm = strtoupper($input['phoneconfirm']);
 		if ($id_code != null) {
 			if ( $user = User::where('email_confirm', '=', $id_code)->first() )
 			{

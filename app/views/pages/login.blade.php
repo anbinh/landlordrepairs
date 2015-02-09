@@ -14,6 +14,7 @@
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     An email is sent to your email address. please click the link to verify your email account and phone number before you can login.
+                
                 </div>
                 @endif
                 @if(Session::get("success") == "0")
@@ -53,6 +54,7 @@
                 </div>
 
 				@endif
+				@if(Session::get("phone_code") != null)Phonenumber authentication Code is:  <p style = "color: red;">{{Session::get("phone_code")}}</p>, remember it to confirm phonenumber.@endif
                     <fieldset>
                         <div class="form-group">
                         	{{ Form::text('email', '', array('placeholder' => 'Email', 'class' => 'form-control')) }}

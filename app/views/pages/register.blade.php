@@ -17,8 +17,8 @@
                 @endif
         <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
-                <h3 class="panel-title" style = "text-align: center">Register</h3>
-                <a href = "#"><p style = "text-align: center"> Tradespeople Here</p></a>
+                <h3 class="panel-title" style = "text-align: center">Tradespeople Here</h3>
+
             </div>
             <div class="panel-body">
 				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
@@ -292,7 +292,23 @@
 							</div>
 							
 							<div class="pad-top">
-								<div class="form-control-wrapper" >
+								<div class="col-lg-2" >
+									<span>Country</span>
+									
+								</div>
+								<div class="col-lg-4" >
+									<select name = "country_code" class="form-control">
+										<option name="country_code" value = "Category">Afghanistan (+93)</option>
+										<option name="country_code" value = "Category 1">Albania (+355)</option>
+										<option name="country_code" value = "Category 2">Algeria  (+213)</option>
+										<option name="country_code" value = "Category 3">American Samoa  (+1684)</option>
+										<option name="country_code" value = "Category 3">United Kingdom  (+44)</option>
+										<option name="country_code" value = "Category 3">United States  (+1)</option>
+										<option name="country_code" value = "Category 3">Vietnam  (+84)</option>	
+									</select>	
+								</div>	
+								
+								<div class="col-lg-6" >
 									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>
 									
 								</div>			
