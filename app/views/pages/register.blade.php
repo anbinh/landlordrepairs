@@ -36,17 +36,67 @@
 									
 								</div>			
 							</div>
-							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<select name = "category" class="form-control">
-										<option name="category" value = "Category">Category</option>
-										<option name="category" value = "Category 1">Category 1</option>
-										<option name="category" value = "Category 2">Category 2</option>
-										<option name="category" value = "Category 3">Category 3</option>
+								
+								<div class = "col-lg-4">
+								<p>Property:</p>
+								</div>
+								<div class = "col-lg-8">
+									<select name = "property" class="form-control">
+										<option name="property" value = "Flat">Flat</option>
+										<option name="property" value = "Terrance House">Terrance House </option>
+										<option name="property" value = "Semi detached ">Semi detached </option>
+										<option name="property" value = "Shared House">Shared House</option>
+										<option name="property" value = "Bungalow">Bungalow</option>
+										<option name="property" value = "Maisonette">Maisonette</option>
 										
 									</select>
-									
+								</div>
+								</div>			
+							</div>
+								<div class="pad-top">
+								<div class="form-control-wrapper" >
+								
+								<div class = "col-lg-4">
+								<p>Category:</p>
+								</div>
+								<div class = "col-lg-8">
+									<select name = "category" class="form-control">
+										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
+										<option name="category" value = "Bricklayers">Bricklayers </option>
+										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
+										<option name="category" value = "Carpet fitters">Carpet fitters</option>
+										<option name="category" value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
+										<option name="category" value = "Conservatory Installers">Conservatory Installers</option>
+										<option name="category" value = "Conversion Specialists">Conversion Specialists</option>
+										<option name="category" value = "Damp Proofing Specialists">Damp Proofing Specialists</option>
+										<option name="category" value = "Driveway Pavers">Driveway Pavers</option>
+										<option name="category" value = "Electricians">Electricians</option>
+										<option name="category" value = "Extension Builders">Extension Builders</option>
+										<option name="category" value = "Fencers">Fencers</option>
+										<option name="category" value = "Flooring Fitters">Flooring Fitters</option>
+										<option name="category" value = "Garage & Shed Builders">Garage & Shed Builders</option>
+										<option name="category" value = "Gas Engineers">Gas Engineers</option>
+										<option name="category" value = "Groundworkers">Groundworkers</option>
+										<option name="category" value = "Handymen">Handymen</option>
+										<option name="category" value = "Heating Engineers">Heating Engineers</option>
+										<option name="category" value = "Insulation Installers">Insulation Installers</option>
+										<option name="category" value = "Kitchen Fitters">Kitchen Fitters</option>
+										<option name="category" value = "Landscape Gardeners">Landscape Gardeners</option>
+										<option name="category" value = "Loft Conversion Specialists">Loft Conversion Specialists</option>
+										<option name="category" value = "New Home Builders">New Home Builders</option>
+										<option name="category" value = "Painters & Decorators">Painters & Decorators</option>
+										<option name="category" value = "Plasterers">Plasterers</option>
+										<option name="category" value = "Plumbers">Plumbers</option>
+										<option name="category" value = "Restoration & Refurb Specialists">Restoration & Refurb Specialists</option>
+										<option name="category" value = "Roofers">Roofers</option>
+										<option name="category" value = "Security System Installers">Security System Installers</option>
+										<option name="category" value = "CTilers">CTilers</option>
+										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
+										<option name="category" value = "Window Fitters">Window Fitters</option>
+									</select>
+								</div>
 								</div>			
 							</div>
 							
@@ -70,9 +120,24 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local" type="text" class="form-control" required placeholder = 'Post code'>
-									<input name = "local_demo" type="text" class="form-control" required placeholder = 'City or Country'>
-									
+								
+								<div class = "col-lg-4">
+								<p>Country:</p>
+								</div>
+								<div class = "col-lg-8">
+									<select name = "local" class="form-control">
+										<option name="local" value = " UK">UK</option>
+										<option name="local" value = "US">US </option>
+										<option name="local" value = "CANADA">CANADA</option>
+										<option name="local" value = "GERMANY">GERMANY</option>
+										<option name="local" value = "ITALIA">ITALIA</option>
+									</select>
+								</div>
+								</div>			
+							</div>
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "local-code" type="text" class="form-control" required placeholder = 'Post code'>
 								</div>			
 							</div>
 							<!-- GOOGLE MAP -->
