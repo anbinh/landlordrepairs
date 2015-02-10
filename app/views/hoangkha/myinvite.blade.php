@@ -43,10 +43,13 @@
 				 		-->
 				 
 				 		<!-- Table -->
+				 		
+				 		
+				 		
 				 		<table class="table">
 				 			<thead>
 				 				<tr>
-				 					<th>Job ID</th>
+				 					
 				 					<th>Title</th>
 				 				
 				 					<th>Builder Invite</th>
@@ -54,15 +57,19 @@
 				 				</tr>
 				 			</thead>
 				 			<tbody>
-				 				<tr>
-				 					<td>1</td>
-				 					<td>Building house</td>
-				 					<td><a href="#">User1 </a>
-				 						<a href="#">User2 </a>
-				 						<a href="#">User3 </a>
-				 					</td>
-				 					
-				 				</tr>
+				 				<?php
+							 		for($i=0;$i<$n_jobs;$i=$i+1)
+							 		{   echo '<tr><td>';
+							 			 echo $jobs[$i]->tittle;
+							 			 echo '</td><td>';
+
+							 			for($j=0;$j<$n_user[$i+1];$j=$j+1)
+							 				{echo $user[$i+1][$j]->username;echo ' ';}
+							 				echo '</td></tr>';
+
+							 		}
+				 				?>
+				 				
 				 			</tbody>
 				 		</table>
 				 </div>
