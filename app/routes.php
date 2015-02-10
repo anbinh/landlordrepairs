@@ -307,3 +307,6 @@ Route::post('pconfirm', 'BaseController@postpconfirm');
 Route::get( 'passchange', array( 'uses' => 'HomeController@getPassChange' ));
 Route::post( 'passchange', array( 'uses' => 'HomeController@postPassChange' ));
 
+//-----FOR CUSTOMMER TEST----//
+Route::get('delete_account', 'BaseController@getDelete_account');
+Route::post('delete_account', 'BaseController@postDelete_account');

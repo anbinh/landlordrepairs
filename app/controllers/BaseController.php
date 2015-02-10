@@ -451,7 +451,28 @@ class BaseController extends Controller {
 		}
 	}
 	
+public function getDelete_account()
+	{
+		
+			return View::make('pages.delete_account');
 	
+	
+	}
+	
+	public function postDelete_account()
+	{
+		
+		$input = Input::all();
+		$email = $input['email'];
+		$user = User::where('email', '=',$email)->first();
+		if ($user != null){
+			DB::table('users')->where('email', '=', $email)->delete();
+			return Redirect::to('delete_account')->with("delete_account", "1");
+		} else {
+			return Redirect::to('delete_account')->with("delete_account", "0");
+		}
+		
+	}
 	
 
 }
