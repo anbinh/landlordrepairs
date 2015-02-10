@@ -320,3 +320,4 @@ Route::get('hoangkha/profile','HoangkhaController@getProfile');
 Route::get('hoangkha/jobs','HoangkhaController@getJob');
 Route::get('hoangkha/myinvites','HoangkhaController@getMyInvite');
 Route::get('hoangkha/myfavorites','HoangkhaController@getMyFavorite');
+Route::get('testing', 'BaseController@getIndex');

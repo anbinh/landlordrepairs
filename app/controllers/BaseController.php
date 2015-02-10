@@ -8,7 +8,10 @@ class BaseController extends Controller {
 	}
 	
 	public function getIndex()
-	{
+		
+	{  	$private = "sk_test_gdKc5TYgUWYr7ey4rpeUbE9b";
+		Stripe::setApiKey($private);
+		var_dump (Stripe::getApiKey());die;
 		return View::make('home.index');
 	}
 	
