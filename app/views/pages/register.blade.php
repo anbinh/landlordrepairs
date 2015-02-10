@@ -40,7 +40,7 @@
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-4">
-								<p>Property:</p>
+								Property:
 								</div>
 								<div class = "col-lg-8">
 									<select name = "property" class="form-control">
@@ -59,7 +59,7 @@
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-4">
-								<p>Category:</p>
+								Category:
 								</div>
 								<div class = "col-lg-8">
 									<select name = "category" class="form-control">
@@ -112,32 +112,27 @@
 									
 								</div>			
 							</div>
-							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<p style = "font-size: 1em;">Location</p>
-									
-								</div>			
-							</div>
+							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 								
-								<div class = "col-lg-4">
-								<p>Country:</p>
+								<div class = "col-lg-6" style = "text-align: center;">
+								City or County:
 								</div>
-								<div class = "col-lg-8">
+								<div class = "col-lg-6">
 									<select name = "local" class="form-control">
-										<option name="local" value = " UK">UK</option>
-										<option name="local" value = "US">US </option>
-										<option name="local" value = "CANADA">CANADA</option>
-										<option name="local" value = "GERMANY">GERMANY</option>
-										<option name="local" value = "ITALIA">ITALIA</option>
+										<option name="local" value = " UK">LONDON</option>
+										<option name="local" value = "Watford">Watford</option>
+										<option name="local" value = "Enfield">Enfield</option>
+										<option name="local" value = "Wokingham">Wokingham</option>
+										<option name="local" value = "Brentwood">Brentwood</option>
 									</select>
 								</div>
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local-code" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
 								</div>			
 							</div>
 							<!-- GOOGLE MAP -->
@@ -206,9 +201,9 @@
 							function initialize() {
 							
 							  var markers = [];
-							  var haightAshbury = new google.maps.LatLng(37.7699298, -122.4469157);
+							  var haightAshbury = new google.maps.LatLng(55.7717596, -3.9047496);
 							  var mapOptions = {
-							    zoom: 12,
+							    zoom: 6,
 							    center: haightAshbury,
 							    //mapTypeId: google.maps.MapTypeId.TERRAIN
 							  };
@@ -357,26 +352,7 @@
 							</div>
 							
 							<div class="pad-top">
-								<div class="col-lg-2" >
-									<span>Country</span>
-									
-								</div>
-								<div class="col-lg-4" >
-									<select name = "country_code" class="form-control">
-										<option name="country_code" value = "Category">Afghanistan (+93)</option>
-										<option name="country_code" value = "Category 1">Albania (+355)</option>
-										<option name="country_code" value = "Category 2">Algeria  (+213)</option>
-										<option name="country_code" value = "Category 3">American Samoa  (+1684)</option>
-										<option name="country_code" value = "Category 3">United Kingdom  (+44)</option>
-										<option name="country_code" value = "Category 3">United States  (+1)</option>
-										<option name="country_code" value = "Category 3">Vietnam  (+84)</option>	
-									</select>	
-								</div>	
-								
-								<div class="col-lg-6" >
-									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>
-									
-								</div>			
+									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>		
 							</div>
 							
 							

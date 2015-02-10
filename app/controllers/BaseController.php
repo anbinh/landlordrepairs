@@ -85,7 +85,7 @@ class BaseController extends Controller {
 	
 			    
 		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric','local_code'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -94,7 +94,6 @@ class BaseController extends Controller {
 			$message = $newcode_phone ;//Input::get('message');
 			//$to_phone_number = Input::get('phone_number');
 			//$to_phone_number = '+84937163522';
-			$country_phone_code = $input['country_code'];
 			$to_phone_number = $input['phone_number'];
 			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
 			
@@ -102,7 +101,7 @@ class BaseController extends Controller {
 				return Redirect::to('register')->with("is_phone_number", "0");
 			}
 			$to_phone_number = substr($to_phone_number, 1);
-			$to_phone_number =  $country_phone_code.$to_phone_number;
+			$to_phone_number =  "+44".$to_phone_number;
 			// Create an authenticated client for the Twilio API
 			/*$client = new Services_Twilio('AC3f7525a996d50d183bd224359c325c6f', '58ac53caa01777973e2931776a61a8f9');
 			$to_phone_number = '+15005550006';
@@ -146,6 +145,7 @@ class BaseController extends Controller {
 			
 			$job->date = $input['date'];
 			$job->local = $input['local'];
+			$job->local_code = $input['local_code'];
 			$job->lat = $input['lat'];
 			$job->lng = $input['lng'];
 			$job->user_id = $userpostjob->id;
@@ -374,24 +374,34 @@ class BaseController extends Controller {
 	public function postPostjob()
 	{
 		$input = Input::all(); 
-		$userpostjob = User::where('id', '=', Auth::user()->id)->first();
-		$job = new Job();
-		$job->tittle = $input['tittle'];
-		$job->description = $input['description'];
-		$job->price = $input['price'];
-		$job->timeoption = $input['timeoption'];
-		
-		$job->date = $input['date'];
-		$job->local = $input['local'];
-		$job->lat = $input['lat'];
-		$job->lng = $input['lng'];
-		
-		$job->user_id = $userpostjob->id;
-		$job->status = 'openjob';
-		$job->property = $input['property'];
-		$job->category = $input['category'];
-		$job->save();
-		return View::make('pages.postjob');
+		$rules = array('price'  => 'numeric','local_code'  => 'numeric');
+	
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+	
+			$userpostjob = User::where('id', '=', Auth::user()->id)->first();
+			$job = new Job();
+			$job->tittle = $input['tittle'];
+			$job->description = $input['description'];
+			$job->price = $input['price'];
+			$job->timeoption = $input['timeoption'];
+			
+			$job->date = $input['date'];
+			$job->local = $input['local'];
+			$job->local_code = $input['local_code'];
+			$job->lat = $input['lat'];
+			$job->lng = $input['lng'];
+			
+			$job->user_id = $userpostjob->id;
+			$job->status = 'openjob';
+			$job->property = $input['property'];
+			$job->category = $input['category'];
+			$job->save();
+			return Redirect::to('postjob')->with("success", "1");
+		} else {
+			return Redirect::to('postjob')->withErrors($v);
+		}
 	}
 	//------------------------test-------------------
 	public function redirectpconfirm( $id_code )

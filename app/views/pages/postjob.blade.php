@@ -3,6 +3,19 @@
 <div class="row" style = "margin-top: 10%; margin-bottom: 80px;">
 
     <div class="col-md-4 col-md-offset-4">
+   				 @if($errors->any())
+					<div class="alert alert-danger alert-dismissable">
+		                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		                 {{ implode('', $errors->all('<li class="error">:message</li>')) }}
+		         	</div>
+		
+				@endif
+				@if(Session::get("success") == "1")
+                 <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    Post job success
+                </div>
+                @endif
         <div class="login-panel panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Post Job</h3>
@@ -24,7 +37,7 @@
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-4">
-								<p>Property:</p>
+								Property:
 								</div>
 								<div class = "col-lg-8">
 									<select name = "property" class="form-control">
@@ -44,7 +57,7 @@
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-4">
-								<p>Category:</p>
+								Category:
 								</div>
 								<div class = "col-lg-8">
 									<select name = "category" class="form-control">
@@ -100,23 +113,23 @@
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 								
-								<div class = "col-lg-4">
-								<p>Country:</p>
+								<div class = "col-lg-5">
+								City or County:
 								</div>
-								<div class = "col-lg-8">
+								<div class = "col-lg-7">
 									<select name = "local" class="form-control">
-										<option name="local" value = " UK">UK</option>
-										<option name="local" value = "US">US </option>
-										<option name="local" value = "CANADA">CANADA</option>
-										<option name="local" value = "GERMANY">GERMANY</option>
-										<option name="local" value = "ITALIA">ITALIA</option>
+										<option name="local" value = " UK">LONDON</option>
+										<option name="local" value = "Watford">Watford</option>
+										<option name="local" value = "Enfield">Enfield</option>
+										<option name="local" value = "Wokingham">Wokingham</option>
+										<option name="local" value = "Brentwood">Brentwood</option>
 									</select>
 								</div>
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local-code" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
 								</div>			
 							</div>
 							<!-- GOOGLE MAP -->
@@ -185,9 +198,9 @@
 							function initialize() {
 							
 							  var markers = [];
-							  var haightAshbury = new google.maps.LatLng(37.7699298, -122.4469157);
+							  var haightAshbury = new google.maps.LatLng(55.7717596, -3.9047496);
 							  var mapOptions = {
-							    zoom: 12,
+							    zoom: 6,
 							    center: haightAshbury,
 							    //mapTypeId: google.maps.MapTypeId.TERRAIN
 							  };
