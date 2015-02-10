@@ -8,7 +8,10 @@ class BaseController extends Controller {
 	}
 	
 	public function getIndex()
-	{
+		
+	{  	$private = "sk_test_gdKc5TYgUWYr7ey4rpeUbE9b";
+		Stripe::setApiKey($private);
+		var_dump (Stripe::getApiKey());die;
 		return View::make('home.index');
 	}
 	
@@ -114,8 +117,12 @@ class BaseController extends Controller {
 			$sid = 'AC3f7525a996d50d183bd224359c325c6f';
 			$token = "58ac53caa01777973e2931776a61a8f9"; 
 			$client = new Services_Twilio($sid, $token);
-			$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
-
+			//$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$to_phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
 			//----------------//
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -451,7 +458,28 @@ class BaseController extends Controller {
 		}
 	}
 	
+public function getDelete_account()
+	{
+		
+			return View::make('pages.delete_account');
 	
+	
+	}
+	
+	public function postDelete_account()
+	{
+		
+		$input = Input::all();
+		$email = $input['email'];
+		$user = User::where('email', '=',$email)->first();
+		if ($user != null){
+			DB::table('users')->where('email', '=', $email)->delete();
+			return Redirect::to('delete_account')->with("delete_account", "1");
+		} else {
+			return Redirect::to('delete_account')->with("delete_account", "0");
+		}
+		
+	}
 	
 
 }
