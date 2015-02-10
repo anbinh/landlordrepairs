@@ -284,7 +284,7 @@ Route::group(array('prefix' => 'api/v1'), function(){
 	Route::resource('users', 'UserController');
 });
 //---------------------//
-Route::get('admin', 'AdminController@getIndex');
+Route::get('admin',array('as'=>'admin-page','uses'=>'AdminController@getIndex'));
 Route::get('admin/setting', 'AdminController@getSetting');
 Route::post('admin/setting', 'AdminController@postSetting');
 Route::get('admin/profile', 'AdminController@getProfile');
@@ -306,7 +306,17 @@ Route::get('pconfirm', 'BaseController@getpconfirm');
 Route::post('pconfirm', 'BaseController@postpconfirm');
 Route::get( 'passchange', array( 'uses' => 'HomeController@getPassChange' ));
 Route::post( 'passchange', array( 'uses' => 'HomeController@postPassChange' ));
+Route::group(array('before' => 'auth'), function(){
 
-//-----FOR CUSTOMMER TEST----//
-Route::get('delete_account', 'BaseController@getDelete_account');
-Route::post('delete_account', 'BaseController@postDelete_account');
+	Route::get('dashboard', 'DashboardController@getIndex');
+	Route::get('dashboard/profile', 'DashboardController@getProfile');
+	Route::post('dashboard/profile', 'DashboardController@postProfile');
+
+});
+Route::get('hoangkha',function(){
+	return View::make('hoangkha.dashboard');
+});
+Route::get('hoangkha/profile','HoangkhaController@getProfile');
+Route::get('hoangkha/jobs','HoangkhaController@getJob');
+Route::get('hoangkha/myinvites','HoangkhaController@getMyInvite');
+Route::get('hoangkha/myfavorites','HoangkhaController@getMyFavorite');
