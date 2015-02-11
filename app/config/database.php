@@ -66,9 +66,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => '10.168.1.83',
--			'database'  => 'landlord1_data',
--			'username'  => 'landlord1_data',
--			'password'  => 'myrepairs008',
+			'database'  => 'landlord1_data',
+			'username'  => 'landlord1_data',
+			'password'  => 'myrepairs008',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
