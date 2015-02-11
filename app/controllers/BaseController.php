@@ -386,7 +386,7 @@ class BaseController extends Controller {
 	public function postPostjob()
 	{
 		$input = Input::all(); 
-		$rules = array('price'  => 'numeric','local_code'  => 'numeric');
+		$rules = array('price'  => 'numeric');
 	
 		$v = Validator::make($input, $rules);
 		if($v->passes())
