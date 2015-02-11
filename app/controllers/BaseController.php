@@ -123,6 +123,8 @@ class BaseController extends Controller {
 					$to_phone_number, // the phone number the text will be sent to
 					$message // the body of the text message
 			);
+			
+			
 			//----------------//
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
