@@ -15,7 +15,6 @@ class BaseController extends Controller {
 		return View::make('home.index');
 	}
 	
-	
 	public function getLogin()
 	{
 		if(Auth::check()) {
@@ -88,7 +87,7 @@ class BaseController extends Controller {
 	
 			    
 		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric','local_code'  => 'numeric');
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -119,11 +118,17 @@ class BaseController extends Controller {
 			$client = new Services_Twilio($sid, $token);
 			//$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
 			$client->account->messages->sendMessage(
-					'+441544430006', // the text will be sent from your Twilio number
+					'+15005550006', // the text will be sent from your Twilio number
 					$to_phone_number, // the phone number the text will be sent to
 					$message // the body of the text message
 			);
 			//----------------//
+			
+			// Get the PHP helper library from twilio.com/docs/php/install
+	
+			 
+			// Your Account Sid and Auth Token from twilio.com/user/account
+			
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
 		 
@@ -458,7 +463,7 @@ class BaseController extends Controller {
 		}
 	}
 	
-public function getDelete_account()
+	public function getDelete_account()
 	{
 		
 			return View::make('pages.delete_account');
@@ -481,6 +486,34 @@ public function getDelete_account()
 		
 	}
 	
+
+	
+	public function postTest()
+	{
+		print_r(Input::all());
+		
+	
+		
+		$amount = Input::get('amount');
+		
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+		// Get the credit card details submitted by the form
+		$token = $_POST['stripeToken'];
+		
+		// Create the charge on Stripe's servers - this will charge the user's card
+		try {
+		$charge = Stripe_Charge::create(array(
+		  "amount" => $amount, // amount in cents, again
+		  "currency" => "usd",
+		  "card" => $token,
+		  "description" => "payinguser@example.com")
+		);
+		} catch(Stripe_CardError $e) {
+		  // The card has been declined
+		}
+		
+	}
 
 }
 

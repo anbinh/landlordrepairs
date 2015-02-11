@@ -94,4 +94,41 @@ class HoangkhaController extends BaseController{
 		}
 
 	}
+	
+	
+public function postDashboardPostjob()
+	{
+		$input = Input::all(); 
+		$rules = array('price'  => 'numeric','local_code'  => 'numeric');
+	
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+	
+			$userpostjob = User::where('id', '=', Auth::user()->id)->first();
+			$job = new Job();
+			$job->tittle = $input['tittle'];
+			$job->description = $input['description'];
+			$job->price = $input['price'];
+			$job->timeoption = $input['timeoption'];
+			
+			$job->date = $input['date'];
+			$job->local = $input['local'];
+			$job->local_code = $input['local_code'];
+			$job->lat = $input['lat'];
+			$job->lng = $input['lng'];
+			
+			$job->user_id = $userpostjob->id;
+			$job->status = 'openjob';
+			$job->property = $input['property'];
+			$job->category = $input['category'];
+			$job->save();
+			
+			//return Redirect::to('postjob')->with("success", "1");
+			//View the list of buiders match
+			var_dump("here"); die;
+		} else {
+			return Redirect::to('postjob')->withErrors($v);
+		}
+	}
 }

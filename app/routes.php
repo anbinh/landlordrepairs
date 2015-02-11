@@ -276,10 +276,7 @@ Route::post('text', function()
 	return $m;
 });
 
-Route::get('test', function()
-{
-	return View::make('pages.test');
-});
+
 Route::group(array('prefix' => 'api/v1'), function(){
 	Route::resource('users', 'UserController');
 });
@@ -320,4 +317,13 @@ Route::get('hoangkha/profile','HoangkhaController@getProfile');
 Route::get('hoangkha/jobs','HoangkhaController@getJob');
 Route::get('hoangkha/myinvites','HoangkhaController@getMyInvite');
 Route::get('hoangkha/myfavorites','HoangkhaController@getMyFavorite');
-Route::get('testing', 'BaseController@getIndex');
+Route::get('test', function()
+{
+	return View::make('pages.test');
+});
+Route::post('test', 'BaseController@postTest');
+
+Route::get('delete_account', array('as'=>'delete_account','uses' => 'BaseController@getDelete_account' ));
+Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseController@postDelete_account' ));
+
+Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');

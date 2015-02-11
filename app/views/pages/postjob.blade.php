@@ -308,43 +308,46 @@
 									
 									
 												
-			 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
-			  
-			
-			  <!-- dateinput styling -->
-			
-			      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
-					<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
-<div id="calendar">
-  <input id = "date"type="date" name="date" value="0" />
-</div>
-
-<!-- large date display -->
-
+								 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
+								  
+								
+								  <!-- dateinput styling -->
+								
+								      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+										<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
+								<div id="calendar">
+								  <input id = "date"type="date" name="date" value="0" />
+								</div>
+								
+								<!-- large date display -->
+								
+																	
+								<br clear="all"/>
+								
+								<!-- make it happen -->
+								<script>
+								$(function() {
+								// initialize dateinput
+								$(":date").dateinput( {
+								
+									// closing is not possible
+									onHide: function()  {
+									$("#calendar").hide();
+								      $("#calroot").hide();
+								      $("#submit-div").css("margin-top", '0px');
+										return false;
+									},
+								
 									
-<br clear="all"/>
-
-<!-- make it happen -->
-<script>
-$(function() {
-// initialize dateinput
-$(":date").dateinput( {
-
-	// closing is not possible
-	onHide: function()  {
-		return false;
-	},
-
-	
-	
-// set initial value and show dateinput when page loads
-}).data("dateinput").setValue(0).show();
-});
-function test(){
-alert($('#date').val());
-}
-</script>
-<script>
+									
+								// set initial value and show dateinput when page loads
+								}).data("dateinput").setValue(0).show();
+								});
+								function test(){
+								alert($('#date').val());
+								}
+								</script>
+								<script>
 										$(document).ready(function(){
 											$("#calendar").hide();
 											$("#calroot").hide();
@@ -387,7 +390,6 @@ alert($('#date').val());
 			</div>
         </div>
     </div>
-</div>
 
 
 @stop
