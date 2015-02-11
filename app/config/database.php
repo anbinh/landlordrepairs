@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => '10.168.1.83',
-			'database'  => 'landlord1_data',
-			'username'  => 'landlord1_data',
-			'password'  => 'myrepairs008',
+			'host'      => 'localhost',
+			'database'  => 'landlord',
+			'username'  => 'root',
+			'password'  => '',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
