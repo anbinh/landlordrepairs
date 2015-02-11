@@ -52,7 +52,7 @@ return array(
 			'prefix'   => '',
 		),
 
-		'mysql' => array(
+		/*'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'landlord',
@@ -61,17 +61,18 @@ return array(
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
-		),
-		/*'mysql' => array(
+		),*/
+		
+		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'landlord1_data',
-			'username'  => 'root',
-			'password'  => '',
+			'host'      => '10.168.1.83',
+-			'database'  => 'landlord1_data',
+-			'username'  => 'landlord1_data',
+-			'password'  => 'myrepairs008',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
-		),*/
+		),
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
