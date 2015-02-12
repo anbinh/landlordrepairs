@@ -365,7 +365,7 @@
 						
 							// closing is not possible
 							onHide: function()  {
-								$("#calendar").hide();
+								//$("#calendar").hide();
 							      $("#calroot").hide();
 						      $("#submit-div").css("margin-top", '0px');
 								return false;

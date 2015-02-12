@@ -283,7 +283,7 @@
 							
 							google.maps.event.addDomListener(window, 'load', initialize);
 							
-							    </script>
+						    </script>
 							<input id="pac-input" class="controls" type="text" placeholder="Search Box">
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
@@ -332,7 +332,7 @@
 								
 									// closing is not possible
 									onHide: function()  {
-									$("#calendar").hide();
+									//$("#calendar").hide();
 								      $("#calroot").hide();
 								      $("#submit-div").css("margin-top", '0px');
 										return false;
