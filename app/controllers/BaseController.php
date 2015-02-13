@@ -729,6 +729,7 @@ class BaseController extends Controller {
 	    	
 	    } else {
 	    	$array_id = array();
+	    	$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
 		    switch ($num_of_checked_builders) {
 			    case '0':
 				    //select random 3 id from $array_builder_id
@@ -738,7 +739,7 @@ class BaseController extends Controller {
 						//sent email to invite
 						//add to my invite
 						//$array_id = array_rand($array_builder_id,3); ;
-						$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
+			
 						
 					    try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
@@ -771,7 +772,7 @@ class BaseController extends Controller {
 						//sent email to invite
 						//add to my invite
 						//$array_id = array_rand($array_builder_id,3); ;
-						$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
+						
 						
 					    try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
@@ -806,12 +807,12 @@ class BaseController extends Controller {
 					    try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
-								$message->to($builders_invite[0]->email)->subject('Invite from Users');
+								$message->to($builders_invite[$array_id]->email)->subject('Invite from Users');
 							});
 				
 						}
 						catch (Exception $e){
-							$to      = $builders_invite[0]->email;
+							$to      = $builders_invite[$array_id]->email;
 							$subject = 'Invite from Users';
 							$message = "update soon";
 							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
