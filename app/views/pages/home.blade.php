@@ -82,7 +82,7 @@
 						<p class="lead">tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam by <a target="_blank" href="http://miratik.com/">Miratik </a></p>
 					</div>
 					<div class="col-lg-5 col-sm-pull-6  col-sm-6">
-						<img class="img-responsive" src="http://homeez.miratik.com/home_page/img/Clean_House.jpg" alt="">
+						<img class="img-responsive" src="http://res.freestockphotos.biz/pictures/14/14443-illustration-of-a-house-pv.png" alt="">
 					</div>
 				</div>
 			</div>

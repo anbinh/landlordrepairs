@@ -124,48 +124,65 @@ $(document).ready(function(){
   font-size: 12px;
 }
 </style>
+ {{ Form::open(array('url' => 'listbuilders')) }}
 <table id="country-list" class="sortable-table">
   <thead>
     <tr class="country-table-head">
-      <th class="sort-down"><em>Country</em> <span>&#9660;</span></th>
-      <th><em>Language</em> <span>&nbsp;</span></th>
-      <th class="date-sort" data-date-format="m d Y"><em>Date</em> <span>&nbsp;</span></th>
-       <th class="date-sort" ><em>Action</em> <span>&nbsp;</span></th>
+      <th><em>Name of Builder</em> <span>&nbsp;</span></th>
+      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
+      <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
+      <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
+      <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
+      <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
+      <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
+      <th class="">Choose</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-    	<td><a href="#">Colombia</a></td>
-    	<td>Espanol</td>
-    	<td>Oct 20 1993</td>
-    	<td>Oct 20 1995</td>
-    </tr>
-    <tr>
-    	<td><a href="#">Albania</a></td>
-    	<td>Albania</td>
-    	<td>Oct 20 1992</td>
-    	<td>Oct 20 1995</td>
-    </tr>
-    <tr>
-    	<td><a href="#">Alemania</a></td>
-    	<td>Aleman</td>
-    	<td>Oct 20 1991</td>
-    	<td>Oct 20 1995</td>
-    </tr>
-    <tr>
-    	<td><a href="#">Argentina</a></td>
-    	<td>Espanol</td>
-    	<td>Oct 20 1991</td>
-    	<td>Oct 20 1995</td>
-    </tr>
-    <tr>
-    	<td><a href="#">Argentina</a></td>
-    	<td>English</td>
-    	<td>Oct 20 1995</td>
-    	<td>Oct 20 1990</td>
-    </tr>
-    
-</table>
+  <?php 
 
+  ?>
+
+  @foreach($builders as $builder)
+ 	<tr>
+    	<td>{{$builder->username}}</td>
+    	<td>{{$builder->category}}</td>
+    	<td>{{$array_radius[$builder->id]}}</td>
+    	<td>{{$builder->local}}</td>
+ 		<td>{{$builder->local_code}}</td>
+ 		<td>{{$builder->email}}</td>
+ 		<td>{{$builder->phone_number}}</td>
+ 		<td><input type="checkbox" name="check_builders[]" value="{{$builder->id}}" /> Choose <br/></td>
+ 	</tr>	
+	@endforeach
+    
+   
+</table>
+ <input hidden name = "category" value = "{{$category}}"/> 
+  {{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
+{{ Form::close() }}
+<script>
+$(document).ready(function () {
+
+   $("input[name='check_builders[]']").change(function () {
+
+      var maxAllowed = 3;
+
+      var cnt = $("input[name='check_builders[]']:checked").length;
+
+      if (cnt > maxAllowed)
+      {
+         $(this).prop("checked", "");
+
+         alert('Select maximum ' + maxAllowed + ' technologies!');
+
+     }
+
+  });
+
+
+});
+
+</script>
 
 @stop

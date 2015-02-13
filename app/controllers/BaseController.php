@@ -409,6 +409,28 @@ class BaseController extends Controller {
 			$job->property = $input['property'];
 			$job->category = $input['category'];
 			$job->save();
+			//make return the list of builder
+			//------select list builders from DB:: where matching the condition with Input::----//
+			$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
+			//calculate the radius:
+			function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
+			    $theta = $longitude1 - $longitude2;
+			    $miles = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta)));
+			    $miles = acos($miles);
+			    $miles = rad2deg($miles);
+			    $miles = $miles * 60 * 1.1515;
+			    
+			    return $miles;
+			}
+			$array_radius = array();
+		    foreach( $builders as $builder ) {
+		  			
+			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
+		    } 
+	
+			//------------------------------//
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category' =>$input['category'])) ;
+			//--------------------------------//
 			return Redirect::to('postjob')->with("success", "1");
 		} else {
 			return Redirect::to('postjob')->withErrors($v);
@@ -516,26 +538,24 @@ class BaseController extends Controller {
 	
 	
 	public function getRegisterBuilder()
-	{  	if (Session::has('phone_code')){
-			Session::forget('phone_code');
-		}
-		if(Auth::check()) {
+	{  	
+		/*if(Auth::check()) {
 			return Redirect::route('landing-page');
-		}
+		}*/
 		return View::make('pages.register-builder');
 	}
 	
 	public function postRegisterBuilder()
 	{   
-		if(Auth::check()) {
+		/*if(Auth::check()) {
 			return Redirect::route('landing-page');
-		}
+		}*/
 	
 		$input = Input::all();
 	
 			    
 		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
+		$rules = array('username' => 'required|unique:builders', 'email' => 'required|unique:builders|email','phone_number'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -548,7 +568,7 @@ class BaseController extends Controller {
 			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
 			
 			if (!preg_match( $regex, $to_phone_number )) {
-				return Redirect::to('register')->with("is_phone_number", "0");
+				return Redirect::to('register-builder')->with("is_phone_number", "0");
 			}
 			//$to_phone_number = substr($to_phone_number, 1);
 			//$to_phone_number =  "+44".$to_phone_number;
@@ -586,33 +606,22 @@ class BaseController extends Controller {
 			$password = $input['password'];
 			$password = Hash::make($password);
 	
-			$user = new User();
-			$user->username = $input['username'];
-			$user->email = $input['email'];
-			$user->password = $password;
-			$user->phone_number = $to_phone_number;
-			$user->email_confirm = $newcode;
-			$user->phone_confirm = $newcode_phone;
-			$user->role = '0';
-			$user->save();
-				
-			$userpostjob = User::where('id', '=', $user->id)->first();
-			$job = new Job();
-			$job->tittle = $input['tittle'];
-			$job->description = $input['description'];
-			$job->price = $input['price'];
-			$job->timeoption = $input['timeoption'];
-			
-			$job->date = $input['date'];
-			$job->local = $input['local'];
-			$job->local_code = $input['local_code'];
-			$job->lat = $input['lat'];
-			$job->lng = $input['lng'];
-			$job->user_id = $userpostjob->id;
-			$job->status = 'openjob';
-			$job->property = $input['property'];
-			$job->category = $input['category'];
-			$job->save();
+			$builder = new Builder();
+			$builder->username = $input['username'];
+			$builder->email = $input['email'];
+			$builder->password = $password;
+			$builder->phone_number = $to_phone_number;
+			$builder->email_confirm = $newcode;
+			$builder->phone_confirm = $newcode_phone;
+			$builder->role = '0';
+			$builder->tittle = $input['tittle'];
+			$builder->local = $input['local'];
+			$builder->local_code = $input['local_code'];
+			$builder->lat = $input['lat'];
+			$builder->lng = $input['lng'];
+			$builder->category = $input['category'];
+			$builder->save();
+
 			//Session::put('job_id', $job->id);Session::get('job_id');
 			//Send confirmation email
 			$data = array(
@@ -652,40 +661,195 @@ class BaseController extends Controller {
 		}
 	}
 	
+	public function getListbuilders() {
+		return Redirect::to('postjob');
+	} 
 	
-	public function getListbuilders() //postListbuilders
+	public function postListbuilders() //postListbuilders
 	{  //	$jobs = DB::select('select * from jobs where user_id = ?',"19");
-	$jobs = DB::table('jobs')->having('user_id', '=', 36)->get();
-	
-	//DB::table('jobs')->select(DB::raw('count(*) as count, column2'))->get();
-	var_dump($jobs[0]->id); die;
-		if(Auth::check()) {
-			//get info from submit post_jobs
-		$num_of_checked_builders = '5';	
+
+		$input = Input::all();
+		$check_builders = Input::get('check_builders');
+		//var_dump($check_builders); die;
+		$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
+		$num_of_checked_builders = count($check_builders);	
 			//select builders matching condition from submit post_jobs.
 			//check number of checked builder
-		switch ($num_of_checked_builders) {
-		    case '0':
-		     
-		        break;
-		    case '1':
-		      
-		        break;
-		    case '2':
-		      
-		        break;
-		    case '3':
-		      
-		        break;
-		    default:
-		    	
-		        return View::make('pages.register');
-		}
+		$array_builder_id = array();
+	    foreach( $builders as $builder ) {
+	    	array_push($array_builder_id, $builder->id);
+    		/*if (isset($check_builders[0])) {
+    			if ($check_builders[0] == $builder->id) {
+    				array_push($array_builder_id, $builder->id);
+    			}
+    		}
+	    	if (isset($check_builders[1])) {
+    			if ($check_builders[1] == $builder->id) {
+    				array_push($array_builder_id, $builder->id);
+    			}
+    		}
+	    	if (isset($check_builders[2])) {
+    			if ($check_builders[2] == $builder->id) {
+    				array_push($array_builder_id, $builder->id);
+    			}
+    		}*/
+	    } 
+	    if (count($array_builder_id) <= "3") {
+	    	
+	    	foreach( $check_builders as $key ) {
+			//echo $array_builder_id[$key];
+			//var_dump ($builders[$array_builder_id[$key]]->email); die;
+			//sent email to invite
+			//add to my invite
+			//$array_id = array_rand($array_builder_id,3); ;
+			$builders_invite = DB::table('builders')->having('id', '=',$key )->get();
 			
+		    try {
+				Mail::send('emails.newpass', $data, function($message) use ($data)
+				{
+					$message->to($builders_invite[0]->email)->subject('Invite from Users');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $builders_invite[0]->email;
+				$subject = 'Invite from Users';
+				$message = "update soon";
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			} 
 			
-			return View::make('pages.listbuilders');
 		}
+	    	
+	    } else {
+	    	$array_id = array();
+		    switch ($num_of_checked_builders) {
+			    case '0':
+				    //select random 3 id from $array_builder_id
+		    		foreach( array_rand($array_builder_id, 3) as $key ) {
+						//echo $array_builder_id[$key];
+						//var_dump ($builders[$array_builder_id[$key]]->email); die;
+						//sent email to invite
+						//add to my invite
+						//$array_id = array_rand($array_builder_id,3); ;
+						$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
+						
+					    try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders_invite[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders_invite[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+						
+					}
+			        break;
+			    case '1':
+			    	
+		    		foreach( array_rand($array_builder_id, 2) as $key ) {
+						//echo $array_builder_id[$key];
+						//var_dump ($builders[$array_builder_id[$key]]->email); die;
+						//sent email to invite
+						//add to my invite
+						//$array_id = array_rand($array_builder_id,3); ;
+						$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
+						
+					    try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders_invite[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders_invite[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+		    		} 
+						
+					
+			        break;
+			    case '2':
+	
+			      	$array_id = array_rand($array_builder_id,1);
+			      	//sent email to invite
+						//add to my invite
+						//$array_id = array_rand($array_builder_id,3); ;
+					    try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders_invite[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders_invite[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+						
+			        break;
+			    default:
+			    	
+			        return View::make('pages.register');
+			}
+			return View::make('pages.register');
+	    }
 		return View::make('pages.register');
+	}
+			
+		
+	
+public function getLoginBuilder()
+	{
+		if(Auth::check()) {
+			return Redirect::route('landing-page');
+			
+		}
+		
+		return View::make('pages.login-builder');
+	}
+	
+	public function postLoginBuilder()
+	{
+	
+		
 	}
 
 }

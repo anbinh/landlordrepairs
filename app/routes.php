@@ -357,3 +357,5 @@ Route::post('listbuilders', 'BaseController@postListbuilders');
 
 Route::get('register-builder', 'BaseController@getRegisterBuilder');
 Route::post('register-builder', 'BaseController@postRegisterBuilder');
+Route::get('login-builder', 'BaseController@getLoginBuilder');
+Route::post('login-builder','BaseController@postLoginBuilder');

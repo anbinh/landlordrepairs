@@ -17,101 +17,88 @@
                 @endif
         <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
-                <h3 class="panel-title" style = "text-align: center">Tradespeople Here</h3>
+                <h3 class="panel-title" style = "text-align: center">Builder Register</h3>
 
             </div>
             <div class="panel-body">
-				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
+				<form accept-charset="UTF-8" action="{{URL::to('register-builder')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
 					<div class="login-block" >
-					<p class="larger center color-53A524">Post Job</p>
+					
 							
-							
-								<div class="login-block" >
-							
-							
-							
+					
+						<div class="login-block" >
+					
+						<div class="form-fields-wrapper">
 							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<input name = "tittle" type="text" class="form-control" required placeholder = 'Tittle'>
+								<div class="form-control-wrapper" id = "form-control-wrapper-plusCss" >
+									<input name = "username" type="text" class="form-control" required placeholder = ' Your full name'>
+									
 									
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-								
-								<div class = "col-lg-4">
-								Property:
-								</div>
-								<div class = "col-lg-8">
-									<select name = "property" class="form-control">
-										<option name="property" value = "Flat">Flat</option>
-										<option name="property" value = "Terrance House">Terrance House </option>
-										<option name="property" value = "Semi detached ">Semi detached </option>
-										<option name="property" value = "Shared House">Shared House</option>
-										<option name="property" value = "Bungalow">Bungalow</option>
-										<option name="property" value = "Maisonette">Maisonette</option>
-										
-									</select>
-								</div>
-								</div>			
-							</div>
-								<div class="pad-top">
-								<div class="form-control-wrapper" >
-								
-								<div class = "col-lg-4">
-								Category:
-								</div>
-								<div class = "col-lg-8">
-									<select name = "category" class="form-control">
-										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
-										<option name="category" value = "Bricklayers">Bricklayers </option>
-										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
-										<option name="category" value = "Carpet fitters">Carpet fitters</option>
-										<option name="category" value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
-										<option name="category" value = "Conservatory Installers">Conservatory Installers</option>
-										<option name="category" value = "Conversion Specialists">Conversion Specialists</option>
-										<option name="category" value = "Damp Proofing Specialists">Damp Proofing Specialists</option>
-										<option name="category" value = "Driveway Pavers">Driveway Pavers</option>
-										<option name="category" value = "Electricians">Electricians</option>
-										<option name="category" value = "Extension Builders">Extension Builders</option>
-										<option name="category" value = "Fencers">Fencers</option>
-										<option name="category" value = "Flooring Fitters">Flooring Fitters</option>
-										<option name="category" value = "Garage & Shed Builders">Garage & Shed Builders</option>
-										<option name="category" value = "Gas Engineers">Gas Engineers</option>
-										<option name="category" value = "Groundworkers">Groundworkers</option>
-										<option name="category" value = "Handymen">Handymen</option>
-										<option name="category" value = "Heating Engineers">Heating Engineers</option>
-										<option name="category" value = "Insulation Installers">Insulation Installers</option>
-										<option name="category" value = "Kitchen Fitters">Kitchen Fitters</option>
-										<option name="category" value = "Landscape Gardeners">Landscape Gardeners</option>
-										<option name="category" value = "Loft Conversion Specialists">Loft Conversion Specialists</option>
-										<option name="category" value = "New Home Builders">New Home Builders</option>
-										<option name="category" value = "Painters & Decorators">Painters & Decorators</option>
-										<option name="category" value = "Plasterers">Plasterers</option>
-										<option name="category" value = "Plumbers">Plumbers</option>
-										<option name="category" value = "Restoration & Refurb Specialists">Restoration & Refurb Specialists</option>
-										<option name="category" value = "Roofers">Roofers</option>
-										<option name="category" value = "Security System Installers">Security System Installers</option>
-										<option name="category" value = "CTilers">CTilers</option>
-										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
-										<option name="category" value = "Window Fitters">Window Fitters</option>
-									</select>
-								</div>
+									<input name = "email" type="text" class="form-control" required placeholder = 'Email'>
+									
 								</div>			
 							</div>
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
+									<input name = "password" type="password" class="form-control" required placeholder = 'Password'>
 									
-									<textarea rows="4" cols="50" name = "description" required placeholder = 'Description' class="form-control"> </textarea>
 								</div>			
 							</div>
+							
 							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<input name = "price" type="text" class="form-control" required placeholder = 'Price (£)'>
-									
-								</div>			
+									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>		
 							</div>
+
+						<!-- make it happen -->
+						<script>
+						$(function() {
+						// initialize dateinput
+						$(":date").dateinput( {
+						
+							// closing is not possible
+							onHide: function()  {
+								//$("#calendar").hide();
+							      $("#calroot").hide();
+						      $("#submit-div").css("margin-top", '0px');
+								return false;
+							},
+
+	
+	
+							// set initial value and show dateinput when page loads
+							}).data("dateinput").setValue(0).show();
+							});
+							function test(){
+							alert($('#date').val());
+							}
+							</script>
+							<script>
+										$(document).ready(function(){
+											
+											$("#calendar").hide();
+											$("#calroot").hide();
+											$("#submit-div").css("margin-top", '0px');
+										    $(".hide-date").click(function(){
+										      $("#calendar").hide();
+										      $("#calroot").hide();
+										      $("#submit-div").css("margin-top", '0px');
+										    });
+										    $(".show-date").click(function(){
+										        $("#calendar").show();
+										        $("#calroot").show();
+										        $("#submit-div").css("margin-top", '350px');
+										    });
+										    
+										});
+									</script>								
+								</div>
+							
+						
 							
 							
 							<div class="pad-top">
@@ -121,11 +108,12 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
-								</div>			
+									<input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
+								</div>	
+										
 							</div>
 							<!-- GOOGLE MAP -->
-							
+							<script>$("#pac-input").val()</script>
 							<style>
 						      #map-canvas {
 						        height: 300px;
@@ -180,7 +168,7 @@
 						    </style>
 						    <input type="hidden" id = "lat" name = "lat">
 							<input type="hidden" id = "lng" name = "lng">
-							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
 							
 						    <script>
 							// This example adds a search box to a map, using the Google Place Autocomplete
@@ -208,7 +196,7 @@
 								$("#lng").val(haightAshbury.lng()); 
 							  // Create the search box and link it to the UI element.
 							  var input = /** @type {HTMLInputElement} */(
-							      document.getElementById('pac-input'));
+							      document.getElementById('local_code'));
 							  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 							
 							  var searchBox = new google.maps.places.SearchBox(
@@ -269,135 +257,82 @@
 									$("#lng").val(event.latLng.lng());
 									markers.push(marker); 
 								});
-								
-								
+									
 							}
 							
 							google.maps.event.addDomListener(window, 'load', initialize);
 							
 							    </script>
-							<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+							
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
 							
+							
+					</div>	
+					<div class="panel-heading">
+		                <h3 class="panel-title" style = "text-align: center">About Service</h3>
+		
+		            </div>
+						<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "tittle" type="text" class="form-control" required placeholder = 'Tittle'>
+									
+								</div>			
+							</div>
+							
+								<div class="pad-top">
+								<div class="form-control-wrapper" >
+								
+								<div class = "col-lg-4">
+								Category:
+								</div>
+								<div class = "col-lg-8">
+									<select name = "category" class="form-control">
+										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
+										<option name="category" value = "Bricklayers">Bricklayers </option>
+										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
+										<option name="category" value = "Carpet fitters">Carpet fitters</option>
+										<option name="category" value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
+										<option name="category" value = "Conservatory Installers">Conservatory Installers</option>
+										<option name="category" value = "Conversion Specialists">Conversion Specialists</option>
+										<option name="category" value = "Damp Proofing Specialists">Damp Proofing Specialists</option>
+										<option name="category" value = "Driveway Pavers">Driveway Pavers</option>
+										<option name="category" value = "Electricians">Electricians</option>
+										<option name="category" value = "Extension Builders">Extension Builders</option>
+										<option name="category" value = "Fencers">Fencers</option>
+										<option name="category" value = "Flooring Fitters">Flooring Fitters</option>
+										<option name="category" value = "Garage & Shed Builders">Garage & Shed Builders</option>
+										<option name="category" value = "Gas Engineers">Gas Engineers</option>
+										<option name="category" value = "Groundworkers">Groundworkers</option>
+										<option name="category" value = "Handymen">Handymen</option>
+										<option name="category" value = "Heating Engineers">Heating Engineers</option>
+										<option name="category" value = "Insulation Installers">Insulation Installers</option>
+										<option name="category" value = "Kitchen Fitters">Kitchen Fitters</option>
+										<option name="category" value = "Landscape Gardeners">Landscape Gardeners</option>
+										<option name="category" value = "Loft Conversion Specialists">Loft Conversion Specialists</option>
+										<option name="category" value = "New Home Builders">New Home Builders</option>
+										<option name="category" value = "Painters & Decorators">Painters & Decorators</option>
+										<option name="category" value = "Plasterers">Plasterers</option>
+										<option name="category" value = "Plumbers">Plumbers</option>
+										<option name="category" value = "Restoration & Refurb Specialists">Restoration & Refurb Specialists</option>
+										<option name="category" value = "Roofers">Roofers</option>
+										<option name="category" value = "Security System Installers">Security System Installers</option>
+										<option name="category" value = "CTilers">CTilers</option>
+										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
+										<option name="category" value = "Window Fitters">Window Fitters</option>
+									</select>
+								</div>
+								</div>			
+							</div>
+							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<div class="radio">
-										  <label>
-										    <input class = "hide-date" type="radio" name="timeoption"  value="Flexible" checked>
-										    Flexible
-										  </label>
-										   <label style = "text-decoration: underline; color: red;">
-										    <input class = "hide-date" type="radio" name="timeoption"  value="Within_48_hours">
-										    Emergency Job
-										  </label>
-										  <label>
-										    <input class = "show-date" type="radio" name="timeoption"  value="Specific">
-										    
-										    Specific day
-										  </label>
-									</div>
 									
-									
-												
-			 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
-			  
-			
-			  <!-- dateinput styling -->
-			
-			      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
-					<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
-					<div id="calendar">
-					  <input id = "date"type="date" name="date" value="0" />
-					</div>
-					
-					<!-- large date display -->
-					
-														
-					<br clear="all"/>
-					
-						<p class="larger center color-53A524" id = "submit-div">User's Infomation</p>
-						
-						<div class="form-fields-wrapper">
-							<div class="pad-top">
-								<div class="form-control-wrapper" id = "form-control-wrapper-plusCss" >
-									<input name = "username" type="text" class="form-control" required placeholder = ' Your full name'>
-									
-									
+									<textarea rows="4" cols="50" name = "description" required placeholder = 'Description' class="form-control"> </textarea>
 								</div>			
-							</div>
-							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<input name = "email" type="text" class="form-control" required placeholder = 'Email'>
-									
-								</div>			
-							</div>
-							
-							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<input name = "password" type="password" class="form-control" required placeholder = 'Password'>
-									
-								</div>			
-							</div>
-							
-							<div class="pad-top">
-									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>		
-							</div>
-							
-							
-							
-						<!-- make it happen -->
-						<script>
-						$(function() {
-						// initialize dateinput
-						$(":date").dateinput( {
-						
-							// closing is not possible
-							onHide: function()  {
-								//$("#calendar").hide();
-							      $("#calroot").hide();
-						      $("#submit-div").css("margin-top", '0px');
-								return false;
-							},
-
-	
-	
-							// set initial value and show dateinput when page loads
-							}).data("dateinput").setValue(0).show();
-							});
-							function test(){
-							alert($('#date').val());
-							}
-							</script>
-							<script>
-										$(document).ready(function(){
-											
-											$("#calendar").hide();
-											$("#calroot").hide();
-											$("#submit-div").css("margin-top", '0px');
-										    $(".hide-date").click(function(){
-										      $("#calendar").hide();
-										      $("#calroot").hide();
-										      $("#submit-div").css("margin-top", '0px');
-										    });
-										    $(".show-date").click(function(){
-										        $("#calendar").show();
-										        $("#calroot").show();
-										        $("#submit-div").css("margin-top", '350px');
-										    });
-										    
-										});
-									</script>
-									
-								</div>			
-							</div>
-
-						</div>	
-								</div>			
-							</div>
-
-							
-						</div>
+							</div>		
+				</div>		
+		</div>
 						
 						<div class="form-fields-wrapper" id = "submit-div">
 							<div class="form-steps-bottom"></div>

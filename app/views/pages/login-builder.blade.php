@@ -9,7 +9,7 @@
             </div>
             <div class="panel-body">
 
-                {{ Form::open(array('url' => 'login')) }}
+                {{ Form::open(array('url' => 'login-builder')) }}
                 @if(Session::get("emailfirst") == "1")
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
