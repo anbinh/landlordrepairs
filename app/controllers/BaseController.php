@@ -729,11 +729,12 @@ class BaseController extends Controller {
 	    	
 	    } else {
 	    	$array_id = array();
-	    	$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
+	    	
 		    switch ($num_of_checked_builders) {
 			    case '0':
 				    //select random 3 id from $array_builder_id
 		    		foreach( array_rand($array_builder_id, 3) as $key ) {
+		    			$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
 						//echo $array_builder_id[$key];
 						//var_dump ($builders[$array_builder_id[$key]]->email); die;
 						//sent email to invite
@@ -765,8 +766,31 @@ class BaseController extends Controller {
 					}
 			        break;
 			    case '1':
+			    	//send mail to check
 			    	
+			    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[$builders[0]]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[$builders[0]]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+						// sent mail to another random
 		    		foreach( array_rand($array_builder_id, 2) as $key ) {
+		    			$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
 						//echo $array_builder_id[$key];
 						//var_dump ($builders[$array_builder_id[$key]]->email); die;
 						//sent email to invite
@@ -799,7 +823,52 @@ class BaseController extends Controller {
 					
 			        break;
 			    case '2':
-	
+			    	//send mail to check
+			    	
+			    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[$builders[0]]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[$builders[0]]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+						
+						try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[$builders[1]]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[$builders[1]]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+
+						// sent mail to another random
+					
 			      	$array_id = array_rand($array_builder_id,1);
 			      	//sent email to invite
 						//add to my invite
@@ -807,12 +876,12 @@ class BaseController extends Controller {
 					    try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
-								$message->to($builders_invite[$array_id]->email)->subject('Invite from Users');
+								$message->to($builders[$array_id]->email)->subject('Invite from Users');
 							});
 				
 						}
 						catch (Exception $e){
-							$to      = $builders_invite[$array_id]->email;
+							$to      = $builders[$array_id]->email;
 							$subject = 'Invite from Users';
 							$message = "update soon";
 							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
