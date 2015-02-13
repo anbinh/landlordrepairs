@@ -54,7 +54,7 @@
                 </div>
 
 				@endif
-				@if(Session::get("phone_code") != null)Phonenumber authentication Code is:  <p style = "color: red;">{{Session::get("phone_code")}}</p>, remember it to confirm phonenumber.@endif
+				
                     <fieldset>
                         <div class="form-group">
                         	{{ Form::text('email', '', array('placeholder' => 'Email', 'class' => 'form-control')) }}

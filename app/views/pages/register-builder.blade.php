@@ -1,28 +1,32 @@
 @extends('layouts.default')
 @section('content')	
-<div class="row" style = "margin-top: 10%; margin-bottom: 80px;">
-
+<div class="row">
     <div class="col-md-4 col-md-offset-4">
-   				 @if($errors->any())
+    			@if($errors->any())
 					<div class="alert alert-danger alert-dismissable">
 		                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 		                 {{ implode('', $errors->all('<li class="error">:message</li>')) }}
 		         	</div>
 		
 				@endif
-				@if(Session::get("success") == "1")
-                 <div class="alert alert-success alert-dismissable">
+				@if(Session::get("is_phone_number") == "0")
+                 <div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Post job success
+                    The phone number is invalid, please type agian
                 </div>
                 @endif
-        <div class="login-panel panel panel-default">
+        <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
-                <h3 class="panel-title">Post Job</h3>
+                <h3 class="panel-title" style = "text-align: center">Tradespeople Here</h3>
+
             </div>
             <div class="panel-body">
-				<form accept-charset="UTF-8" action="{{URL::to('postjob')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
+				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
 					<div class="login-block" >
+					<p class="larger center color-53A524">Post Job</p>
+							
+							
+								<div class="login-block" >
 							
 							
 							
@@ -32,7 +36,6 @@
 									
 								</div>			
 							</div>
-							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 								
@@ -52,8 +55,7 @@
 								</div>
 								</div>			
 							</div>
-							
-							<div class="pad-top">
+								<div class="pad-top">
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-4">
@@ -110,6 +112,8 @@
 									
 								</div>			
 							</div>
+							
+							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									<input name = "local" type="text" class="form-control" required placeholder = 'City or County'>
@@ -117,7 +121,7 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local_code" id  = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
 								</div>			
 							</div>
 							<!-- GOOGLE MAP -->
@@ -176,7 +180,7 @@
 						    </style>
 						    <input type="hidden" id = "lat" name = "lat">
 							<input type="hidden" id = "lng" name = "lng">
-							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
+							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
 							
 						    <script>
 							// This example adds a search box to a map, using the Google Place Autocomplete
@@ -204,7 +208,7 @@
 								$("#lng").val(haightAshbury.lng()); 
 							  // Create the search box and link it to the UI element.
 							  var input = /** @type {HTMLInputElement} */(
-							      document.getElementById('local_code'));
+							      document.getElementById('pac-input'));
 							  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 							
 							  var searchBox = new google.maps.places.SearchBox(
@@ -271,8 +275,8 @@
 							
 							google.maps.event.addDomListener(window, 'load', initialize);
 							
-						    </script>
-							
+							    </script>
+							<input id="pac-input" class="controls" type="text" placeholder="Search Box">
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
 							
@@ -296,47 +300,78 @@
 									
 									
 												
-								 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
-								  
-								
-								  <!-- dateinput styling -->
-								
-								      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
-										<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
-								<div id="calendar">
-								  <input id = "date"type="date" name="date" value="0" />
-								</div>
-								
-								<!-- large date display -->
-								
-																	
-								<br clear="all"/>
-								
-								<!-- make it happen -->
-								<script>
-								$(function() {
-								// initialize dateinput
-								$(":date").dateinput( {
-								
-									// closing is not possible
-									onHide: function()  {
-									//$("#calendar").hide();
-								      $("#calroot").hide();
-								      $("#submit-div").css("margin-top", '0px');
-										return false;
-									},
-								
+			 <link rel="shortcut icon" href="http://jquerytools.github.io/media/img/favicon.ico">
+			  
+			
+			  <!-- dateinput styling -->
+			
+			      <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+					<link href="{{{ asset('font-awesome/css/large.css') }}}" rel="stylesheet">
+					<div id="calendar">
+					  <input id = "date"type="date" name="date" value="0" />
+					</div>
+					
+					<!-- large date display -->
+					
+														
+					<br clear="all"/>
+					
+						<p class="larger center color-53A524" id = "submit-div">User's Infomation</p>
+						
+						<div class="form-fields-wrapper">
+							<div class="pad-top">
+								<div class="form-control-wrapper" id = "form-control-wrapper-plusCss" >
+									<input name = "username" type="text" class="form-control" required placeholder = ' Your full name'>
 									
 									
-								// set initial value and show dateinput when page loads
-								}).data("dateinput").setValue(0).show();
-								});
-								function test(){
-								alert($('#date').val());
-								}
-								</script>
-								<script>
+								</div>			
+							</div>
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "email" type="text" class="form-control" required placeholder = 'Email'>
+									
+								</div>			
+							</div>
+							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "password" type="password" class="form-control" required placeholder = 'Password'>
+									
+								</div>			
+							</div>
+							
+							<div class="pad-top">
+									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>		
+							</div>
+							
+							
+							
+						<!-- make it happen -->
+						<script>
+						$(function() {
+						// initialize dateinput
+						$(":date").dateinput( {
+						
+							// closing is not possible
+							onHide: function()  {
+								//$("#calendar").hide();
+							      $("#calroot").hide();
+						      $("#submit-div").css("margin-top", '0px');
+								return false;
+							},
+
+	
+	
+							// set initial value and show dateinput when page loads
+							}).data("dateinput").setValue(0).show();
+							});
+							function test(){
+							alert($('#date').val());
+							}
+							</script>
+							<script>
 										$(document).ready(function(){
+											
 											$("#calendar").hide();
 											$("#calroot").hide();
 											$("#submit-div").css("margin-top", '0px');
@@ -356,28 +391,25 @@
 									
 								</div>			
 							</div>
-							
-							
-							
-							
-							
-							
-							
-							
+
+						</div>	
+								</div>			
+							</div>
+
 							
 						</div>
 						
 						<div class="form-fields-wrapper" id = "submit-div">
 							<div class="form-steps-bottom"></div>
 							
-							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Post" id = "btn-submit" id = "btn-submit">
+							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Register" id = "btn-submit" id = "btn-submit">
 						</div>
-				</form>
 					</div>
-				
+				</form>
 			</div>
         </div>
     </div>
+</div>
 
 
 @stop

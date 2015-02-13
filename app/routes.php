@@ -327,3 +327,33 @@ Route::get('delete_account', array('as'=>'delete_account','uses' => 'BaseControl
 Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseController@postDelete_account' ));
 
 Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');
+
+//-----TEST DISTANCE GOOGLEMAP------//
+Route::get('test-distance', function()
+{
+	function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
+	    $theta = $longitude1 - $longitude2;
+	    $miles = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta)));
+	    $miles = acos($miles);
+	    $miles = rad2deg($miles);
+	    $miles = $miles * 60 * 1.1515;
+	    $feet = $miles * 5280;
+	    $yards = $feet / 3;
+	    $kilometers = $miles * 1.609344;
+	    $meters = $kilometers * 1000;
+	    return $miles;
+	}
+	$latitude1 = "55.7717596";
+	$longitude1 = "-3.904749600000059";
+	$latitude2 = "56.99886705111672";
+	$longitude2 = "-6.48193359375";
+	var_dump(get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2)); die;
+});
+
+
+
+Route::get('listbuilders', 'BaseController@getListbuilders');
+Route::post('listbuilders', 'BaseController@postListbuilders');
+
+Route::get('register-builder', 'BaseController@getRegisterBuilder');
+Route::post('register-builder', 'BaseController@postRegisterBuilder');

@@ -115,28 +115,17 @@
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-								
-								<div class = "col-lg-6" style = "text-align: center;">
-								City or County:
-								</div>
-								<div class = "col-lg-6">
-									<select name = "local" class="form-control">
-										<option name="local" value = " UK">LONDON</option>
-										<option name="local" value = "Watford">Watford</option>
-										<option name="local" value = "Enfield">Enfield</option>
-										<option name="local" value = "Wokingham">Wokingham</option>
-										<option name="local" value = "Brentwood">Brentwood</option>
-									</select>
-								</div>
+									<input name = "local" type="text" class="form-control" required placeholder = 'City or County'>
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
-								</div>			
+									<input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
+								</div>	
+										
 							</div>
 							<!-- GOOGLE MAP -->
-							
+							<script>$("#pac-input").val()</script>
 							<style>
 						      #map-canvas {
 						        height: 300px;
@@ -191,7 +180,7 @@
 						    </style>
 						    <input type="hidden" id = "lat" name = "lat">
 							<input type="hidden" id = "lng" name = "lng">
-							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
 							
 						    <script>
 							// This example adds a search box to a map, using the Google Place Autocomplete
@@ -219,7 +208,7 @@
 								$("#lng").val(haightAshbury.lng()); 
 							  // Create the search box and link it to the UI element.
 							  var input = /** @type {HTMLInputElement} */(
-							      document.getElementById('pac-input'));
+							      document.getElementById('local_code'));
 							  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 							
 							  var searchBox = new google.maps.places.SearchBox(
@@ -287,7 +276,7 @@
 							google.maps.event.addDomListener(window, 'load', initialize);
 							
 							    </script>
-							<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+							
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
 							

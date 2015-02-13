@@ -31,7 +31,7 @@
                         	</a>
                         @else
                         	<a href="register">
-                        		register
+                        		Tradespeople Here
                         	</a>
                         @endif
                         
