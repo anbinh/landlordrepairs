@@ -976,6 +976,7 @@ public function getLoginBuilder()
 	{
 		$input = Input::all();
 		$user = Auth::user();
+		echo Auth::user()->email; die;
 		$phonenumber = $input['phonenumber']; 
 		
 		//----send sms----//
@@ -1028,7 +1029,7 @@ public function getLoginBuilder()
 	
 			}
 			catch (Exception $e){
-				$to      = Input::get('email');
+				$to      = Auth::user()->email;
 				$subject = 'Change Phonenumber';
 				$message = View::make('emails.signup', $data)->render();
 				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
