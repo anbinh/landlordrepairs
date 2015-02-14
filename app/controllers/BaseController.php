@@ -743,7 +743,44 @@ class BaseController extends Controller {
 				    
 				    for ($x = 0; $x <= 2; $x++) {
 				    	$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
-					
+					//echo $builders[0]->email; die;
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[$x]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+					} 
+			        break;
+			        
+			        
+			    case '1':
+			    	//send mail to check
+			    	$array_id_sent_invite = array();
+			    	$array_id_sent_invite[0] = $check_builders[0];
+			    	$array_id_sent_invite_random = array_rand($array_builder_id, 2);
+			    	$array_id_sent_invite[1] = $array_builder_id[$array_id_sent_invite_random[0]];
+			    	$array_id_sent_invite[2] = $array_builder_id[$array_id_sent_invite_random[1]];
+			    	//var_dump($array_id_sent_invite); die;
+			    	// send 2 email random
+			    	
+			    	for ($x = 0; $x <= 2; $x++) {
+				    	$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
+					//echo $builders[0]->email; die;
 				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
@@ -765,76 +802,32 @@ class BaseController extends Controller {
 				
 						} 
 					} 
-			        break;
-			    case '1':
-			    	//send mail to check
-			    	
-			    	try {
-							Mail::send('emails.newpass', $data, function($message) use ($data)
-							{
-								$message->to($builders[$builders[0]]->email)->subject('Invite from Users');
-							});
-				
-						}
-						catch (Exception $e){
-							$to      = $builders[$builders[0]]->email;
-							$subject = 'Invite from Users';
-							$message = "update soon";
-							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-									'X-Mailer: PHP/' . phpversion() . "\r\n" .
-									'MIME-Version: 1.0' . "\r\n" .
-									'Content-Type: text/html; charset=ISO-8859-1\r\n';
-				
-							mail($to, $subject, $message, $headers);
-				
-						} 
-						// sent mail to another random
-		    		foreach( array_rand($array_builder_id, 2) as $key ) {
-		    			$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
-						//echo $array_builder_id[$key];
-						//var_dump ($builders[$array_builder_id[$key]]->email); die;
-						//sent email to invite
-						//add to my invite
-						//$array_id = array_rand($array_builder_id,3); ;
-						
-						
-					    try {
-							Mail::send('emails.newpass', $data, function($message) use ($data)
-							{
-								$message->to($builders_invite[0]->email)->subject('Invite from Users');
-							});
-				
-						}
-						catch (Exception $e){
-							$to      = $builders_invite[0]->email;
-							$subject = 'Invite from Users';
-							$message = "update soon";
-							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-									'X-Mailer: PHP/' . phpversion() . "\r\n" .
-									'MIME-Version: 1.0' . "\r\n" .
-									'Content-Type: text/html; charset=ISO-8859-1\r\n';
-				
-							mail($to, $subject, $message, $headers);
-				
-						} 
-		    		} 
 						
 					
 			        break;
 			    case '2':
 			    	//send mail to check
+			    	$array_id_sent_invite = array();
+			    	$array_id_sent_invite[0] = $check_builders[0];
+			    	$array_id_sent_invite[1] = $check_builders[1];
+			    	$array_id_sent_invite_random = array_rand($array_builder_id, 1);
+			    	$array_id_sent_invite[2] = $array_builder_id[$array_id_sent_invite_random[0]];
 			    	
-			    	try {
+			    	//var_dump($array_id_sent_invite); die;
+			    	// send 2 email random
+			    	
+			    	for ($x = 0; $x <= 2; $x++) {
+				    	$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
+					//echo $builders[0]->email; die;
+				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
-								$message->to($builders[$builders[0]]->email)->subject('Invite from Users');
+								$message->to($builders[0]->email)->subject('Invite from Users');
 							});
 				
 						}
 						catch (Exception $e){
-							$to      = $builders[$builders[0]]->email;
+							$to      = $builders[0]->email;
 							$subject = 'Invite from Users';
 							$message = "update soon";
 							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
@@ -846,56 +839,37 @@ class BaseController extends Controller {
 							mail($to, $subject, $message, $headers);
 				
 						} 
-						
-						try {
-							Mail::send('emails.newpass', $data, function($message) use ($data)
-							{
-								$message->to($builders[$builders[1]]->email)->subject('Invite from Users');
-							});
-				
-						}
-						catch (Exception $e){
-							$to      = $builders[$builders[1]]->email;
-							$subject = 'Invite from Users';
-							$message = "update soon";
-							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-									'X-Mailer: PHP/' . phpversion() . "\r\n" .
-									'MIME-Version: 1.0' . "\r\n" .
-									'Content-Type: text/html; charset=ISO-8859-1\r\n';
-				
-							mail($to, $subject, $message, $headers);
-				
-						}
-
-						// sent mail to another random
-					
-			      	$array_id = array_rand($array_builder_id,1);
-			      	//sent email to invite
-						//add to my invite
-						//$array_id = array_rand($array_builder_id,3); ;
-					    try {
-							Mail::send('emails.newpass', $data, function($message) use ($data)
-							{
-								$message->to($builders[$array_id]->email)->subject('Invite from Users');
-							});
-				
-						}
-						catch (Exception $e){
-							$to      = $builders[$array_id]->email;
-							$subject = 'Invite from Users';
-							$message = "update soon";
-							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-									'X-Mailer: PHP/' . phpversion() . "\r\n" .
-									'MIME-Version: 1.0' . "\r\n" .
-									'Content-Type: text/html; charset=ISO-8859-1\r\n';
-				
-							mail($to, $subject, $message, $headers);
-				
-						} 
+					} 
 						
 			        break;
+			        
+			        
+		        case '3':
+			    	for ($x = 0; $x <= 2; $x++) {
+				    	$builders = DB::table('builders')->having('id', '=',$check_builders[$x])->get();
+					//echo $builders[0]->email; die;
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						} 
+					} 
+		        	 break;
 			    default:
 			    	
 			        return View::make('pages.register');
