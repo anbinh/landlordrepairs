@@ -665,16 +665,16 @@ class BaseController extends Controller {
 		return Redirect::to('postjob');
 	} 
 	
-	public function postListbuilders() //postListbuilders
-	{  //	$jobs = DB::select('select * from jobs where user_id = ?',"19");
-
+	public function postListbuilders() 
+	{
 		$input = Input::all();
 		$check_builders = Input::get('check_builders');
 		//var_dump($check_builders); die;
 		$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
 		$num_of_checked_builders = count($check_builders);	
-			//select builders matching condition from submit post_jobs.
-			//check number of checked builder
+			
+		//select builders matching condition from submit post_jobs.
+		//check number of checked builder
 		$array_builder_id = array();
 	    foreach( $builders as $builder ) {
 	    	array_push($array_builder_id, $builder->id);
@@ -693,64 +693,66 @@ class BaseController extends Controller {
     				array_push($array_builder_id, $builder->id);
     			}
     		}*/
-	    } 
-	    if (count($array_builder_id) <= "3") {
+	    }
+	     
+	    if (count($builders) <= "3") { //sent invite to all Builders in list $array_builder_id
 	    	
-	    	foreach( $check_builders as $key ) {
-			//echo $array_builder_id[$key];
-			//var_dump ($builders[$array_builder_id[$key]]->email); die;
-			//sent email to invite
-			//add to my invite
-			//$array_id = array_rand($array_builder_id,3); ;
-			$builders_invite = DB::table('builders')->having('id', '=',$key )->get();
-			
-		    try {
-				Mail::send('emails.newpass', $data, function($message) use ($data)
-				{
-					$message->to($builders_invite[0]->email)->subject('Invite from Users');
-				});
-	
+	    	foreach( $builders as $builder ) {
+				//echo $array_builder_id[$key];
+				//var_dump ($builders[$array_builder_id[$key]]->email); die;
+				//sent email to invite
+				//add to my invite
+				//$array_id = array_rand($array_builder_id,3); ;
+				//$builders_invite = DB::table('builders')->having('id', '=',$key )->get();
+				
+			    try {
+					Mail::send('emails.newpass', $data, function($message) use ($data)
+					{
+						$message->to($builder->email)->subject('Invite from Users');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = $builder->email;
+					$subject = 'Invite from Users';
+					$message = "update soon";
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				} 
+				
 			}
-			catch (Exception $e){
-				$to      = $builders_invite[0]->email;
-				$subject = 'Invite from Users';
-				$message = "update soon";
-				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-						'X-Mailer: PHP/' . phpversion() . "\r\n" .
-						'MIME-Version: 1.0' . "\r\n" .
-						'Content-Type: text/html; charset=ISO-8859-1\r\n';
-	
-				mail($to, $subject, $message, $headers);
-	
-			} 
+
 			
-		}
-	    	
+			
 	    } else {
 	    	$array_id = array();
 	    	
 		    switch ($num_of_checked_builders) {
 			    case '0':
-				    //select random 3 id from $array_builder_id
-		    		foreach( array_rand($array_builder_id, 3) as $key ) {
-		    			$builders_invite = DB::table('builders')->having('id', '=',$array_builder_id[$key] )->get();
-						//echo $array_builder_id[$key];
-						//var_dump ($builders[$array_builder_id[$key]]->email); die;
-						//sent email to invite
-						//add to my invite
-						//$array_id = array_rand($array_builder_id,3); ;
-			
-						
-					    try {
+				    //select random 3 elements from $array_builder_id;
+				    //$array_id_sent_invite = array_rand($array_builder_id,3);
+				  
+					$array_id_sent_invite = array_rand($array_builder_id, 3);
+				    //var_dump($array_builder_id[$array_id_sent_invite[2]]); die;
+				    
+				    for ($x = 0; $x <= 2; $x++) {
+				    	$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
+					
+				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
-								$message->to($builders_invite[0]->email)->subject('Invite from Users');
+								$message->to($builders[0]->email)->subject('Invite from Users');
 							});
 				
 						}
 						catch (Exception $e){
-							$to      = $builders_invite[0]->email;
+							$to      = $builders[0]->email;
 							$subject = 'Invite from Users';
 							$message = "update soon";
 							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
@@ -762,8 +764,7 @@ class BaseController extends Controller {
 							mail($to, $subject, $message, $headers);
 				
 						} 
-						
-					}
+					} 
 			        break;
 			    case '1':
 			    	//send mail to check
