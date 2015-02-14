@@ -1015,7 +1015,7 @@ public function getLoginBuilder()
 			for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
 			//Send confirmation email
 			$data = array(
-					'email'     => $input['email'],
+					'email'     => Auth::user()->email,
 					'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
 			);
 			 
