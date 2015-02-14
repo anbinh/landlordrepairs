@@ -310,18 +310,17 @@ Route::group(array('before' => 'auth'), function(){
 	Route::post('dashboard/profile', 'DashboardController@postProfile');
 
 });
-Route::get('hoangkha',function(){
-	return View::make('hoangkha.dashboard');
-});
-Route::get('hoangkha/profile','HoangkhaController@getProfile');
-Route::get('hoangkha/jobs','HoangkhaController@getJob');
-Route::get('hoangkha/myinvites','HoangkhaController@getMyInvite');
-Route::get('hoangkha/myfavorites','HoangkhaController@getMyFavorite');
-Route::get('test', function()
-{
-	return View::make('pages.test');
-});
-Route::post('test', 'BaseController@postTest');
+
+Route::get('user/profile','BaseController@getProfile');
+Route::post('change_user_profile','BaseController@postChangeUserProfile');
+Route::post('change_password','BaseController@postChangePassword');
+Route::post('change_phonenumber','BaseController@postChangePhoneNumber');
+
+Route::get('user/jobs','BaseController@getJob');
+Route::get('user/myinvites','BaseController@getMyInvite');
+Route::get('user/myfavorites','BaseController@getMyFavorite');
+
+
 
 Route::get('delete_account', array('as'=>'delete_account','uses' => 'BaseController@getDelete_account' ));
 Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseController@postDelete_account' ));
@@ -354,6 +353,7 @@ Route::get('test-distance', function()
 
 Route::get('listbuilders', 'BaseController@getListbuilders');
 Route::post('listbuilders', 'BaseController@postListbuilders');
+
 
 Route::get('register-builder', 'BaseController@getRegisterBuilder');
 Route::post('register-builder', 'BaseController@postRegisterBuilder');

@@ -2,9 +2,11 @@
 class HoangkhaController extends BaseController{
 	public function getProfile()
 	{
-
-		$user = Auth::user();
-		return View::make('hoangkha.dashboard')->with('user', $user);
+		if(Auth::check()) {
+			$user = Auth::user();
+			return View::make('hoangkha.dashboard')->with('user', $user);
+		}
+		return Redirect::to('register');
 
 	}
 	public function getJob()

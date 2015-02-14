@@ -897,8 +897,153 @@ public function getLoginBuilder()
 	
 		
 	}
+	
+	//-----------USER DASHBOARD------------//
+	public function getProfile()
+	{
+		if(Auth::check()) {
+			$user = Auth::user();
+			return View::make('user_dashboard.dashboard')->with('user', $user);
+		}
+		return Redirect::to('register');
+
+	}
+	
+	
+	public function postChangeUserProfile()
+	{
+		$input = Input::all();
+		$rules = array('email' => 'required|email|exists:users,email');
+		//var_dump($input['email'] ); die	;	
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+			$user = Auth::user();
+			if ($user->username != $input['username'] ) {
+				$user->username = $input['username'];
+ 			}
+			if ($user->email != $input['email']) {
+				$user->email = $input['email'];
+				/*for($code_length = 25, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+				$data = array(
+					'email'     => $input['email'],
+					'clickUrl'  => URL::to('/') . '/confirm/' . $newcode
+			);
+			 
+			//---new send email----//
+			try {
+				Mail::send('emails.signup', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Welcome');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = Input::get('email');
+				$subject = 'Welcome';
+				$message = View::make('emails.signup', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}*/
+	
+				
+			}
+			$user->save();
+			return Redirect::to('user/profile')->with('success', '1');	
+		} else {
+			return Redirect::to('user/profile')->withInput()->withErrors($v);	
+		}
+	}
+	
+	public function postChangePassword()
+	{
+		$input = Input::all();
+		$user = Auth::user();
+		$password = $input['password'];
+		$password = Hash::make($password);
+		$user->password = $password; 
+		$user->save();
+		return Redirect::to('user/profile')->with('cpsuccess', '1');
+	}
+	
+	public function postChangePhoneNumber()
+	{
+		$input = Input::all();
+		$user = Auth::user();
+		$phonenumber = $input['phonenumber']; 
+		$user->save();
+		//----send sms----//
+			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+			//$number = Input::get('phoneNumber');
+			$newcode_phone = strtoupper($newcode_phone);
+			$message = $newcode_phone ;//Input::get('message');
+			//$to_phone_number = Input::get('phone_number');
+			//$to_phone_number = '+84937163522';
+			//$to_phone_number = $input['phone_number'];
+			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
+			
+			if (!preg_match( $regex, $to_phone_number )) {
+				return Redirect::to('register-builder')->with("is_phone_number", "0");
+			}
+			//$to_phone_number = substr($to_phone_number, 1);
+			//$to_phone_number =  "+44".$to_phone_number;
+			// Create an authenticated client for the Twilio API
+			/*$client = new Services_Twilio('AC3f7525a996d50d183bd224359c325c6f', '58ac53caa01777973e2931776a61a8f9');
+			$to_phone_number = '+15005550006';
+			// Use the Twilio REST API client to send a text message
+			$m = $client->account->messages->sendMessage(
+					'+15005550006', // the text will be sent from your Twilio number
+					$to_phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			); echo $m; die;*/
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$token = "d94d47547950d199f065f365a51111a4"; 
+			$client = new Services_Twilio($sid, $token);
+			//$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$phonenumber, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			//----------------//
+			for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+			//Send confirmation email
+			$data = array(
+					'email'     => $input['email'],
+					'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
+			);
+			 
+			//---new send email----//
+			try {
+				Mail::send('emails.signup', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Welcome');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = Input::get('email');
+				$subject = 'Welcome';
+				$message = View::make('emails.signup', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}
+			return Redirect::to('user/profile')->with('phonesuccess', '1');
+
+	}
 
 }
-
 
 
