@@ -976,7 +976,7 @@ public function getLoginBuilder()
 	{
 		$input = Input::all();
 		$user = Auth::user();
-		echo Auth::user()->email; die;
+		//echo Auth::user()->email; die;
 		$phonenumber = $input['phonenumber']; 
 		
 		//----send sms----//
