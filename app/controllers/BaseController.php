@@ -977,7 +977,7 @@ public function getLoginBuilder()
 		$input = Input::all();
 		$user = Auth::user();
 		$phonenumber = $input['phonenumber']; 
-		$user->save();
+		
 		//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
 			//$number = Input::get('phoneNumber');
@@ -1023,13 +1023,13 @@ public function getLoginBuilder()
 			try {
 				Mail::send('emails.signup', $data, function($message)
 				{
-					$message->to(Input::get('email'))->subject('Welcome');
+					$message->to(Input::get('email'))->subject('Change Phonenumber');
 				});
 	
 			}
 			catch (Exception $e){
 				$to      = Input::get('email');
-				$subject = 'Welcome';
+				$subject = 'Change Phonenumber';
 				$message = View::make('emails.signup', $data)->render();
 				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
 						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
@@ -1040,6 +1040,10 @@ public function getLoginBuilder()
 				mail($to, $subject, $message, $headers);
 	
 			}
+			$user->phone_number =$phonenumber;
+			$user->email_confirm = $newcode;
+			$user->phone_confirm = $newcode_phone; 
+			$user->save();
 			return Redirect::to('profile')->with('phonesuccess', '1');
 
 	}
