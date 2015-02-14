@@ -1,6 +1,12 @@
 @extends('layouts.default')
 @section('content')	
 <div class="row">
+<style>
+.col-lg-8 {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+</style>
     <div class="col-md-4 col-md-offset-4">
     			@if($errors->any())
 					<div class="alert alert-danger alert-dismissable">
@@ -17,13 +23,13 @@
                 @endif
         <div class="login-panel panel panel-default" style = "margin-top: 50px;">
             <div class="panel-heading">
-                <h3 class="panel-title" style = "text-align: center">Tradespeople Here</h3>
+                <h3 class="panel-title" style = "text-align: center">How can we help you today?</h3>
 
             </div>
             <div class="panel-body">
 				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
 					<div class="login-block" >
-					<p class="larger center color-53A524">Post Job</p>
+					
 							
 							
 								<div class="login-block" >
@@ -120,7 +126,7 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code' style = "z-index:2; margin-left: -42px;">
 								</div>	
 										
 							</div>
@@ -129,7 +135,7 @@
 							<style>
 						      #map-canvas {
 						        height: 300px;
-								width: 380px;
+								width: 100%;
 						        
 						      }
 						      .controls {

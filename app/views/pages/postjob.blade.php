@@ -1,7 +1,12 @@
 @extends('layouts.default')
 @section('content')	
 <div class="row" style = "margin-top: 10%; margin-bottom: 80px;">
-
+<style>
+.col-lg-8 {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+</style>
     <div class="col-md-4 col-md-offset-4">
    				 @if($errors->any())
 					<div class="alert alert-danger alert-dismissable">
@@ -117,7 +122,7 @@
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "local_code" id  = "local_code" type="text" class="form-control" required placeholder = 'Post code'>
+									<input name = "local_code" id  = "local_code" type="text" class="form-control" required placeholder = 'Post code' style = "z-index:2; margin-left: -42px;">
 								</div>			
 							</div>
 							<!-- GOOGLE MAP -->
@@ -125,7 +130,7 @@
 							<style>
 						      #map-canvas {
 						        height: 300px;
-								width: 380px;
+								width: 100%;
 						        
 						      }
 						      .controls {
@@ -356,15 +361,7 @@
 									
 								</div>			
 							</div>
-							
-							
-							
-							
-							
-							
-							
-							
-							
+						
 						</div>
 						
 						<div class="form-fields-wrapper" id = "submit-div">
