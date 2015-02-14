@@ -955,9 +955,9 @@ public function getLoginBuilder()
 				
 			}
 			$user->save();
-			return Redirect::to('user/profile')->with('success', '1');	
+			return Redirect::to('profile')->with('success', '1');	
 		} else {
-			return Redirect::to('user/profile')->withInput()->withErrors($v);	
+			return Redirect::to('profile')->withInput()->withErrors($v);	
 		}
 	}
 	
@@ -969,7 +969,7 @@ public function getLoginBuilder()
 		$password = Hash::make($password);
 		$user->password = $password; 
 		$user->save();
-		return Redirect::to('user/profile')->with('cpsuccess', '1');
+		return Redirect::to('profile')->with('cpsuccess', '1');
 	}
 	
 	public function postChangePhoneNumber()
@@ -1040,7 +1040,7 @@ public function getLoginBuilder()
 				mail($to, $subject, $message, $headers);
 	
 			}
-			return Redirect::to('user/profile')->with('phonesuccess', '1');
+			return Redirect::to('profile')->with('phonesuccess', '1');
 
 	}
 
