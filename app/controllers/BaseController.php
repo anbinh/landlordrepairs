@@ -988,7 +988,7 @@ public function getLoginBuilder()
 			//$to_phone_number = $input['phone_number'];
 			$regex = "/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i";
 			
-			if (!preg_match( $regex, $to_phone_number )) {
+			if (!preg_match( $regex, $phonenumber )) {
 				return Redirect::to('register-builder')->with("is_phone_number", "0");
 			}
 			//$to_phone_number = substr($to_phone_number, 1);
