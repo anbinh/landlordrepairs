@@ -63,7 +63,7 @@ return array(
 			'prefix'    => '',
 		),
 		
-		/*'mysql' => array(
+		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => '10.168.1.83',
 			'database'  => 'landlord1_data',
@@ -72,8 +72,8 @@ return array(
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
-		),*/
-		'pgsql' => array(
+		),
+		/*'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
 			'database' => 'forge',
@@ -82,7 +82,7 @@ return array(
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',
-		),
+		),*/
 
 		'sqlsrv' => array(
 			'driver'   => 'sqlsrv',
