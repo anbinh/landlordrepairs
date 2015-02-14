@@ -311,7 +311,7 @@ Route::group(array('before' => 'auth'), function(){
 
 });
 
-Route::get('user/profile','BaseController@getProfile');
+Route::get('profile','BaseController@getProfile');
 Route::post('change_user_profile','BaseController@postChangeUserProfile');
 Route::post('change_password','BaseController@postChangePassword');
 Route::post('change_phonenumber','BaseController@postChangePhoneNumber');
