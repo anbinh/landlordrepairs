@@ -6,6 +6,9 @@
 	padding-left: 0px;
 	padding-right: 0px;
 }
+#submit-div {
+	text-align: center;
+}
 </style>
     <div class="col-md-4 col-md-offset-4">
     			@if($errors->any())
