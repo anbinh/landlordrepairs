@@ -40,7 +40,7 @@
 			                        </div>
 			                        @endif
 			                        
-			                       {{ Form::open(array('url' => 'change_password')) }}
+			                       {{ Form::open(array('url' => 'change_user_profile')) }}
 		                            <div class="form-group">
 		                                <label>Username</label>
 		                                {{ Form::text('username', $user->username, array('placeholder' => 'Choose your username', 'class' => 'form-control')) }}
