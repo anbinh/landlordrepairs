@@ -807,10 +807,11 @@ class BaseController extends Controller {
 			        break;
 			    case '2':
 			    	//send mail to check
+			    	//send mail to check
 			    	$array_id_sent_invite = array();
 			    	$array_id_sent_invite[0] = $check_builders[0];
 			    	$array_id_sent_invite[1] = $check_builders[1];
-			    	$array_id_sent_invite_random = array_rand($array_builder_id, 1);
+			    	$array_id_sent_invite_random = array_rand($array_builder_id, 2);
 			    	$array_id_sent_invite[2] = $array_builder_id[$array_id_sent_invite_random[0]];
 			    	
 			    	//var_dump($array_id_sent_invite); die;
