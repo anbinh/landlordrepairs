@@ -48,7 +48,9 @@
                     </li>
                     <li class="page-scroll">
                     	@if(Auth::check())
+                    		@if(Auth::user()->role == '0')
                         	<a href="postjob">PostJob</a>
+                        	@endif	
                         @else
                         	<a href="register"> PostJob </a>
                         @endif
