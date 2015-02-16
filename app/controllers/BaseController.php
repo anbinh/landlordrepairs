@@ -995,8 +995,8 @@ class BaseController extends Controller {
 			$user->email = $input['email'];
 			$user->password = $password;
 			$user->phone_number = $to_phone_number;
-			$user->email_confirm = $newcode;
-			$user->phone_confirm = $newcode_phone;
+			//$user->email_confirm = $newcode;
+			//$user->phone_confirm = $newcode_phone;
 			$user->role = '1';
 			$user->save();
 			
