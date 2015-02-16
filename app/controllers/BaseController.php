@@ -519,7 +519,6 @@ class BaseController extends Controller {
 	}
 	
 
-	
 	public function postTest()
 	{
 		print_r(Input::all());
@@ -546,9 +545,7 @@ class BaseController extends Controller {
 		}
 		
 	}
-	
-	
-	
+
 	public function getListbuilders() {
 		return Redirect::to('postjob');
 	} 
@@ -557,20 +554,22 @@ class BaseController extends Controller {
 	{
 		$input = Input::all();
 		$check_builders = Input::get('check_builders');
+		$radius = Input::get('radius');
 		//var_dump($check_builders); die;
-		$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
+		//$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
+		$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.category', '=', $input['category'])->get();
 		$num_of_checked_builders = count($check_builders);	
-			
+			//var_dump ($builders); die;
 		//select builders matching condition from submit post_jobs.
 		//check number of checked builder
 		$array_builder_id = array();
 	    foreach( $builders as $builder ) {
-	    	array_push($array_builder_id, $builder->id);
+	    	array_push($array_builder_id, $builder->builder_id);
     		
 	    }
 	     
 	    if (count($builders) <= "3") { //sent invite to all Builders in list $array_builder_id
-	    	
+	    	$i = 0;
 	    	foreach( $builders as $builder ) {
 				
 				
@@ -593,7 +592,16 @@ class BaseController extends Controller {
 		
 					mail($to, $subject, $message, $headers);
 		
-				} 
+				}
+
+				//-----Save to DB::job_process--//
+				$job_process = new JobProcess();
+				$job_process->user_id = Auth::user()->id;
+				$job_process->builder_id = $builder->builder_id;
+				$job_process->status = 'inviting';
+				$job_process->radius = $radius[$i];
+				$job_process->save();
+				$i++;
 				
 			}
 
@@ -611,12 +619,20 @@ class BaseController extends Controller {
 				    //var_dump($array_builder_id[$array_id_sent_invite[2]]); die;
 				    
 				    for ($x = 0; $x <= 2; $x++) {
-				    	$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
+				    	//$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_builder_id[$array_id_sent_invite[$x]])->get();
 					//echo $builders[0]->email; die;
+					//echo $builders[0]->email; die;
+					$job_process = new JobProcess();
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->status = 'inviting';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
 				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
-								$message->to($builders[$x]->email)->subject('Invite from Users');
+								$message->to($builders[0]->email)->subject('Invite from Users');
 							});
 				
 						}
@@ -644,12 +660,20 @@ class BaseController extends Controller {
 			    	$array_id_sent_invite_random = array_rand($array_builder_id, 2);
 			    	$array_id_sent_invite[1] = $array_builder_id[$array_id_sent_invite_random[0]];
 			    	$array_id_sent_invite[2] = $array_builder_id[$array_id_sent_invite_random[1]];
-			    	//var_dump($array_id_sent_invite); die;
+			    	
 			    	// send 2 email random
 			    	
 			    	for ($x = 0; $x <= 2; $x++) {
-				    	$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
-					//echo $builders[0]->email; die;
+				    	//$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_id_sent_invite[$x])->get();
+						//var_dump($builders); die;
+						//echo $builders[0]->email; die;
+					$job_process = new JobProcess();
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->status = 'inviting';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
 				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
@@ -687,8 +711,15 @@ class BaseController extends Controller {
 			    	// send 2 email random
 			    	
 			    	for ($x = 0; $x <= 2; $x++) {
-				    	$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
-					//echo $builders[0]->email; die;
+				    	//$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_id_sent_invite[$x])->get();
+					
+					$job_process = new JobProcess();
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->status = 'inviting';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
 				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
@@ -709,6 +740,7 @@ class BaseController extends Controller {
 							mail($to, $subject, $message, $headers);
 				
 						} 
+						
 					} 
 						
 			        break;
@@ -716,8 +748,16 @@ class BaseController extends Controller {
 			        
 		        case '3':
 			    	for ($x = 0; $x <= 2; $x++) {
-				    	$builders = DB::table('builders')->having('id', '=',$check_builders[$x])->get();
-					//echo $builders[0]->email; die;
+				    	//$builders = DB::table('builders')->having('id', '=',$check_builders[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $check_builders[$x])->get();
+						//echo $builders[0]->email; die;
+						//echo $builders[0]->email; die;
+						$job_process = new JobProcess();
+						$job_process->user_id = Auth::user()->id;
+						$job_process->builder_id = $builders[0]->builder_id;
+						$job_process->status = 'inviting';
+						$job_process->radius = $radius[$x];
+						$job_process->save();
 				    	try {
 							Mail::send('emails.newpass', $data, function($message) use ($data)
 							{
@@ -744,6 +784,9 @@ class BaseController extends Controller {
 			    	
 			        return View::make('pages.register');
 			}
+			
+			//---Save to DB::job_process-------//
+			
 			return View::make('pages.register');
 	    }
 		return View::make('pages.register');
@@ -863,6 +906,36 @@ class BaseController extends Controller {
 			return Redirect::to('profile')->with('phonesuccess', '1');
 
 	}
+	
+	public function getMyJobs()
+	{
+		if(Auth::check()) {
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id )->get();
+			
+			return View::make('user_dashboard.jobs')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
+
+	}
+	
+	public function getMyInvites()
+	{
+		/*if(Auth::check()) {
+			
+			//$invites = DB::table('job_process')->having('user_id', '=',Auth::user()->id )->get();
+			$invites = DB::table('job_process');
+		    ->join('job_process', 'job_process.user_id', '=', 'jobs.user_id')
+		    ->where('jobs.user_id', '=', Auth::user()->id)
+		    ->get();
+		    var_dump($invites); die;
+			return View::make('user_dashboard.myinvite')->with('invites', $invites);
+		}
+		return Redirect::to('register');*/
+
+	}
+	
+	
 	/*-------------------------------
 	 * BUILDERS
 	 * 
@@ -882,7 +955,7 @@ class BaseController extends Controller {
 		$input = Input::all();
 	
 		
-		$rules = array('username' => 'required|unique:builders', 'email' => 'required|unique:builders|email','phone_number'  => 'numeric');
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -897,7 +970,7 @@ class BaseController extends Controller {
 				return Redirect::to('register-builder')->with("is_phone_number", "0");
 			}
 	
-			/*$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
 			$token = "d94d47547950d199f065f365a51111a4"; 
 			$client = new Services_Twilio($sid, $token);
 			//$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
@@ -905,7 +978,7 @@ class BaseController extends Controller {
 					'+441544430006', // the text will be sent from your Twilio number
 					$to_phone_number, // the phone number the text will be sent to
 					$message // the body of the text message
-			);*/
+			);
 			
 			
 		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
@@ -933,8 +1006,8 @@ class BaseController extends Controller {
 			$extend_builder->category = $input['category'];
 			$extend_builder->local = $input['local'];
 			$extend_builder->local_code = $input['local_code'];
-			//$extend_builder->lat = $input['lat'];
-			//$extend_builder->lng = $input['lng'];
+			$extend_builder->lat = $input['lat'];
+			$extend_builder->lng = $input['lng'];
 			$extend_builder->save();
 
 		

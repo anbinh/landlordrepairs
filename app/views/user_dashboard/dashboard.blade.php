@@ -1,7 +1,7 @@
 
 @extends('layouts.default')
 @section('content')
-	<div class="container" style= "margin-bottom: 160px;">
+	<div class="container" style= "margin-bottom: 230px;">
 			<div class="row">
 				<h1 class="text-center">Dashboard</h1>
 			</div>
@@ -10,8 +10,8 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="#" class="list-group-item">My Profile</a>
-					  <a href="#" class="list-group-item">Jobs</a>
+					   <a href="profile" class="list-group-item">My Profile</a>
+					  <a href="myjobs" class="list-group-item">Jobs</a>
 					  <a href="#" class="list-group-item">My Invites</a>
 					  <a href="#" class="list-group-item">My favorites</a>
 				</div>

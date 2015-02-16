@@ -327,6 +327,10 @@ Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseContro
 
 Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');
 
+
+Route::get('myjobs','BaseController@getMyJobs');
+Route::get('myinvites','BaseController@getMyInvites');
+
 //-----TEST DISTANCE GOOGLEMAP------//
 
 

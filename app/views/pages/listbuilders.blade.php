@@ -147,12 +147,12 @@ $(document).ready(function(){
  	<tr>
     	<td>{{$builder->username}}</td>
     	<td>{{$builder->category}}</td>
-    	<td>{{$array_radius[$builder->id]}}</td>
+    	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{$array_radius[$builder->id]}}</td>
     	<td>{{$builder->local}}</td>
  		<td>{{$builder->local_code}}</td>
  		<td>{{$builder->email}}</td>
  		<td>{{$builder->phone_number}}</td>
- 		<td><input type="checkbox" name="check_builders[]" value="{{$builder->id}}" /> Choose <br/></td>
+ 		<td><input type="checkbox" name="check_builders[]" value="{{$builder->builder_id}}" /> Choose <br/></td>
  	</tr>	
 	@endforeach
     

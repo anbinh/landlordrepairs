@@ -1,10 +1,25 @@
-@extends('admin')
 
-
+@extends('layouts.default')
 @section('content')
+	<div class="container" style= "margin-bottom: 300px;">
+			<div class="row">
+				<h1 class="text-center">Dashboard</h1>
+			</div>
+			<div class="col-md-2">
+				<div class="list-group">
+					  <a href="#" class="list-group-item active">
+					    Dashboard
+					  </a>
+					  <a href="profile" class="list-group-item">My Profile</a>
+					  <a href="myjobs" class="list-group-item">Jobs</a>
+					  <a href="#" class="list-group-item">My Invites</a>
+					  <a href="#" class="list-group-item">My favorites</a>
+				</div>
 
-<div class="row">
-    <div class="col-lg-12" style="margin-top:30px">
+			</div>
+			<div class="col-md-10">
+				<div class="row">
+				<div class="col-lg-12" style="margin-top:30px">
         <script>
 			$(document).ready(function(){
 				  
@@ -146,16 +161,16 @@
 			  <tbody>
 			
 			
-			  @foreach($invites as $invite)
+			  @foreach($jobs as $job)
 			 	<tr>
-			    	<td>{{$invite->tittle}}</td>
-			    	<td>{{$invite->property}}</td>
-			    	<td>{{$invite->category}}</td>
-			    	<td>{{$invite->price}}</td>
-			 		<td>{{$invite->timeoption}}</td>
-			 		<td>{{$invite->local}}</td>
-			 		<td>{{$invite->description}}</td>
-			 		<td>{{$invite->status}}</td>
+			    	<td>{{$job->tittle}}</td>
+			    	<td>{{$job->property}}</td>
+			    	<td>{{$job->category}}</td>
+			    	<td>{{$job->price}}</td>
+			 		<td>{{$job->timeoption}}</td>
+			 		<td>{{$job->local}}</td>
+			 		<td>{{$job->description}}</td>
+			 		<td>{{$job->status}}</td>
 			 		
 			 	</tr>	
 				@endforeach
@@ -168,7 +183,16 @@
 			
     </div>
     
+
+    <!-- end change phone number -->
 </div>
+			</div>
+		</div>
+		
+		
 
-
+		<!-- jQuery -->
+		<script src="//code.jquery.com/jquery.js"></script>
+		<!-- Bootstrap JavaScript -->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 @stop
