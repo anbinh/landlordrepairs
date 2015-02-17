@@ -26,7 +26,7 @@
                    
                     <li class="page-scroll">
                         @if(Auth::check())
-                        	<a href="register">
+                        	<a href="profile">
                         		dashboard
                         	</a>
                         @else
