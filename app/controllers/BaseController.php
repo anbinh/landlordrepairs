@@ -803,14 +803,14 @@ class BaseController extends Controller {
 		        	 break;
 			    default:
 			    	
-			        return View::make('pages.register');
+			        return Redirect::to('myjobs');
 			}
 			
 			//---Save to DB::job_process-------//
 			
-			return View::make('pages.register');
+			return Redirect::to('myjobs');
 	    }
-		return View::make('pages.register');
+		return Redirect::to('myjobs');
 	}
 			
 		
