@@ -562,11 +562,8 @@ class BaseController extends Controller {
 			//var_dump ($builders); die;
 		//select builders matching condition from submit post_jobs.
 		//check number of checked builder
-		$array_builder_id = array();
-	    foreach( $builders as $builder ) {
-	    	array_push($array_builder_id, $builder->builder_id);
-    		
-	    }
+		
+	    
 	     
 	    if (count($builders) <= "3") { //sent invite to all Builders in list $array_builder_id
 	    	$i = 0;
@@ -608,6 +605,30 @@ class BaseController extends Controller {
 			
 			
 	    } else {
+    	$array_builder_id = array();
+	    foreach( $builders as $builder ) {
+	    	//forgot check survival BUILDERS_CHECKED
+	    	if ($num_of_checked_builders == 0){
+	    		array_push($array_builder_id, $builder->builder_id);
+	    	} else {
+	    		if ($num_of_checked_builders == 1) {
+	    			if ($builder->builder_id != $check_builders[0]) {
+	    				array_push($array_builder_id, $builder->builder_id);
+	    			}
+	    		} else {
+	    			if ($num_of_checked_builders == 2){
+		    			if (($builder->builder_id != $check_builders[0]) && ($builder->builder_id != $check_builders[1])) {
+		    				array_push($array_builder_id, $builder->builder_id);
+		    			}
+	    			} else{ //$num_of_checked_builders == 3
+	    				if (($builder->builder_id != $check_builders[0]) && ($builder->builder_id != $check_builders[1])&& ($builder->builder_id != $check_builders[2])) {
+		    				array_push($array_builder_id, $builder->builder_id);
+		    			}
+	    			}
+	    		}
+	    	}
+    		
+	    }
 	    	$array_id = array();
 	    	
 		    switch ($num_of_checked_builders) {
