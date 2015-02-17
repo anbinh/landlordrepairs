@@ -105,7 +105,7 @@
                         @if(Session::get("phonesuccess") == "1")
                         <div class="alert alert-success alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            Phonenumber has been changed successfully.
+                            Phonenumber has been changed successfully, please check email to confirm new phonenumber
                         </div>
                         @endif
                         {{ Form::open(array('url' => 'change_phonenumber')) }}
