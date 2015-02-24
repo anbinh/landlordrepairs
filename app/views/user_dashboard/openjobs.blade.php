@@ -10,7 +10,7 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="profile" class="list-group-item">My Profile</a>
+					 <a href="profile" class="list-group-item">My Profile</a>
 					  <a href="openjobs" class="list-group-item">Open Jobs</a>
 					  <a href="ongoingjobs" class="list-group-item">Ongoing Jobs</a>
 					  <a href="cancelledjobs" class="list-group-item">Cancelled Jobs</a>
@@ -153,32 +153,30 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Name of Builder</em> <span>&nbsp;</span></th>
+			      <th><em>Tittle</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Vote</em> <span>&nbsp;</span></th>
-			      
-			      
+			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
 			
-			  @foreach($invites as $invite)
+			  @foreach($jobs as $job)
 			 	<tr>
-			    	
-			    	<td>{{$builders[$invite->builder_id][0]->username}}</td>
-			    	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
-			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->local}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->local_code}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$invite->vote}}</em> <span>&nbsp;</span></td>
+			    	<td>{{$job->tittle}}</td>
+			    	<td>{{$job->property}}</td>
+			    	<td>{{$job->category}}</td>
+			    	<td>{{$job->price}}</td>
+			 		<td>{{$job->timeoption}}</td>
+			 		<td>{{$job->local}}</td>
+			 		<td>{{$job->description}}</td>
+			 		<td>{{$job->status}}</td>
+			 		
 			 	</tr>	
 				@endforeach
 			    

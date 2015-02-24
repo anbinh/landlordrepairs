@@ -159,6 +159,7 @@ $(document).ready(function(){
    
 </table>
  <input hidden name = "category" value = "{{$category}}"/> 
+ <input hidden name = "job_id" value = "{{$job_id}}"/>
   {{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
 {{ Form::close() }}
 <script>

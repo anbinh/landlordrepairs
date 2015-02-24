@@ -328,8 +328,13 @@ Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseContro
 Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');
 
 
-Route::get('myjobs','BaseController@getMyJobs');
+Route::get('openjobs','BaseController@getOpenJobs');
+Route::get('ongoingjobs','BaseController@getOngoingJobs');
+Route::get('cancelledjobs','BaseController@getCancelledJobs');
+Route::get('pendingreview','BaseController@getPendingReviewJobs');
+Route::get('completedjobs','BaseController@getCompletedJobs');
 Route::get('myinvites','BaseController@getMyInvites');
+Route::get('myfavorites','BaseController@getMyFavorites');
 
 //-----TEST DISTANCE GOOGLEMAP------//
 

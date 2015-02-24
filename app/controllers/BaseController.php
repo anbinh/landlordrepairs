@@ -408,6 +408,7 @@ class BaseController extends Controller {
 			$job->status = 'openjob';
 			$job->property = $input['property'];
 			$job->category = $input['category'];
+			
 			$job->save();
 			
 			//make return the list of builder
@@ -438,9 +439,9 @@ class BaseController extends Controller {
 		  			
 			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
 		    } 
-	
+			//echo $job->id; die;
 			//------------------------------//
-			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category' =>$input['category'])) ;
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category' =>$input['category'],'job_id'=> $job->id)) ;
 			//--------------------------------//
 			return Redirect::to('postjob')->with("success", "1");
 		} else {
@@ -593,6 +594,7 @@ class BaseController extends Controller {
 
 				//-----Save to DB::job_process--//
 				$job_process = new JobProcess();
+				$job_process->job_id = Input::get('job_id');
 				$job_process->user_id = Auth::user()->id;
 				$job_process->builder_id = $builder->builder_id;
 				$job_process->status = 'inviting';
@@ -645,6 +647,7 @@ class BaseController extends Controller {
 					//echo $builders[0]->email; die;
 					//echo $builders[0]->email; die;
 					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->status = 'inviting';
@@ -690,6 +693,7 @@ class BaseController extends Controller {
 						//var_dump($builders); die;
 						//echo $builders[0]->email; die;
 					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->status = 'inviting';
@@ -736,6 +740,7 @@ class BaseController extends Controller {
 				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_id_sent_invite[$x])->get();
 					
 					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->status = 'inviting';
@@ -774,6 +779,7 @@ class BaseController extends Controller {
 						//echo $builders[0]->email; die;
 						//echo $builders[0]->email; die;
 						$job_process = new JobProcess();
+						$job_process->job_id = Input::get('job_id');
 						$job_process->user_id = Auth::user()->id;
 						$job_process->builder_id = $builders[0]->builder_id;
 						$job_process->status = 'inviting';
@@ -928,31 +934,106 @@ class BaseController extends Controller {
 
 	}
 	
-	public function getMyJobs()
+	public function getOpenJobs()
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id )->get();
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','open')->get();
 			
-			return View::make('user_dashboard.jobs')->with('jobs', $jobs);
+			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
 		}
 		return Redirect::to('register');
 
 	}
 	
+	public function getOngoingJobs()
+	{
+		if(Auth::check()) {
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','ongoing')->get();
+			
+			return View::make('user_dashboard.ongoingjobs')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
+
+	}
+	
+	public function getCancelledJobs()
+	{
+		if(Auth::check()) {
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','cancelled')->get();
+			
+			return View::make('user_dashboard.cancelledjobs')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
+
+	}
+	public function getPendingReviewJobs()
+	{
+		if(Auth::check()) {
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','pending review')->get();
+			
+			return View::make('user_dashboard.pendingreview')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
+
+	}
+	
+	public function getCompletedJobs()
+	{
+		if(Auth::check()) {
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','completed')->get();
+			
+			return View::make('user_dashboard.completedjobs')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
+
+	}
+	
+	
+	
 	public function getMyInvites()
 	{
-		/*if(Auth::check()) {
+		if(Auth::check()) {
 			
-			//$invites = DB::table('job_process')->having('user_id', '=',Auth::user()->id )->get();
-			$invites = DB::table('job_process');
-		    ->join('job_process', 'job_process.user_id', '=', 'jobs.user_id')
+			
+			
+			
+			/*$invites = DB::table('job_process')
+		    ->join('users', 'job_process.user_id', '=', 'jobs.user_id')
 		    ->where('jobs.user_id', '=', Auth::user()->id)
-		    ->get();
-		    var_dump($invites); die;
-			return View::make('user_dashboard.myinvite')->with('invites', $invites);
+		    ->get();*/
+		    
+		    $invites = DB::table('job_process')->having('user_id', '=',Auth::user()->id )->get();
+		    $builders = array();
+		    foreach($invites as $invite){
+		    	 //var_dump($invite->builder_id); die;
+    			 //$builder = DB::table('users')->having('id', '=',$invite->builder_id)->get();
+		    	 $builder = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('users.id', '=', $invite->builder_id)->get();
+    			 $builders[$invite->builder_id] = $builder;
+		    	 $job = DB::table('jobs')->having('id', '=',$invite->job_id)->get();
+		    	 $jobs[$invite->builder_id] = $job;
+		    } 
+		    //var_dump($invite->radius); die;
+		   	//var_dump($builders[73][0]->id); die;
+			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'jobs'=>$jobs));
 		}
-		return Redirect::to('register');*/
+		return Redirect::to('register');
+
+	}
+	public function getMyFavorites()
+	{
+		if(Auth::check()) {
+						
+			
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('favorite','=','1')->get();
+			
+			return View::make('user_dashboard.myfavorites')->with('jobs', $jobs);
+		}
+		return Redirect::to('register');
 
 	}
 	
