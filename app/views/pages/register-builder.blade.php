@@ -333,17 +333,35 @@
 								</div>
 								</div>			
 							</div>
-							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									
 									<textarea rows="4" cols="50" name = "description" required placeholder = 'Description' class="form-control"> </textarea>
 								</div>			
-							</div>		
-				</div>		
-		</div>
+							</div>
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div class="radio">
+										  <label>
+										    <input type="radio" name="package_builder" value="2000" checked>
+										    Package 1
+										  </label>
+										   <label>
+										    <input type="radio" name="package_builder" value="5000">
+										    Package 2
+										  </label>
+										  <label>
+										    <input type="radio" name="package_builder" value="10000">
+										    
+										    Package 3
+										  </label>
+									</div>
+											
+								</div>		
+							</div>
 						
-						<div class="form-fields-wrapper" id = "submit-div">
+						
+							<div class="form-fields-wrapper" id = "submit-div">
 							<div class="form-steps-bottom"></div>
 							
 							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Register" id = "btn-submit" id = "btn-submit">

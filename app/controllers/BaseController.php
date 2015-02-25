@@ -519,34 +519,6 @@ class BaseController extends Controller {
 		
 	}
 	
-
-	public function postTest()
-	{
-		print_r(Input::all());
-		
-	
-		
-		$amount = Input::get('amount');
-		
-		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
-
-		// Get the credit card details submitted by the form
-		$token = $_POST['stripeToken'];
-		
-		// Create the charge on Stripe's servers - this will charge the user's card
-		try {
-		$charge = Stripe_Charge::create(array(
-		  "amount" => $amount, // amount in cents, again
-		  "currency" => "usd",
-		  "card" => $token,
-		  "description" => "payinguser@example.com")
-		);
-		} catch(Stripe_CardError $e) {
-		  // The card has been declined
-		}
-		
-	}
-
 	public function getListbuilders() {
 		return Redirect::to('postjob');
 	} 
@@ -1038,8 +1010,11 @@ class BaseController extends Controller {
 	}
 	
 	
+	
+	
+	
 	/*-------------------------------
-	 * BUILDERS
+	 *          BUILDERS
 	 * 
 	 *-----------------------------*/
 	public function getRegisterBuilder()
@@ -1097,6 +1072,8 @@ class BaseController extends Controller {
 			$user->email = $input['email'];
 			$user->password = $password;
 			$user->phone_number = $to_phone_number;
+			$user->package_builder = $input['package_builder'];
+			$user->package_builder_confirm = '0';
 			//$user->email_confirm = $newcode;
 			//$user->phone_confirm = $newcode_phone;
 			$user->role = '1';
@@ -1110,6 +1087,7 @@ class BaseController extends Controller {
 			$extend_builder->local_code = $input['local_code'];
 			$extend_builder->lat = $input['lat'];
 			$extend_builder->lng = $input['lng'];
+			
 			$extend_builder->save();
 
 		
@@ -1142,7 +1120,9 @@ class BaseController extends Controller {
 			}
 			//redirect to confirmation alert
 			Session::put('phone_code', $newcode_phone);
-			return Redirect::to('login')->with("emailfirst", "1");
+			//return Redirect::to('login')->with("emailfirst", "1");
+			
+			return View::make('pages.pay_package_builder')->with(array("package_builder"=>$input['package_builder'],"email"=>$input['email'] ));
 	
 		} else {
 	
@@ -1150,6 +1130,43 @@ class BaseController extends Controller {
 	
 		}
 	}
+	
+
+
+	public function postPayPackageBuilder()
+	{
+		//print_r(Input::all());
+		
+	
+		$input = Input::all(); 
+		$amount = Input::get('amount');
+		
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+		// Get the credit card details submitted by the form
+		$token = $_POST['stripeToken'];
+		
+		// Create the charge on Stripe's servers - this will charge the user's card
+		try {
+		$charge = Stripe_Charge::create(array(
+		  "amount" => $amount, // amount in cents, again
+		  "currency" => "usd",
+		  "card" => $token,
+		  "description" => "payinguser@example.com")
+		);
+		//----do something after charge success---//
+		
+		$user = User::where('email', '=',Input::get('email') )->first();
+		//var_dump($user); die;
+		$user->package_builder_confirm = '1';
+		$user->save();
+		return Redirect::to('login')->with("emailfirst", "1");
+		} catch(Stripe_CardError $e) {
+		  // The card has been declined
+		}
+		
+	}
+	
 	
 }
 
