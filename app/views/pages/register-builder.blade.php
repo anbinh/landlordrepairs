@@ -292,44 +292,116 @@
 								<div class="pad-top">
 								<div class="form-control-wrapper" >
 								
-								<div class = "col-lg-4">
+								<div class = "col-lg-12">
 								Category:
 								</div>
-								<div class = "col-lg-8">
-									<select name = "category" class="form-control">
-										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
-										<option name="category" value = "Bricklayers">Bricklayers </option>
-										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
-										<option name="category" value = "Carpet fitters">Carpet fitters</option>
-										<option name="category" value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
-										<option name="category" value = "Conservatory Installers">Conservatory Installers</option>
-										<option name="category" value = "Conversion Specialists">Conversion Specialists</option>
-										<option name="category" value = "Damp Proofing Specialists">Damp Proofing Specialists</option>
-										<option name="category" value = "Driveway Pavers">Driveway Pavers</option>
-										<option name="category" value = "Electricians">Electricians</option>
-										<option name="category" value = "Extension Builders">Extension Builders</option>
-										<option name="category" value = "Fencers">Fencers</option>
-										<option name="category" value = "Flooring Fitters">Flooring Fitters</option>
-										<option name="category" value = "Garage & Shed Builders">Garage & Shed Builders</option>
-										<option name="category" value = "Gas Engineers">Gas Engineers</option>
-										<option name="category" value = "Groundworkers">Groundworkers</option>
-										<option name="category" value = "Handymen">Handymen</option>
-										<option name="category" value = "Heating Engineers">Heating Engineers</option>
-										<option name="category" value = "Insulation Installers">Insulation Installers</option>
-										<option name="category" value = "Kitchen Fitters">Kitchen Fitters</option>
-										<option name="category" value = "Landscape Gardeners">Landscape Gardeners</option>
-										<option name="category" value = "Loft Conversion Specialists">Loft Conversion Specialists</option>
-										<option name="category" value = "New Home Builders">New Home Builders</option>
-										<option name="category" value = "Painters & Decorators">Painters & Decorators</option>
-										<option name="category" value = "Plasterers">Plasterers</option>
-										<option name="category" value = "Plumbers">Plumbers</option>
-										<option name="category" value = "Restoration & Refurb Specialists">Restoration & Refurb Specialists</option>
-										<option name="category" value = "Roofers">Roofers</option>
-										<option name="category" value = "Security System Installers">Security System Installers</option>
-										<option name="category" value = "CTilers">CTilers</option>
-										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
-										<option name="category" value = "Window Fitters">Window Fitters</option>
-									</select>
+								<div class = "col-lg-6">
+								<div class="checkbox">
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters"> Bathroom Fitters
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Bricklayers"> Bricklayers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Carpenters & Joiners"> Carpenters & Joiners
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Carpet fitters"> Carpet fitters
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Chimney & Fireplace Specialists"> Chimney & Fireplace Specialists
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Conservatory Installers"> Conservatory Installers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Conversion Specialists"> Conversion Specialists
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Damp Proofing Specialists"> Damp Proofing Specialists
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Driveway Pavers"> Driveway Pavers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Electricians"> Electricians
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Extension Builders"> Extension Builders
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Fencers"> Fencers
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Flooring Fitters"> Flooring Fitters
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Garage & Shed Builders"> Garage & Shed Builders
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Gas Engineers"> Gas Engineers
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Groundworkers"> Groundworkers
+								    </label>
+						
+								</div>
+									
+								</div>
+								</div>	
+								<div class = "col-lg-6">
+								<div class="checkbox">
+								    		     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Handymen"> Handymen
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Heating Engineers"> Heating Engineers
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Insulation Installers"> Insulation Installers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Kitchen Fitters"> Kitchen Fitters
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Landscape Gardeners"> Landscape Gardeners
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Loft Conversion Specialists"> Loft Conversion Specialists
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "New Home Builders"> New Home Builders
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Painters & Decorators"> Painters & Decorators
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Plasterers"> Plasterers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Plumbers"> Plumbers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Restoration & Refurb Specialists"> Restoration & Refurb Specialists
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Roofers"> Roofers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Security System Installers"> Security System Installers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "CTilers"> CTilers
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Tree Surgeons"> Tree Surgeons
+								    </label>
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Window Fitters"> Window Fitters
+								    </label>
+								</div>
+									
 								</div>
 								</div>			
 							</div>

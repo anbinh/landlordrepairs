@@ -52,7 +52,7 @@
                         	<a href="postjob">PostJob</a>
                         	@endif	
                         @else
-                        	<a href="register"> PostJob </a>
+                        	<a href="login"> PostJob </a>
                         @endif
                         
                     </li>

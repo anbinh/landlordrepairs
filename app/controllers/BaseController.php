@@ -418,7 +418,9 @@ class BaseController extends Controller {
 			
 	
 
-        $builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.category', '=', $input['category'])->get();
+        $builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        ->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        ->where('extend_builders_category.category', '=', $input['category'])->get();
         
         
 		//var_dump($builders); die;
@@ -529,8 +531,8 @@ class BaseController extends Controller {
 		$check_builders = Input::get('check_builders');
 		$radius = Input::get('radius');
 		//var_dump($check_builders); die;
-		//$builders = DB::table('builders')->having('category', '=',$input['category'] )->get();
-		$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.category', '=', $input['category'])->get();
+		//$builders = DategB::table('builders')->having('category', '=',$input['category'] )->get();
+		$builders = DB::table('users')->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')->where('extend_builders_category.category', '=', $input['category'])->get();
 		$num_of_checked_builders = count($check_builders);	
 			//var_dump ($builders); die;
 		//select builders matching condition from submit post_jobs.
@@ -781,14 +783,14 @@ class BaseController extends Controller {
 		        	 break;
 			    default:
 			    	
-			        return Redirect::to('myjobs');
+			        return Redirect::to('myinvites');
 			}
 			
 			//---Save to DB::job_process-------//
 			
-			return Redirect::to('myjobs');
+			return Redirect::to('myinvites');
 	    }
-		return Redirect::to('myjobs');
+		return Redirect::to('myinvites');
 	}
 			
 		
@@ -984,13 +986,22 @@ class BaseController extends Controller {
 		    foreach($invites as $invite){
 		    	 //var_dump($invite->builder_id); die;
     			 //$builder = DB::table('users')->having('id', '=',$invite->builder_id)->get();
-		    	 $builder = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('users.id', '=', $invite->builder_id)->get();
+		    	 
+		    	$builder = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+		    	 
+		    	 ->where('users.id', '=', $invite->builder_id)->get();
+		    	 
+		    	 /*$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+		         ->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+		         ->where('users.id', '=', $invite->builder_id)->get();*/
+		         
+		         
     			 $builders[$invite->builder_id] = $builder;
 		    	 $job = DB::table('jobs')->having('id', '=',$invite->job_id)->get();
 		    	 $jobs[$invite->builder_id] = $job;
 		    } 
 		    //var_dump($invite->radius); die;
-		   	//var_dump($builders[73][0]->id); die;
+		   	//var_dump($builders[$invite->builder_id][0]->id); die;
 			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'jobs'=>$jobs));
 		}
 		return Redirect::to('register');
@@ -1030,7 +1041,7 @@ class BaseController extends Controller {
 		
 	
 		$input = Input::all();
-	
+		
 		
 		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric');
 		$v = Validator::make($input, $rules);
@@ -1050,7 +1061,7 @@ class BaseController extends Controller {
 			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
 			$token = "d94d47547950d199f065f365a51111a4"; 
 			$client = new Services_Twilio($sid, $token);
-			//$sms = $client->account->sms_messages->create("+15005550006", "+14108675309", $newcode_phone, array());
+			
 			$client->account->messages->sendMessage(
 					'+441544430006', // the text will be sent from your Twilio number
 					$to_phone_number, // the phone number the text will be sent to
@@ -1064,6 +1075,11 @@ class BaseController extends Controller {
 		
 		if($v->passes())
 		{	
+			$categorys = Input::get('check_builders');
+			$num_of_checked_builders = count($categorys);
+			if ($num_of_checked_builders == 0) {
+				return Redirect::to('register-builder')->with("num_of_checked_builders", "0");
+			} else {
 			$password = $input['password'];
 			$password = Hash::make($password);
 	
@@ -1074,23 +1090,31 @@ class BaseController extends Controller {
 			$user->phone_number = $to_phone_number;
 			$user->package_builder = $input['package_builder'];
 			$user->package_builder_confirm = '0';
-			//$user->email_confirm = $newcode;
-			//$user->phone_confirm = $newcode_phone;
 			$user->role = '1';
 			$user->save();
 			
 			$extend_builder = new ExtendBuilder();
 			$extend_builder->builder_id = $user->id;
 			$extend_builder->tittle = $input['tittle'];
-			$extend_builder->category = $input['category'];
 			$extend_builder->local = $input['local'];
 			$extend_builder->local_code = $input['local_code'];
 			$extend_builder->lat = $input['lat'];
 			$extend_builder->lng = $input['lng'];
 			
 			$extend_builder->save();
-
-		
+			
+			
+			for ($i = 0; $i < $num_of_checked_builders; $i++){
+				$extend_builder_category = new ExtendBuilderCategory();	
+				$extend_builder_category->builder_id = $user->id;
+				$extend_builder_category->category = $categorys[$i];
+				$extend_builder_category->save();
+			
+			}
+		}
+			
+			
+			
 			//Send confirmation email
 			$data = array(
 					'email'     => $input['email'],

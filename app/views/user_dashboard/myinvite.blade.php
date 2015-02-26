@@ -154,7 +154,7 @@
 			  <thead>
 			    <tr class="country-table-head">
 			      <th><em>Name of Builder</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
+			     
 			      <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
@@ -172,11 +172,12 @@
 			 	<tr>
 			    	
 			    	<td>{{$builders[$invite->builder_id][0]->username}}</td>
-			    	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></td>
+			    	
 			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
-			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></td>
+			      	
 			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->local}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->local_code}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->email}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$invite->vote}}</em> <span>&nbsp;</span></td>
 			 	</tr>	
