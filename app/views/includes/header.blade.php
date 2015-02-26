@@ -26,9 +26,16 @@
                    
                     <li class="page-scroll">
                         @if(Auth::check())
-                        	<a href="profile">
-                        		dashboard
-                        	</a>
+                        	@if(Auth::user()->role == 0)
+                        		<a href="profile">
+                        			dashboard
+                        		</a>
+                        	@else
+                        		<a href="builder-invited">
+                        			dashboard
+                        		</a>
+                        	@endif
+                        	
                         @else
                         	<a href="register">
                         		Tradespeople Here

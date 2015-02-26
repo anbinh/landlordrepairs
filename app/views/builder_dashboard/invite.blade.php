@@ -153,12 +153,10 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Name of Builder</em> <span>&nbsp;</span></th>
-			      <th><em>Category</em> <span>&nbsp;</span></th>
-			     
+			      <th><em>Name of Customer</em> <span>&nbsp;</span></th>
+			     <th><em>Category</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
+			      
 			      <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Vote</em> <span>&nbsp;</span></th>
@@ -172,14 +170,13 @@
 			  @foreach($invites as $invite)
 			 	<tr>
 			    	
-			    	<td>{{$builders[$invite->builder_id][0]->username}}</td>
-			    	<td class="date-sort" ><em>{{$categorys[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></th>
+			    	<td>{{$customers[$invite->user_id][0]->username}}</td>
+			    	<td>{{$categorys[$invite->user_id][0]->category}}</td>
 			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
 			      	
-			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->local}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->local_code}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->email}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
+			      	
+			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->email}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$invite->vote}}</em> <span>&nbsp;</span></td>
 			 	</tr>	
 				@endforeach

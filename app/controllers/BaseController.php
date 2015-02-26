@@ -997,12 +997,14 @@ class BaseController extends Controller {
 		         
 		         
     			 $builders[$invite->builder_id] = $builder;
-		    	 $job = DB::table('jobs')->having('id', '=',$invite->job_id)->get();
-		    	 $jobs[$invite->builder_id] = $job;
+		    	 $category = DB::table('extend_builders_category')->having('builder_id', '=',$invite->builder_id)->get();
+		    	 $categorys[$invite->builder_id] = $category;
+		    	 
+		    	 
 		    } 
-		    //var_dump($invite->radius); die;
+		    //var_dump($categorys[$invite->builder_id][0]->category); die;
 		   	//var_dump($builders[$invite->builder_id][0]->id); die;
-			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'jobs'=>$jobs));
+			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'categorys'=>$categorys));
 		}
 		return Redirect::to('register');
 
@@ -1088,6 +1090,8 @@ class BaseController extends Controller {
 			$user->email = $input['email'];
 			$user->password = $password;
 			$user->phone_number = $to_phone_number;
+			$user->email_confirm = $newcode;
+			$user->phone_confirm = $newcode_phone;
 			$user->package_builder = $input['package_builder'];
 			$user->package_builder_confirm = '0';
 			$user->role = '1';
@@ -1189,6 +1193,42 @@ class BaseController extends Controller {
 		  // The card has been declined
 		}
 		
+	}
+	
+	public function getBuilderInvited()
+	{
+		if(Auth::check()) {
+			if (Auth::user()->role == '1' ) {
+				$invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->get();
+			   
+			    foreach($invites as $invite){
+			    	 //var_dump($invite->builder_id); die;
+	    			 //$builder = DB::table('users')->having('id', '=',$invite->builder_id)->get();
+			    	 
+			    	
+			    	 
+			    	
+			    	 
+			    	 $customer = DB::table('users')->having('id', '=',$invite->user_id )->get();
+			      
+	    			 $customers[$invite->user_id] = $customer;
+	    			 
+	    			 $category = DB::table('extend_builders_category')->having('builder_id', '=',$invite->builder_id )->get();
+			      
+	    			 $categorys[$invite->user_id] = $category;
+			    	
+			    } 
+		    //var_dump($customers[$invite->user_id][0]); die;
+		   	//var_dump($categorys); die;
+			return View::make('builder_dashboard.invite')->with(array('invites'=>$invites,'customers'=>$customers,'categorys'=>$categorys));	
+			} else {
+				return Redirect::to('login');
+			}
+			
+		    
+		}
+		return Redirect::to('login');
+
 	}
 	
 	

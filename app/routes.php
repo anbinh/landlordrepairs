@@ -329,3 +329,6 @@ Route::get('register-builder', 'BaseController@getRegisterBuilder');
 Route::post('register-builder', 'BaseController@postRegisterBuilder');
 
 Route::post('paypackagebuilder', 'BaseController@postPayPackageBuilder');
+
+Route::get('builder-invited', 'BaseController@getBuilderInvited');
+Route::post('builder-invited', 'BaseController@postBuilderInvited');
