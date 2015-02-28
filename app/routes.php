@@ -330,5 +330,11 @@ Route::post('register-builder', 'BaseController@postRegisterBuilder');
 
 Route::post('paypackagebuilder', 'BaseController@postPayPackageBuilder');
 
+Route::get('builder-profile', 'BaseController@getBuilderProfile');
+Route::post('builder-profile', 'BaseController@postBuilderProfile');
+
 Route::get('builder-invited', 'BaseController@getBuilderInvited');
 Route::post('builder-invited', 'BaseController@postBuilderInvited');
+
+Route::get('builder-find-jobs', 'BaseController@getBuilderFindJobs');
+Route::post('change_builder_profile','BaseController@postChangeBuilderProfile');

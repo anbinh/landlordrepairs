@@ -284,7 +284,7 @@
 		            </div>
 						<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "tittle" type="text" class="form-control" required placeholder = 'Tittle'>
+									<input name = "tittle" type="text" class="form-control" required placeholder = ' Company name'>
 									
 								</div>			
 							</div>
@@ -295,14 +295,53 @@
 								<div class = "col-lg-12">
 								Category:
 								</div>
+								
+								
+								
+								
 								<div class = "col-lg-6">
 								<div class="checkbox">
 								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters"> Bathroom Fitters
+								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters" checked> Bathroom Fitters
 								    </label>
 								    <label>
 								        <input type="checkbox" name = "check_builders[]" value = "Bricklayers"> Bricklayers
 								    </label>
+								    
+						
+								</div>
+									
+								</div>
+								</div>	
+								<div class = "col-lg-6">
+								<div class="checkbox">
+								    <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Handymen"> Handymen
+								    </label>
+								     <label>
+								        <input type="checkbox" name = "check_builders[]" value = "Heating Engineers"> Heating Engineers
+								    </label>
+								    
+								</div>
+									
+								</div>
+								
+								<script>
+								function showAllCategory() {
+									if ($("#show_all_category").val() == "Show all"){
+								 		$("#show_all_category").val("Hide");
+								 		$(".listCategorys").show();
+									} else {
+										$("#show_all_category").val("Show all");
+										$(".listCategorys").hide();
+									}
+								}
+								</script>
+								
+								
+								<div class = "col-lg-6 listCategorys" hidden>
+								<div class="checkbox">
+								    
 								    <label>
 								        <input type="checkbox" name = "check_builders[]" value = "Carpenters & Joiners"> Carpenters & Joiners
 								    </label>
@@ -349,15 +388,10 @@
 								</div>
 									
 								</div>
-								</div>	
-								<div class = "col-lg-6">
+								
+								<div class = "col-lg-6 listCategorys" hidden>
 								<div class="checkbox">
-								    		     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Handymen"> Handymen
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Heating Engineers"> Heating Engineers
-								    </label>
+								    		    
 								     <label>
 								        <input type="checkbox" name = "check_builders[]" value = "Insulation Installers"> Insulation Installers
 								    </label>
@@ -403,6 +437,9 @@
 								</div>
 									
 								</div>
+								<div class = "col-lg-12">
+								<input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
+								</div>
 								</div>			
 							</div>
 							<div class="pad-top">
@@ -414,23 +451,56 @@
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									<div class="radio">
-										  <label>
-										    <input type="radio" name="package_builder" value="2000" checked>
-										    Package 1
+										  <label onclick = "DetailPak1()">
+										    <input type="radio" name="package_builder" value="2000" id = "detail1" checked >
+										    Package 1 (20£)
 										  </label>
-										   <label>
+										   <label onclick = "DetailPak2()">
 										    <input type="radio" name="package_builder" value="5000">
-										    Package 2
+										    Package 2 (50£)
 										  </label>
-										  <label>
+										  <label onclick = "DetailPak3()">
 										    <input type="radio" name="package_builder" value="10000">
 										    
-										    Package 3
+										    Package 3 (100£)
 										  </label>
 									</div>
 											
 								</div>		
 							</div>
+
+
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div id = "detail_pack_1" >
+										<p>Details of Package 1</p>
+									</div>
+									<div id = "detail_pack_2" hidden>
+										<p>Details of Package 2</p>
+									</div>
+									<div id = "detail_pack_3" hidden>
+										<p>Details of Package 3</p>
+									</div>
+											
+								</div>		
+							</div>
+							<script>
+							function DetailPak1() {
+								$("#detail_pack_1").show();
+								$("#detail_pack_2").hide();
+								$("#detail_pack_3").hide();
+							}
+							function DetailPak2() {
+								$("#detail_pack_1").hide();
+								$("#detail_pack_2").show();
+								$("#detail_pack_3").hide();
+							}
+							function DetailPak3() {
+								$("#detail_pack_1").hide();
+								$("#detail_pack_2").hide();
+								$("#detail_pack_3").show();
+							}
+							</script>
 						
 						
 							<div class="form-fields-wrapper" id = "submit-div">

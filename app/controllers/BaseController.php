@@ -52,7 +52,7 @@ class BaseController extends Controller {
 				}
 				else {
 					if (Auth::user()->role == '1') {
-						return Redirect::route('landing-page');
+						return Redirect::to('builder-invited');
 					} else {
 						return Redirect::route('landing-page');
 					}
@@ -571,6 +571,7 @@ class BaseController extends Controller {
 				$job_process->job_id = Input::get('job_id');
 				$job_process->user_id = Auth::user()->id;
 				$job_process->builder_id = $builder->builder_id;
+				$job_process->num_invite_sent = count($builders);
 				$job_process->status = 'inviting';
 				$job_process->radius = $radius[$i];
 				$job_process->save();
@@ -624,6 +625,7 @@ class BaseController extends Controller {
 					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->num_invite_sent = '3';
 					$job_process->status = 'inviting';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
@@ -671,6 +673,7 @@ class BaseController extends Controller {
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->status = 'inviting';
+					$job_process->num_invite_sent = '3';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
 				    	try {
@@ -717,6 +720,7 @@ class BaseController extends Controller {
 					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->num_invite_sent = '3';
 					$job_process->status = 'inviting';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
@@ -756,6 +760,7 @@ class BaseController extends Controller {
 						$job_process->job_id = Input::get('job_id');
 						$job_process->user_id = Auth::user()->id;
 						$job_process->builder_id = $builders[0]->builder_id;
+						$job_process->num_invite_sent = '3';
 						$job_process->status = 'inviting';
 						$job_process->radius = $radius[$x];
 						$job_process->save();
@@ -804,7 +809,7 @@ class BaseController extends Controller {
 			$user = Auth::user();
 			return View::make('user_dashboard.dashboard')->with('user', $user);
 		}
-		return Redirect::to('register');
+		return Redirect::to('login');
 
 	}
 	
@@ -812,7 +817,7 @@ class BaseController extends Controller {
 	public function postChangeUserProfile()
 	{
 		$input = Input::all();
-		$rules = array('email' => 'required|email|exists:users,email');
+		$rules = array('email' => 'required|unique:users|email');
 		//var_dump($input['email'] ); die	;	
 		$v = Validator::make($input, $rules);
 		if($v->passes())
@@ -840,7 +845,11 @@ class BaseController extends Controller {
 		$password = Hash::make($password);
 		$user->password = $password; 
 		$user->save();
-		return Redirect::to('profile')->with('cpsuccess', '1');
+		if (Auth::user()->role == '0') {
+			return Redirect::to('profile')->with('cpsuccess', '1');
+		} else {// builder
+			return Redirect::to('builder-profile')->with('cpsuccess', '1');
+		}
 	}
 	
 	public function postChangePhoneNumber()
@@ -904,7 +913,12 @@ class BaseController extends Controller {
 			$user->email_confirm = $newcode;
 			$user->phone_confirm = $newcode_phone; 
 			$user->save();
-			return Redirect::to('profile')->with('phonesuccess', '1');
+			if (Auth::user()->role == '0') {
+					return Redirect::to('profile')->with('phonesuccess', '1');
+				} else {// builder
+					return Redirect::to('builder-profile')->with('phonesuccess', '1');
+				}
+			//return Redirect::to('profile')->with('phonesuccess', '1');
 
 	}
 	
@@ -1030,6 +1044,7 @@ class BaseController extends Controller {
 	 *          BUILDERS
 	 * 
 	 *-----------------------------*/
+	
 	public function getRegisterBuilder()
 	{  	
 		if(Auth::check()) {
@@ -1195,12 +1210,102 @@ class BaseController extends Controller {
 		
 	}
 	
+	
+	public function getBuilderProfile()
+	{
+		if(Auth::check()) {
+			//$builder = Auth::user();
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        		->where('users.id', '=', Auth::user()->id)->get();
+        		
+			return View::make('builder_dashboard.profile')->with('builder', $builder);
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postChangeBuilderProfile()
+	{
+		$input = Input::all();
+		$rules = array('email' => 'required|unique:users|email');	
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+			$builder = Auth::user();
+			if ($builder->username != $input['username'] ) {
+				$builder->username = $input['username'];
+ 			}
+			if ($builder->email != $input['email']) {
+				$builder->email = $input['email'];
+								
+			}
+			
+			$extend_builder = DB::table('extend_builders')
+        		->where('extend_builders.builder_id', '=', Auth::user()->id)
+        		->first();
+        		//var_dump($extend_builder); die;
+		if ($extend_builder->tittle != $input['company']) {
+				$extend_builder->tittle = $input['company'];
+								
+			}
+		if ($extend_builder->local != $input['local']) {
+				$extend_builder->local = $input['local'];
+								
+			}
+		if ($extend_builder->local_code != $input['local_code']) {
+				$extend_builder->local_code = $input['local_code'];
+								
+			}
+		if ($extend_builder->lat != $input['lat']) {
+				$extend_builder->lat = $input['lat'];
+								
+			}
+		if ($extend_builder->lng != $input['lng']) {
+				$extend_builder->lng = $input['lng'];
+								
+			}
+		if ($extend_builder->site_link != $input['site_link']) {
+				$extend_builder->site_link = $input['site_link'];
+								
+			}
+		if ($extend_builder->created_at != $input['created_at']) {
+				$extend_builder->created_at = $input['created_at'];
+								
+			}
+			$builder->save();
+			
+			DB::table('extend_builders')
+			->where('extend_builders.builder_id', '=', Auth::user()->id)
+			->update(array(
+			'tittle' => $input['company'],
+			'local' => $input['local'],
+			'local_code' => $input['local_code'],
+			'lat' => $input['lat'],
+			'lng' => $input['lng'],
+			'site_link' => $input['site_link'],
+			'created_at' => $input['created_at'],
+			));
+			
+			return Redirect::to('builder-profile')->with('success', '1');	
+		} else {
+			return Redirect::to('builder-profile')->withInput()->withErrors($v);	
+		}
+	}
+	
+	
+	
+	
+	
 	public function getBuilderInvited()
 	{
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
-				$invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->get();
-			   
+				$invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->having('status', '=','inviting' )->get();
+			    $customers = "";
+			    $categorys = "";
+				if ($invites != null) {
 			    foreach($invites as $invite){
 			    	 //var_dump($invite->builder_id); die;
 	    			 //$builder = DB::table('users')->having('id', '=',$invite->builder_id)->get();
@@ -1217,6 +1322,7 @@ class BaseController extends Controller {
 			      
 	    			 $categorys[$invite->user_id] = $category;
 			    	
+			    }
 			    } 
 		    //var_dump($customers[$invite->user_id][0]); die;
 		   	//var_dump($categorys); die;
@@ -1231,6 +1337,45 @@ class BaseController extends Controller {
 
 	}
 	
+	
+	public function getBuilderFindJobs()
+	{
+		if(Auth::check()) {
+			if (Auth::user()->role == '1' ) {
+				$builders = DB::table('users')->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        		->where('users.id', '=', Auth::user()->id)->get();
+        		//var_dump($builders); die;
+				return View::make('builder_dashboard.findJobs')->with(array('builders'=>$builders));;			
+			} else {
+				return Redirect::to('login');
+			}
+			
+		    
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postBuilderFindJobs()
+	{
+		$input = Input::all(); $hello = 1;
+		
+		
+		//var_dump ($test); die;
+		$category = Input::get('category');
+		$jobs = DB::table('jobs')->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+        		->having('jobs.category', '=', $category)
+        		->having('job_process.builder_id', '<>', Auth::user()->id)
+        		->having('job_process.status', '=', 'inviting')
+        		->having('job_process.num_invite_sent', '<', '3')
+        		->get();
+		
+
+		//var_dump($jobs); die;
+		
+		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs'=>$jobs));;
+	
+	}	
 	
 }
 

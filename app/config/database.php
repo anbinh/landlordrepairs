@@ -52,7 +52,7 @@ return array(
 			'prefix'   => '',
 		),
 
-		'mysql' => array(
+		/*'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'landlord1_data',
@@ -61,7 +61,7 @@ return array(
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
-		),
+		),*/
 		
 		'mysql' => array(
 			'driver'    => 'mysql',

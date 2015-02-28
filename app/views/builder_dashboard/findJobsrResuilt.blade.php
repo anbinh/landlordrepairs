@@ -22,6 +22,7 @@
 					  <a href="#" class="list-group-item">Invite jobs</a>
 					  <a href="#" class="list-group-item">Credit</a>
 					  
+					  
 				</div>
 
 			</div>
@@ -156,31 +157,39 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Name of Customer</em> <span>&nbsp;</span></th>
-			     <th><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
-			      
-			      <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Vote</em> <span>&nbsp;</span></th>
+			      <th><em>Title</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Description</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Property</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Category</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Time Option</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Date</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Local</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Local Code</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Num of Builder invited</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			      
 			      
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($invites != null)
-              @foreach($invites as $invite)
+			  @if($jobs != null)
+              @foreach($jobs as $job)
 			 	<tr>
 			    	
-			    	<td>{{$customers[$invite->user_id][0]->username}}</td>
-			    	<td>{{$categorys[$invite->user_id][0]->category}}</td>
-			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
-			      	
-			      	
-			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->email}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$invite->vote}}</em> <span>&nbsp;</span></td>
+			    	<td>{{$job->tittle}}</td>
+			    	<td>{{$job->description}}</td>
+			    	<td>{{$job->price}}</td>
+			    	<td>{{$job->property}}</td>
+			    	<td>{{$job->category}}</td>
+			    	<td>{{$job->timeoption}}</td>
+			    	<td>{{$job->date}}</td>
+			    	<td>{{$job->local}}</td>
+			    	<td>{{$job->num_invite_sent}}</td>
+			    	<td>{{$job->local_code}}</td>
+			    	<td>Vote</td>
+			    	
 			 	</tr>	
 				@endforeach
               @endif
