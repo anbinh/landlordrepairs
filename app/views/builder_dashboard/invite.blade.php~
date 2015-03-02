@@ -190,7 +190,7 @@
 							
 							<form action="vote-job" method="post">
   								<input type = "number" name = "votePrice" value = "0"/>
-  								<input hidden name = "job_id"value = "{{$invite->job_id}}"/>
+  								<input hidden name = "job_id"value = "{{$invite[0]->job_id}}"/>
   								<input type="submit" value="Vote">
 							</form>
 								      	

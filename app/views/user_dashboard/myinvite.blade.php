@@ -149,7 +149,7 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
+			
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
@@ -180,7 +180,17 @@
 			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->local_code}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->email}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$invite->vote}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>
+						
+						@if ("{{$invite->vote}}" == "0")
+			      	{{$invite->vote}}£
+			      	 
+			      	@else
+			         {{$invite->vote}}£
+			      	 <a class = "btn btn-primary" style = "background-color: green; color: white;" href = "accept-vote/{{$invite->builder_id}},{{$invite->job_id}}">Accept</a>
+			      	 <a class = "btn btn-primary" style = "background-color: red; color: white;" href = "cancel-vote/{{$invite->builder_id}},{{$invite->job_id}}">Cancel</a>
+			      	@endif
+			      	</em> <span>&nbsp;</span></td>
 			 	</tr>	
 				@endforeach
 			    
@@ -188,7 +198,7 @@
 			</table>
 			
 			 
-			{{ Form::close() }}
+
 			
     </div>
     

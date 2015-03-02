@@ -28,48 +28,79 @@
 			</div>
 			<div class="col-md-10">
 				<div class="row">
-				    <div class="col-lg-4">
+				    <div class="col-lg-6">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
-				                Builder Profile
+				                Job Detail
 				            </div>
 			            <div class="panel-body">
 			                <div class="row">
 			                    <div class="col-lg-12">
-			                       
-			                        @if(Session::get("success") == '1')
-			                        <div class="alert alert-success alert-dismissable">
-			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			                            Profile has been updated successfully.
-			                        </div>
-			                        @endif
-			                        
-			                       {{ Form::open(array('url' => 'change_builder_profile')) }}
+
+			                     
 		                            <div class="form-group">
-		                                <label>Name</label>
-		                                {{ Form::text('username', $builder[0]->username, array('placeholder' => 'Choose your username', 'class' => 'form-control')) }}
+		                                <label>Tittle</label>
+		                              	<p>{{$jobInfo->tittle}}</p>
 		                            </div>
 		                           
 		                            <div class="form-group">
-		                                <label>Email</label>
-		                                {{ Form::text('email', $builder[0]->email, array('placeholder' => 'Type your email','class' => 'form-control')) }}
+		                                <label>Description</label>
+		                                <p>{{$jobInfo->description}}</p>
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Company</label>
-		                                {{ Form::text('company', $builder[0]->tittle, array('placeholder' => 'Type your company','class' => 'form-control')) }}
+		                                <label>Price</label>
+		                                <p>{{$jobInfo->price}}£</p>
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Property</label>
+		                                <p>{{$jobInfo->property}}</p>
+		                            </div>
+		                            
+		                             <div class="form-group">
+		                                <label>Category</label>
+		                                <p>{{$jobInfo->category}}</p>
+		                            	
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Time Option</label>
+		                                <p>{{$jobInfo->timeoption}}</p>
+		                            	
+		                            </div>
+		                           
+		                           @if("{{$jobInfo->timeoption}}" == "Specific")
+					                 <div class="form-group">
+		                                <label>At date</label>
+		                                <p>{{$jobInfo->date}}</p>
+		                            	
+		                            </div>
+		         	               
+		
+				                     @endif
+		                            <div class="form-group">
+		                                <label>Time Invited Sent</label>
+		                                <p>{{$jobProcess->created_at}}</p>
+		                            	
 		                            </div>
 		                            
 		                            <div class="form-group">
 		                                <label>Local</label>
-		                                {{ Form::text('local', $builder[0]->local, array('placeholder' => 'Type your code','class' => 'form-control')) }}
-		                            </div>
-		                            
-		                             <div class="form-group">
-		                                <label>Local code</label>
-		                                <input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'style = "z-index:2; margin-left: -42px;" value = "{{$builder[0]->local_code}}">
+		                                <p>{{$jobInfo->local}}</p>
 		                            	
 		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Local code</label>
+		                                <p>{{$jobInfo->local_code}}</p>
+		                            	
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Radius</label>
+		                                <p>{{$jobProcess->radius}} miles</p>
+		                            	
+		                            </div>
+		                            
 		                            <div class="pad-top">
 								<div class="form-control-wrapper" >
 									
@@ -142,9 +173,9 @@
 							function initialize() {
 							
 							  var markers = [];
-							  var haightAshbury = new google.maps.LatLng({{$builder[0]->lat}},{{$builder[0]->lng}});
+							  var haightAshbury = new google.maps.LatLng({{$jobInfo->lat}},{{$jobInfo->lng}});
 							  var mapOptions = {
-							    zoom: 6,
+							    zoom: 10,
 							    center: haightAshbury,
 							    //mapTypeId: google.maps.MapTypeId.TERRAIN
 							  };
@@ -230,89 +261,47 @@
 							
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
-		                            <div class="form-group">
-		                                <label>Site Link</label>
-		                                {{ Form::text('site_link', $builder[0]->site_link, array('placeholder' => 'Type your site link','class' => 'form-control')) }}
-		                            </div>
-		                            
-		                             <div class="form-group">
-		                                <label>Started At</label>
-		                                {{ Form::text('created_at', $builder[0]->created_at, array('placeholder' => 'Type your date','class' => 'form-control')) }}
-		                            </div>
-		                           
 
-		                            {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
-		                            
-		                        {{ Form::close() }}
 		                    </div>
 		                </div>
 		            </div>
         </div>
     </div>
     <!-- end col-md-6-->
-      <div class="col-lg-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Change password
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                      
-                        @if(Session::get("cpsuccess") == "1")
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            User password has been changed successfully.
-                        </div>
-                        @endif
-                        {{ Form::open(array('url' => 'change_password')) }}
-                            <div class="form-group">
-                                <label>New Password</label>
-                                {{ Form::text('password','', array('placeholder' => 'Type your new Password', 'class' => 'form-control')) }}
-                            </div>
-                           
+    <div class="col-lg-6">
+				        <div class="panel panel-default">
+				            <div class="panel-heading">
+				                Customer Info
+				            </div>
+			            <div class="panel-body">
+			                <div class="row">
+			                    <div class="col-lg-12">
 
-                            {{ Form::submit('Change password', array('class' => 'btn btn-primary')) }}
-                           
-                        {{ Form::close() }}
-                        
-                    </div>
-                </div>
-            </div>
+			                     
+		                            <div class="form-group">
+		                                <label>Name</label>
+		                                <p>{{$userInfo->username}}</p>
+		                            </div>
+		                           
+		                            <div class="form-group">
+		                                <label>Email</label>
+		                                <p>{{$userInfo->email}}</p>
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Phone number</label>
+		                                <p>{{$userInfo->phone_number}}</p>
+		                            </div>
+		                            
+		                           <a class = "btn btn-primary" href = "{{URL::route('builder-invited')}}">Back</a>
+		                           
+
+		                           
+		                    </div>
+		                </div>
+		            </div>
         </div>
     </div>
-    <!-- end change password-->
-      <div class="col-lg-3" >
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Change Phone Number
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        
-                        @if(Session::get("phonesuccess") == "1")
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            Phonenumber has been changed successfully, please check email to confirm new phonenumber
-                        </div>
-                        @endif
-                        {{ Form::open(array('url' => 'change_phonenumber')) }}
-                            <div class="form-group">
-                                <label>New Phonenumber</label>
-                                {{ Form::text('phonenumber','', array('placeholder' => 'Type your new Phonenumber', 'class' => 'form-control')) }}
-                            </div>
-                           
-                            {{ Form::submit('Change Phonenumber', array('class' => 'btn btn-primary')) }}
-                           
-                        {{ Form::close() }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- end change phone number -->
 </div>
 			</div>
 		</div>

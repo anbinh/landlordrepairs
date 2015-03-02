@@ -237,7 +237,8 @@ Route::post('login','BaseController@postLogin');
 Route::get('phoneconfirm', 'BaseController@getPhoneconfirm');
 Route::post('phoneconfirm','BaseController@postPhoneconfirm');
 
-Route::get('logout', 'BaseController@logout');
+
+Route::get('logout', array('as'=>'logout','uses' => 'BaseController@logout' ));
 Route::get('forgetpass', 'BaseController@getForgetpass');
 Route::post('forgetpass', 'BaseController@postForgetpass');
 
@@ -330,11 +331,23 @@ Route::post('register-builder', 'BaseController@postRegisterBuilder');
 
 Route::post('paypackagebuilder', 'BaseController@postPayPackageBuilder');
 
-Route::get('builder-profile', 'BaseController@getBuilderProfile');
-Route::post('builder-profile', 'BaseController@postBuilderProfile');
 
-Route::get('builder-invited', 'BaseController@getBuilderInvited');
+Route::get('builder-profile', array('as'=>'builder-profile','uses' => 'BaseController@getBuilderProfile' ));
+Route::post('builder-profile', 'BaseController@postBuilderProfile');
+Route::post('change_builder_profile','BaseController@postChangeBuilderProfile');
+
+Route::get('builder-invited', array('as'=>'builder-invited','uses' => 'BaseController@getBuilderInvited' ));
 Route::post('builder-invited', 'BaseController@postBuilderInvited');
 
-Route::get('builder-find-jobs', 'BaseController@getBuilderFindJobs');
-Route::post('change_builder_profile','BaseController@postChangeBuilderProfile');
+Route::get('builder-find-jobs', array('as'=>'builder-find-jobs','uses' => 'BaseController@getBuilderFindJobs' ));
+Route::post('builder-find-jobs', 'BaseController@postBuilderFindJobs');
+
+Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
+
+Route::post('vote-job', 'BaseController@postVoteJob');
+
+Route::get( 'accept-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getAcceptVote' ));
+Route::get( 'cancel-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getCancelVote' ));
+
+
+

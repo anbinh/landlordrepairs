@@ -45,7 +45,7 @@
                     </li>
                     <li class="page-scroll">
                     	@if(Auth::check())
-                        	<a href="{{URL::route('logout')}}">logout</a>
+                        	<a href="logout">logout</a>
                         @else
                         	<a href="login">
                         		login

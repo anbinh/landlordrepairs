@@ -36,7 +36,12 @@
 			            <div class="panel-body">
 			                <div class="row">
 			                    <div class="col-lg-12">
-			                       
+			                        @if($errors->any())
+			                        <div class="alert alert-danger alert-dismissable">
+			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			                            {{ implode('', $errors->all('<li class="error">:message</li>')) }}
+			                        </div>
+			                        @endif
 			                        @if(Session::get("success") == '1')
 			                        <div class="alert alert-success alert-dismissable">
 			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
