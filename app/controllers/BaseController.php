@@ -815,7 +815,39 @@ class BaseController extends Controller {
 	
 	
 	public function postChangeUserProfile()
-	{
+	{   
+		$input = Input::all();
+		$email_old = $input['email'];
+		
+		DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'email' => "temp",
+			));
+			
+		$rules = array('email' => 'required|unique:users|email');
+		$v = Validator::make($input, $rules);
+		if($v->passes()) {
+			DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'username' => $input['username'],
+			'email' => $input['email'],
+			));
+			return Redirect::to('profile')->with('success', '1');
+		}
+		else {
+			DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'email' => $email_old,
+			));
+			return Redirect::to('profile')->withInput()->withErrors($v);	
+		}
+		
+		
+		
+		
 		$input = Input::all();
 		$rules = array('email' => 'required|unique:users|email');
 		//var_dump($input['email'] ); die	;	
@@ -1270,21 +1302,25 @@ class BaseController extends Controller {
 	public function postChangeBuilderProfile()
 	{
 		$input = Input::all();
+		$email_old = $input['email'];
 		
-		if($input['email'] != Auth::user()->email)
-		{
+		DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'email' => "temp",
+			));
 			
-			$builder = Auth::user();
-			if ($builder->username != $input['username'] ) {
-				$builder->username = $input['username'];
- 			}
-			if ($builder->email != $input['email']) {
-				$builder->email = $input['email'];
-								
-			}
-			$builder->save();			
-			
-			
+		$rules = array('email' => 'required|unique:users|email');
+		$v = Validator::make($input, $rules);
+		if($v->passes()) {
+		
+			DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'username' => $input['username'],
+			'email' => $input['email'],
+			));
+
 			
 			DB::table('extend_builders')
 			->where('extend_builders.builder_id', '=', Auth::user()->id)
@@ -1312,8 +1348,15 @@ class BaseController extends Controller {
 			}
 			//----------------------//
 			
-			return Redirect::to('builder-profile')->with('success', '1');	
+				
+		
+		return Redirect::to('builder-profile')->with('success', '1');
 		} else {
+			DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'email' => $email_old,
+			));
 			return Redirect::to('builder-profile')->with('success', '0');	
 		}
 	}
