@@ -311,7 +311,10 @@
 								
 								<div class = "col-lg-6">
 								<div class="checkbox">
-									  
+									  @foreach($builders as $builder)
+										{{$builder->category}}
+										
+										@endforeach
 								    <label>
 								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters" checked> Bathroom Fitters
 								    </label>
