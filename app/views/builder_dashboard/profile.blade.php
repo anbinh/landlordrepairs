@@ -249,7 +249,7 @@
 		                                <label>Started At</label>
 		                                {{ Form::text('created_at', $builder[0]->created_at, array('placeholder' => 'Type your date','class' => 'form-control')) }}
 		                            </div>
-		                            	<div class="pad-top">
+		                 <div class="pad-top">
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-12">
@@ -281,7 +281,7 @@
 								</div>
 									
 								</div>
-								</div>	
+								</div>
 								<div class = "col-lg-6">
 								
 								<div class="checkbox">
@@ -305,7 +305,7 @@
 								</div>
 								
 								<script>
-								function showAllCategory() {
+								function showAllCategory() { //alert();
 									if ($("#show_all_category").val() == "Show all"){
 								 		$("#show_all_category").val("Hide");
 								 		$(".listCategorys").show();
@@ -528,17 +528,24 @@
 								
 								</div>
 							   
-								<div class = "col-lg-12">
+								<div class = "col-lg-12" style = "margin-bottom: 100px;">
 								<input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
 								</div>
 								</div>
 								
-								<div class="pad-top">
+
+
+
+
+
+
+
+						<div class="" >
 							<div class = "col-lg-12">
 								Association 
 								</div>
-								<div class="form-control-wrapper" >
-									<div class="radio">
+								
+									<div class="">
 											<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
 										  <label>											  	
 										    <input type="radio" name="association" value="association_1" id = "detail1"   @if ($builder[0]->association == 'association_1') checked @endif />
@@ -641,13 +648,13 @@
 								</script>
 									</div>
 											
-								</div>		
+								
 							</div>
 
 		                            {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
 		                            
 		                        {{ Form::close() }}
-		                    </div>
+		                    </div>	
 		                </div>
 		            </div>
         </div>
