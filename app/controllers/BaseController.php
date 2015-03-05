@@ -1498,6 +1498,7 @@ class BaseController extends Controller {
 		
 		$isHasNum = true;
 		//var_dump ($test); die;
+		$jobs = "";
 		$category = Input::get('category');
 		$jobs = DB::table('jobs')->join('job_process', 'jobs.id', '=', 'job_process.job_id')
         		->having('jobs.category', '=', $category)
@@ -1505,13 +1506,15 @@ class BaseController extends Controller {
         		->having('jobs.status', '=', 'openjob')
         		->having('job_process.num_invite_sent', '<', '3')
         		->get();
-        if($jobs == null){
+        //var_dump($jobs); die;
+        /*if($jobs == null){
         	//echo "here"; die;
         	$jobs = DB::table('jobs')
         		->having('jobs.category', '=', $category)
         		->get();
         	$isHasNum = false;	
-        }
+        }*/
+        		
 		//var_dump($jobs); die;
 		/*
 		 * 
