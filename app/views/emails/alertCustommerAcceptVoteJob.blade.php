@@ -1,0 +1,1 @@
+Customer has been accept your vote, please contact with {{$phone_number}} them to begin job.

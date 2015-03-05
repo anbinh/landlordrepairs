@@ -52,7 +52,7 @@ class BaseController extends Controller {
 				}
 				else {
 					if (Auth::user()->role == '1') {
-						return Redirect::to('builder-invited');
+						return Redirect::to('customer-invited');
 					} else {
 						return Redirect::route('landing-page');
 					}
@@ -969,9 +969,13 @@ class BaseController extends Controller {
 	public function getOngoingJobs()
 	{
 		if(Auth::check()) {
-			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','ongoing')->get();
-			
+							
+			$jobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.user_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status', '=', 'ongoing')
+		    	 ->get();
+		    	 //var_dump($jobs); die;
 			return View::make('user_dashboard.ongoingjobs')->with('jobs', $jobs);
 		}
 		return Redirect::to('login');
@@ -1018,39 +1022,32 @@ class BaseController extends Controller {
 	public function getMyInvites()
 	{
 		if(Auth::check()) {
-			
-			
-			
-			
-			/*$invites = DB::table('job_process')
-		    ->join('users', 'job_process.user_id', '=', 'jobs.user_id')
-		    ->where('jobs.user_id', '=', Auth::user()->id)
-		    ->get();*/
-		    
+		
 		    $invites = DB::table('job_process')->having('user_id', '=',Auth::user()->id )->get();
-		    $builders = array();
+		    $builders = array(); 
 		    foreach($invites as $invite){
-		    	 //var_dump($invite->builder_id); die;
-    			 //$builder = DB::table('users')->having('id', '=',$invite->builder_id)->get();
 		    	 
-		    	$builder = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+		    	$builder = DB::table('users')
+		    		->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+		    	 	->where('users.id', '=', $invite->builder_id)
+		    	 	->get();
 		    	 
-		    	 ->where('users.id', '=', $invite->builder_id)->get();
-		    	 
-		    	 /*$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-		         ->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-		         ->where('users.id', '=', $invite->builder_id)->get();*/
-		         
-		         
     			 $builders[$invite->builder_id] = $builder;
-		    	 $category = DB::table('extend_builders_category')->having('builder_id', '=',$invite->builder_id)->get();
+		    	 
+    			 $category = DB::table('extend_builders_category')
+    			 	->having('builder_id', '=',$invite->builder_id)
+    			 	->get();
 		    	 $categorys[$invite->builder_id] = $category;
 		    	 
+		    	 $jobtittle = DB::table('jobs')
+		    	 	->where('id', '=',$invite->job_id)
+		    	 	->first();  
+		    	 	
+		    	 $jobtittles[$invite->id] = $jobtittle;
 		    	 
+		    	   
 		    } 
-		    //var_dump($categorys[$invite->builder_id][0]->category); die;
-		   	//var_dump($builders[$invite->builder_id][0]->id); die;
-			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'categorys'=>$categorys));
+			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'categorys'=>$categorys,'jobtittles'=>$jobtittles));
 		}
 		return Redirect::to('register');
 
@@ -1070,7 +1067,16 @@ class BaseController extends Controller {
 	
 	public function getAcceptVote($builder_id, $job_id)
 	{
-		if(Auth::check()) {			
+		if(Auth::check()) {
+			
+			/*When Customer Accept a Vote from Builder:
+			 * + Status of job_process: "ongoing"
+			 * + Disable tobe a results of FindJobs form builders's request (conditions findjobs: ->having('jobs.status', '=', 'openjob'))
+			 * +
+			 */
+			
+			//--Process in DATABASE
+						
 			DB::table('job_process')
 			->where('job_id', '=', $job_id)
 			->where('builder_id', '=', $builder_id)
@@ -1085,9 +1091,58 @@ class BaseController extends Controller {
         	->update(array(
 			'status' => 'miss',
 			));
-			//----Sent Alert to Email & Phone of Customer + Builders
 			
+			DB::table('jobs')
+			->where('id', '=', $job_id)
+        	->update(array(
+			'status' => 'closejob',
+			));
+			//----Sent Alert to Email & Phone of Customer + Builders
+			$builder = User::where('id', '=',$builder_id )->first();
+			$data = array(
+					'email'     => $builder->email,
+					'phone_number' =>$builder->phone_number
+					//'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
+			);
+			try {
+				Mail::send('emails.signup', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Customer Accept your Vote');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $builder->email;
+				$subject = 'Customer Accept your Vote';
+				$message = View::make('emails.alertCustommerAcceptVoteJob', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}
+			
+			
+			//----send sms----//
+			
+			
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$token = "d94d47547950d199f065f365a51111a4"; 
+			$client = new Services_Twilio($sid, $token);
+			$message = "Customer has been accept your vote, please check email to contact with them";
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$builder->phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			//----------------//
+			
+			//--End send email and phone to Customer----//
 			//----------END Alert-----------------------------------
+			
 			return Redirect::to('ongoingjobs');
 		}
 		return Redirect::to('login');
@@ -1421,20 +1476,34 @@ class BaseController extends Controller {
 	{
 		$input = Input::all(); $hello = 1;
 		
-		
+		$isHasNum = true;
 		//var_dump ($test); die;
 		$category = Input::get('category');
 		$jobs = DB::table('jobs')->join('job_process', 'jobs.id', '=', 'job_process.job_id')
         		->having('jobs.category', '=', $category)
         		->having('job_process.builder_id', '<>', Auth::user()->id)
-        		->having('job_process.status', '=', 'inviting')
+        		->having('jobs.status', '=', 'openjob')
         		->having('job_process.num_invite_sent', '<', '3')
         		->get();
-		
+        if($jobs == null){
+        	//echo "here"; die;
+        	$jobs = DB::table('jobs')
+        		->having('jobs.category', '=', $category)
+        		->get();
+        	$isHasNum = false;	
+        }
+		//var_dump($jobs); die;
+		/*
+		 * 
+		 * 
+		 * 
+		 * thieu truong hop khi chua co trong job_process
+		 * 
+		 */
 
 		//var_dump($jobs); die;
 		
-		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs'=>$jobs));;
+		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs'=>$jobs,'isHasNum'=>$isHasNum));;
 	
 	}	
 	
@@ -1472,7 +1541,57 @@ class BaseController extends Controller {
         	->update(array(
 			'vote' => Input::get('votePrice'),
 			));
-			echo "vote success"; die;
+			
+		$customer = DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+        	->first();
+			//var_dump($customer->phone_number); die;
+			//--set email and phone to Customer----//
+			$data = array(
+					'email'     => $customer->email
+					//'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
+			);
+			try {
+				Mail::send('emails.signup', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Builder Vote your Job');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $customer->email;
+				$subject = 'Builder Vote your Job';
+				$message = View::make('emails.alertBuilderVoteJob', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}
+			
+			
+			//----send sms----//
+			
+			
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$token = "d94d47547950d199f065f365a51111a4"; 
+			$client = new Services_Twilio($sid, $token);
+			$message = "Abuilder has been vote your job, please go to http://landlordrepairs.uk/test/landlord/public/myinvites to Accept or Cancel it.";
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$customer->phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			//----------------//
+			
+			//--End send email and phone to Customer----//
+			
+			
+			
+			
       return Redirect::to('login');
 			
 	}	

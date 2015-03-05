@@ -336,8 +336,8 @@ Route::get('builder-profile', array('as'=>'builder-profile','uses' => 'BaseContr
 Route::post('builder-profile', 'BaseController@postBuilderProfile');
 Route::post('change_builder_profile','BaseController@postChangeBuilderProfile');
 
-Route::get('builder-invited', array('as'=>'builder-invited','uses' => 'BaseController@getBuilderInvited' ));
-Route::post('builder-invited', 'BaseController@postBuilderInvited');
+Route::get('customer-invited', array('as'=>'customer-invited','uses' => 'BaseController@getBuilderInvited' ));
+Route::post('customer-invited', 'BaseController@postBuilderInvited');
 
 Route::get('builder-find-jobs', array('as'=>'builder-find-jobs','uses' => 'BaseController@getBuilderFindJobs' ));
 Route::post('builder-find-jobs', 'BaseController@postBuilderFindJobs');

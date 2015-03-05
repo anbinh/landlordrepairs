@@ -11,7 +11,7 @@
 					    Dashboard
 					  </a>
 					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('builder-invited')}}" class="list-group-item">Job Alerts</a>
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
 					  <a href="#" class="list-group-item">On going Jobs</a>
 					  <a href="#" class="list-group-item">Lost jobs</a>

@@ -31,7 +31,7 @@
                         			dashboard
                         		</a>
                         	@else
-                        		<a href="builder-invited">
+                        		<a href="customer-invited">
                         			dashboard
                         		</a>
                         	@endif
