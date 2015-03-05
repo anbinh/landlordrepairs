@@ -10,15 +10,15 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="profile" class="list-group-item">My Profile</a>
-					  <a href="openjobs" class="list-group-item">Open Jobs</a>
-					  <a href="ongoingjobs" class="list-group-item">Ongoing Jobs</a>
-					  <a href="cancelledjobs" class="list-group-item">Cancelled Jobs</a>
-					  <a href="pendingreview" class="list-group-item">Pending reviews</a>
-					  <a href="completedjobs" class="list-group-item">Completed Jobs</a>
-					  <a href="myinvites" class="list-group-item">My Invites</a>
-					  <a href="myfavorites" class="list-group-item">My favorites Builders</a>
-					  <a href="postjob" class="list-group-item">Post a Job</a>
+					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 				</div>
 
 			</div>

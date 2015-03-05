@@ -292,7 +292,7 @@ Route::group(array('before' => 'auth'), function(){
 
 });
 
-Route::get('profile','BaseController@getProfile');
+Route::get('profile',array('as'=>'profile','uses' => 'BaseController@getProfile' ));
 Route::post('change_user_profile','BaseController@postChangeUserProfile');
 Route::post('change_password','BaseController@postChangePassword');
 Route::post('change_phonenumber','BaseController@postChangePhoneNumber');
@@ -309,14 +309,18 @@ Route::post('delete_account', array('as'=>'delete_account','uses' => 'BaseContro
 Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');
 
 
-Route::get('openjobs','BaseController@getOpenJobs');
-Route::get('ongoingjobs','BaseController@getOngoingJobs');
-Route::get('cancelledjobs','BaseController@getCancelledJobs');
-Route::get('pendingreview','BaseController@getPendingReviewJobs');
-Route::get('completedjobs','BaseController@getCompletedJobs');
-Route::get('myinvites','BaseController@getMyInvites');
-Route::get('myfavorites','BaseController@getMyFavorites');
+Route::get('openjobs',array('as'=>'openjobs','uses' => 'BaseController@getOpenJobs' ));
+Route::get('ongoingjobs',array('as'=>'ongoingjobs','uses' => 'BaseController@getOngoingJobs' ));
+Route::get('cancelledjobs',array('as'=>'cancelledjobs','uses' => 'BaseController@getCancelledJobs' ));
+Route::get('pendingreview',array('as'=>'pendingreview','uses' => 'BaseController@getPendingReviewJobs' ));
+Route::get('completedjobs',array('as'=>'completedjobs','uses' => 'BaseController@getCompletedJobs' ));
+Route::get('myinvites',array('as'=>'myinvites','uses' => 'BaseController@getMyInvites' ));
+Route::get('myfavorites',array('as'=>'myfavorites','uses' => 'BaseController@getMyFavorites' ));
 
+Route::get( 'accept-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getAcceptVote' ));
+Route::get( 'cancel-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getCancelVote' ));
+
+Route::get('view-detail-info-builder/{builder_id},{job_id}', array('uses' => 'BaseController@getViewDetailInfoBuilder' ));
 //-----TEST DISTANCE GOOGLEMAP------//
 
 
@@ -342,12 +346,21 @@ Route::post('customer-invited', 'BaseController@postBuilderInvited');
 Route::get('builder-find-jobs', array('as'=>'builder-find-jobs','uses' => 'BaseController@getBuilderFindJobs' ));
 Route::post('builder-find-jobs', 'BaseController@postBuilderFindJobs');
 
+Route::get('builder-ongoing-jobs', array('as'=>'builder-ongoing-jobs','uses' => 'BaseController@getBuilderOngoingJobs' ));
+Route::get('builder-lost-jobs', array('as'=>'builder-lost-jobs','uses' => 'BaseController@getBuilderLostJobs' ));
+Route::get('builder-won-jobs', array('as'=>'builder-won-jobs','uses' => 'BaseController@getBuilderWonJobs' ));
+Route::get('builder-cancelled-jobs', array('as'=>'builder-cancelled-jobs','uses' => 'BaseController@getBuilderCancelledJobs' ));
+Route::get('builder-completed-jobs', array('as'=>'builder-completed-jobs','uses' => 'BaseController@getBuilderCompletedJobs' ));
+
+
+
+
+
 Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
 
 Route::post('vote-job', 'BaseController@postVoteJob');
 
-Route::get( 'accept-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getAcceptVote' ));
-Route::get( 'cancel-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getCancelVote' ));
+
 
 
 

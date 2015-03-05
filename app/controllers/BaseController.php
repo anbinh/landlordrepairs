@@ -958,7 +958,7 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','open')->get();
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','openjob')->get();
 			
 			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
 		}
@@ -986,7 +986,7 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','cancelled')->get();
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','cancelledjob')->get();
 			
 			return View::make('user_dashboard.cancelledjobs')->with('jobs', $jobs);
 		}
@@ -1009,21 +1009,24 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','completed')->get();
+			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','completedjob')->get();
 			
 			return View::make('user_dashboard.completedjobs')->with('jobs', $jobs);
 		}
 		return Redirect::to('login');
 
 	}
-	
-	
-	
+
 	public function getMyInvites()
 	{
 		if(Auth::check()) {
-		
-		    $invites = DB::table('job_process')->having('user_id', '=',Auth::user()->id )->get();
+		$invites = "";
+		$categorys = "";
+		$jobtittles = "";
+		    $invites = DB::table('job_process')
+		    	->having('user_id', '=',Auth::user()->id )
+		    	->having('status', '=','inviting' )
+		    	->get(); 
 		    $builders = array(); 
 		    foreach($invites as $invite){
 		    	 
@@ -1065,13 +1068,30 @@ class BaseController extends Controller {
 
 	}
 	
+	public function getViewDetailInfoBuilder($builder_id, $job_id)
+	{ 
+		if(Auth::check()) {
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        		->where('users.id', '=', $builder_id)->get();
+        		//var_dump($builder[0]); 
+        	
+        	$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
+			$radius = $jobProcess->radius; 
+        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder, 'radius' => $radius));
+		}
+		return Redirect::to('login');
+
+	}
+	
 	public function getAcceptVote($builder_id, $job_id)
 	{
 		if(Auth::check()) {
 			
 			/*When Customer Accept a Vote from Builder:
 			 * + Status of job_process: "ongoing"
-			 * + Disable tobe a results of FindJobs form builders's request (conditions findjobs: ->having('jobs.status', '=', 'openjob'))
+			 * + Disable to be a results of FindJobs form builders's request (conditions findjobs: ->having('jobs.status', '=', 'openjob'))
 			 * +
 			 */
 			
@@ -1424,8 +1444,9 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
-				 $invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->having('status', '=','inviting' )->get();
-			    $customers = "";
+				$invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->having('status', '=','inviting' )->get();
+			   
+				$customers = "";
 			    $categorys = "";
 				if ($invites != null) {
 			    foreach($invites as $invite){
@@ -1440,8 +1461,7 @@ class BaseController extends Controller {
 			    	
 			    }
 			    } 
-		    //var_dump($customers[$invite->user_id][0]); die;
-		   	//var_dump($categorys); die;
+			
 			return View::make('builder_dashboard.invite')->with(array('invites'=>$invites,'customers'=>$customers,'categorys'=>$categorys));	
 			} else {
 				return Redirect::to('login');
@@ -1541,11 +1561,10 @@ class BaseController extends Controller {
         	->update(array(
 			'vote' => Input::get('votePrice'),
 			));
-			
+		//var_dump(); die;	
 		$customer = DB::table('users')
 			->where('id', '=', Input::get('user_id'))
         	->first();
-			//var_dump($customer->phone_number); die;
 			//--set email and phone to Customer----//
 			$data = array(
 					'email'     => $customer->email
@@ -1589,12 +1608,49 @@ class BaseController extends Controller {
 			
 			//--End send email and phone to Customer----//
 			
+			/*Lost more here
+			 * 
+			 * 
+			 */
 			
 			
+      return Redirect::to('customer-invited');
+
+      
+	}
+	
+	public function getBuilderOngoingJobs()
+	{
+		if(Auth::check()) {
+			 /*$builders = DB::table('jobs_process')->join('job_process', 'jobs.builder_id', '=', 'job_process.builder_id')
+        		->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        		->where('extend_builders_category.category', '=', $input['category'])->get();
+        	*/
+			$jobs = DB::table('job_process')
+				->having('builder_id', '=',Auth::user()->id)
+				->having('status','=','ongoing')
+				->get();
 			
-      return Redirect::to('login');
-			
-	}	
+			$OngoingJobs = array();
+			foreach( $jobs as $job ) {
+				/*$OngoingJob = DB::table('jobs')
+				->having('id', '=', $job->job_id)
+				
+				->first();*/
+				$OngoingJob = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('jobs.id', '=', $job->job_id)
+		    	 ->first();
+		    	 //var_dump($OngoingJob); die;
+				$OngoingJobs[$job->id] = $OngoingJob;
+			}
+			//var_dump($OngoingJobs); die;
+			return View::make('builder_dashboard.ongoingjobs')->with(array('jobs'=> $jobs, 'OngoingJobs'=> $OngoingJobs));
+		}
+		return Redirect::to('login');
+
+	}
+	
 }
 
 
