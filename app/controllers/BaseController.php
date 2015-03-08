@@ -992,7 +992,7 @@ class BaseController extends Controller {
 			$cancelledJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
 		    	 ->where('job_process.user_id', '=', Auth::user()->id)
-		    	 ->where('job_process.status', '=', 'cancelled')
+		    	 ->where('job_process.status_process', '=', 'cancelled')
 		    	 ->get();
 		    	 
 		 	
@@ -1018,7 +1018,7 @@ public function postCustomerActionCancelled()
 			->where('job_id', '=', Input::get('job_id'))
 			->where('builder_id', '=', Input::get('builder_id'))
         	->update(array(
-			'status' => 'cancelled',
+			'status_process' => 'cancelled',
         	'cancelled_confirm' => $newcode,
 			));
 		/*
@@ -1962,7 +1962,7 @@ public function postCustomerActionCancelled()
 			->where('job_id', '=', Input::get('job_id'))
 			->where('builder_id', '=', Auth::user()->id)
         	->update(array(
-			'status' => 'cancelled',
+			'status_process' => 'cancelled',
         	'cancelled_confirm' => $newcode,
 			));
 		/*
@@ -2105,7 +2105,7 @@ public function postCustomerActionCancelled()
 			$cancelledJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
-		    	 ->where('job_process.status', '=', 'cancelled')
+		    	 ->where('job_process.status_process', '=', 'cancelled')
 		    	 ->get();
 		    	 
 		 	
