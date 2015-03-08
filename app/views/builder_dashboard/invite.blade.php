@@ -11,16 +11,15 @@
 					    Dashboard
 					  </a>
 					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					 
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="#" class="list-group-item">On going Jobs</a>
-					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="#" class="list-group-item">Won jobs</a>
-					  <a href="#" class="list-group-item">Cancelled jobs</a>
+					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
+					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
+					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
 					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="#" class="list-group-item">Completed jobs</a>
-					  <a href="#" class="list-group-item">Invite jobs</a>
+					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="#" class="list-group-item">Credit</a>
 					  
 				</div>
@@ -190,6 +189,7 @@
   								<input type = "number" name = "votePrice" value = "{{$invite->vote}}"/>
   								<input hidden name = "job_id" value = "{{$invite->job_id}}"/>
   								<input hidden name = "user_id" value = "{{$invite->user_id}}"/>
+  								<input hidden name = "isAddToJobProcess" value = "false" />
   								<input type="submit" value="Vote">
 							</form>
 								      	

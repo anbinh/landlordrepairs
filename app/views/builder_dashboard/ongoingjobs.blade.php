@@ -10,16 +10,16 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
+					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="#" class="list-group-item">On going Jobs</a>
-					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="#" class="list-group-item">Won jobs</a>
-					  <a href="#" class="list-group-item">Cancelled jobs</a>
+					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
+					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
+					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
 					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="#" class="list-group-item">Completed jobs</a>
-					  <a href="#" class="list-group-item">Invite jobs</a>
+					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="#" class="list-group-item">Credit</a>
 				</div>
 
@@ -151,43 +151,56 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
+			 
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
 			      <th><em>Tittle</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			      
 			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
-			      
+			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			
-			  @foreach($jobs as $job)
+			@if ($OngoingJobs != "")
+			  @foreach($OngoingJobs as $OngoingJob)
 			 	<tr>
-			    	<td>{{$OngoingJobs[$job->id]->tittle}}</td>
-			    	<td>{{$OngoingJobs[$job->id]->property}}</td>
-			   		<td>{{$OngoingJobs[$job->id]->category}}</td>
-			    	<td>{{$OngoingJobs[$job->id]->price}}</td>
-			 		<td>{{$OngoingJobs[$job->id]->timeoption}}</td>
-			 		<td>{{$OngoingJobs[$job->id]->local}}</td>
+			    	<td>{{$OngoingJob->tittle}}</td>
+			    	<td>{{$OngoingJob->property}}</td>
+			   		<td>{{$OngoingJob->category}}</td>
+			    	
+			 		<td>{{$OngoingJob->timeoption}}</td>
+			 		<td>{{$OngoingJob->local}}</td>
+			 		<td>{{$OngoingJob->description}}</td>
+			 		<td >
+			 		<form method = "post" action = "builder-action-completed" >
+				 		<input name = "job_id" value = "{{$OngoingJob->job_id}}" hidden>
+				 		<input name = "builder_id" value = "{{$OngoingJob->builder_id}}" hidden>
+				 		The date completed:<input type="date" name = "date_completed" value="<?php echo date('Y-m-d'); ?>" />
+				 		<button class="btn btn-success" type = "submit">Completed</button>
+			 		</form>
 			 		
-			 		<td>{{$OngoingJobs[$job->id]->description}}</td>
-			 		
+			 		<form method = "post" action = "builder-action-cancelled" >
+				 		<input name = "job_id" value = "{{$OngoingJob->job_id}}" hidden>
+				 		<input name = "user_id" value = "{{$OngoingJob->user_id}}" hidden>
+				 		<input type="date" name = "date_cancelled" value="<?php echo date('Y-m-d'); ?>" hidden/>
+				 		<button class="btn btn-danger">Cancelled</button>
+			 		</form>
+			 		</td>
 			 		
 			 	</tr>	
 				@endforeach
-			    
+			   @endif 
 			   
 			</table>
 			
 			 
-			{{ Form::close() }}
+			
 			
     </div>
     

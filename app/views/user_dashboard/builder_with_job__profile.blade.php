@@ -10,17 +10,15 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('builder-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="#" class="list-group-item">Won jobs</a>
-					  <a href="#" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="#" class="list-group-item">Completed jobs</a>
-					  <a href="#" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
+					  <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  
 					  
 				</div>
@@ -28,79 +26,59 @@
 			</div>
 			<div class="col-md-10">
 				<div class="row">
-				    <div class="col-lg-6">
+				    <div class="col-lg-12">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
-				                Job Detail
+				                Builder Profile
 				            </div>
 			            <div class="panel-body">
 			                <div class="row">
 			                    <div class="col-lg-12">
-
-			                     
+			                       
+			                        @if(Session::get("success") == '1')
+			                        <div class="alert alert-success alert-dismissable">
+			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			                            Profile has been updated successfully.
+			                        </div>
+			                        @endif
+			                        @if(Session::get("success") == '0')
+			                        <div class="alert alert-danger alert-dismissable">
+			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			                            Wrong, The info you change is invalid, please try again.
+			                        </div>
+			                        @endif
+			                        
+			                       
 		                            <div class="form-group">
-		                                <label>Tittle</label>
-		                              	<p>{{$jobInfo->tittle}}</p>
+		                                <label>Name</label>
+		                                {{$builder[0]->username}}
+		                                
 		                            </div>
 		                           
 		                            <div class="form-group">
-		                                <label>Description</label>
-		                                <p>{{$jobInfo->description}}</p>
+		                                <label>Email</label>
+		                                {{$builder[0]->email}}
+		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Price</label>
-		                                <p>{{$jobInfo->price}}£</p>
-		                            </div>
-		                            
-		                            <div class="form-group">
-		                                <label>Property</label>
-		                                <p>{{$jobInfo->property}}</p>
-		                            </div>
-		                            
-		                             <div class="form-group">
-		                                <label>Category</label>
-		                                <p>{{$jobInfo->category}}</p>
-		                            	
-		                            </div>
-		                            <div class="form-group">
-		                                <label>Time Option</label>
-		                                <p>{{$jobInfo->timeoption}}</p>
-		                            	
-		                            </div>
-		                           
-		                           @if("{{$jobInfo->timeoption}}" == "Specific")
-					                 <div class="form-group">
-		                                <label>At date</label>
-		                                <p>{{$jobInfo->date}}</p>
-		                            	
-		                            </div>
-		         	               
-		
-				                     @endif
-		                            <div class="form-group">
-		                                <label>Time Invited Sent</label>
-		                                <p>{{$jobProcess->created_at}}</p>
-		                            	
+		                                <label>Company</label>
+		                                {{$builder[0]->tittle}}
+		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
 		                                <label>Local</label>
-		                                <p>{{$jobInfo->local}}</p>
-		                            	
+		                                {{$builder[0]->local}}
+		                                
 		                            </div>
 		                            
-		                            <div class="form-group">
+		                             <div class="form-group">
 		                                <label>Local code</label>
-		                                <p>{{$jobInfo->local_code}}</p>
+		                                {{$builder[0]->local_code}}
+		                                
 		                            	
 		                            </div>
-		                            <div class="form-group">
-		                                <label>Radius</label>
-		                                <p>{{$jobProcess->radius}} miles</p>
-		                            	
-		                            </div>
-		                            
 		                            <div class="pad-top">
 								<div class="form-control-wrapper" >
 									
@@ -173,9 +151,9 @@
 							function initialize() {
 							
 							  var markers = [];
-							  var haightAshbury = new google.maps.LatLng({{$jobInfo->lat}},{{$jobInfo->lng}});
+							  var haightAshbury = new google.maps.LatLng({{$builder[0]->lat}},{{$builder[0]->lng}});
 							  var mapOptions = {
-							    zoom: 10,
+							    zoom: 12,
 							    center: haightAshbury,
 							    //mapTypeId: google.maps.MapTypeId.TERRAIN
 							  };
@@ -261,47 +239,74 @@
 							
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
+							<div class="form-group">
+                                <label>Radius</label>
+                                {{$radius}} Miles
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Site Link</label>
+                                {{$builder[0]->site_link}}
+                                
+                            </div>
+                             <div class="form-group">
+                                <label>Social Link</label>
+                                {{$builder[0]->social_link}}
+                                
+                            </div>
+                            
+                             <div class="form-group">
+                                <label>Started At</label>
+                                {{$builder[0]->created_at}}
+                                
+                            </div>
+		                 <div class="pad-top">
+								<div class="form-control-wrapper" >
+								
+								<div class = "col-lg-12">
+								Category:
+								</div>
+								
+								
+								
+								
+								<div class = "col-lg-12">
+								@foreach($builder as $buildere)
+									{{$buildere->category}}
+								
+								@endforeach 
+								
+									
+								</div>
+								</div>
+	
+							   
+								
+						</div>
+							<div class = "col-lg-12">
+								Association:
+								</div>
+							<div class = "col-lg-12">
+								<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/> 
+								{{$builder[0]->association}}
+							</div>
+							
+									
+											
+						
 
-		                    </div>
+		                         
+		                            
+		                        
+		                    </div>	
 		                </div>
 		            </div>
         </div>
     </div>
-    <!-- end col-md-6-->
-    <div class="col-lg-6">
-				        <div class="panel panel-default">
-				            <div class="panel-heading">
-				                Customer Info
-				            </div>
-			            <div class="panel-body">
-			                <div class="row">
-			                    <div class="col-lg-12">
 
-			                     
-		                            <div class="form-group">
-		                                <label>Name</label>
-		                                <p>{{$userInfo->username}}</p>
-		                            </div>
-		                           
-		                            <div class="form-group">
-		                                <label>Email</label>
-		                                <p>{{$userInfo->email}}</p>
-		                            </div>
-		                            
-		                            <div class="form-group">
-		                                <label>Phone number</label>
-		                                <p>{{$userInfo->phone_number}}</p>
-		                            </div>
-		                            
-		                           <a class = "btn btn-primary" href = "{{URL::route('builder-invited')}}">Back</a>
-		                           
 
-		                           
-		                    </div>
-		                </div>
-		            </div>
-        </div>
-    </div>
+    <!-- end change phone number -->
 </div>
 			</div>
 		</div>

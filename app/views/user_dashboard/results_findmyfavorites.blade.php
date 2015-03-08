@@ -10,19 +10,15 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					   <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
-					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
-					  
-					  
+					  <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 				</div>
 
 			</div>
@@ -153,61 +149,60 @@
 			  font-size: 12px;
 			}
 			</style>
-
+			 
+			
+				                      
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Title</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Description</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Property</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Time Option</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Date</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Local Code</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Num of Builder invited</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			      <th><em>Builder Name</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Company</em> <span>&nbsp;</span></th>
 			      
+			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Local code</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>View details</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			      
 			    </tr>
 			  </thead>
 			  <tbody>
-			
-			  @if($jobs_resuilt != null)
-              @foreach($jobs_resuilt as $job_resuilt)
-			 	<tr>
-			    	
-			    	<td>{{$job_resuilt->tittle}}</td>
-			    	<td>{{$job_resuilt->description}}</td>
-			    	<td>{{$job_resuilt->price}}</td>
-			    	<td>{{$job_resuilt->property}}</td>
-			    	<td>{{$job_resuilt->category}}</td>
-			    	<td>{{$job_resuilt->timeoption}}</td>
-			    	<td>{{$job_resuilt->date}}</td>
-			    	<td>{{$job_resuilt->local}}</td>
-			    	<td>{{$job_resuilt->local_code}}</td>
-			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
-			    	<td>
-			    	<form action="vote-job" method="post">
-	  					<input type = "number" name = "votePrice" value = "{{$job_resuilt->vote}}"/>
-	  					<input hidden name = "job_id" value = "{{$job_resuilt->job_id}}"/>
-	  					<input hidden name = "user_id" value = "{{$job_resuilt->user_id}}"/>
-	  					<input hidden name = "isAddToJobProcess" value = "true" />
-	  					<input type="submit" value="Vote">
-					</form>
-			    	</td>
-			 	</tr>	
+			   @if ($builders != "")
+			 	@foreach ($builders as $builder)
+			 		
+					<tr>
+					  		<td>{{$builder->username}}</td>
+						    <td>{{$builder->tittle}}</td>
+						    
+							<td>{{$builder->local}}</td>
+					 		<td>{{$builder->local_code}}</td>
+					 		<td class="date-sort"><em>
+					 			<a href="view-detail-info-builder/{{$builder->builder_id}}">View</></em> <span>&nbsp;</span></td>
+					 		<td>
+					 		<form method = "post" action = "customer-action-add-favorite-builder">
+						 		<input name = "builder_id" value = "{{$builder->builder_id}}" hidden/>
+						 		<button class="btn btn-success">Add to My favorites</button>
+					 		</form>
+					 		</td>
+						</tr>
+					
 				@endforeach
-              @endif
+			    @endif
 			   
 			</table>
-
+			
+			 
+			
+			
     </div>
+    
+
     <!-- end change phone number -->
 </div>
 			</div>
 		</div>
+		
+		
+
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
 		<!-- Bootstrap JavaScript -->

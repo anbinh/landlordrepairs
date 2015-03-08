@@ -193,7 +193,7 @@ class BaseController extends Controller {
 	
 			}
 			//redirect to confirmation alert
-
+			
 			return Redirect::to('login')->with("emailfirst", "1");
 	
 		} else {
@@ -532,7 +532,10 @@ class BaseController extends Controller {
 		$radius = Input::get('radius');
 		//var_dump($check_builders); die;
 		//$builders = DategB::table('builders')->having('category', '=',$input['category'] )->get();
-		$builders = DB::table('users')->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')->where('extend_builders_category.category', '=', $input['category'])->get();
+		$builders = DB::table('users')
+			->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+			->where('extend_builders_category.category', '=', $input['category'])
+			->get();
 		$num_of_checked_builders = count($check_builders);	
 			//var_dump ($builders); die;
 		//select builders matching condition from submit post_jobs.
@@ -572,7 +575,7 @@ class BaseController extends Controller {
 				$job_process->user_id = Auth::user()->id;
 				$job_process->builder_id = $builder->builder_id;
 				$job_process->num_invite_sent = count($builders);
-				$job_process->status = 'inviting';
+				$job_process->status_process = 'inviting';
 				$job_process->radius = $radius[$i];
 				$job_process->save();
 				$i++;
@@ -626,7 +629,7 @@ class BaseController extends Controller {
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->num_invite_sent = '3';
-					$job_process->status = 'inviting';
+					$job_process->status_process = 'inviting';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
 				    	try {
@@ -672,7 +675,7 @@ class BaseController extends Controller {
 					$job_process->job_id = Input::get('job_id');
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
-					$job_process->status = 'inviting';
+					$job_process->status_process = 'inviting';
 					$job_process->num_invite_sent = '3';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
@@ -721,7 +724,7 @@ class BaseController extends Controller {
 					$job_process->user_id = Auth::user()->id;
 					$job_process->builder_id = $builders[0]->builder_id;
 					$job_process->num_invite_sent = '3';
-					$job_process->status = 'inviting';
+					$job_process->status_process = 'inviting';
 					$job_process->radius = $radius[$x];
 					$job_process->save();
 				    	try {
@@ -761,7 +764,7 @@ class BaseController extends Controller {
 						$job_process->user_id = Auth::user()->id;
 						$job_process->builder_id = $builders[0]->builder_id;
 						$job_process->num_invite_sent = '3';
-						$job_process->status = 'inviting';
+						$job_process->status_process = 'inviting';
 						$job_process->radius = $radius[$x];
 						$job_process->save();
 				    	try {
@@ -973,7 +976,7 @@ class BaseController extends Controller {
 			$jobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
 		    	 ->where('job_process.user_id', '=', Auth::user()->id)
-		    	 ->where('job_process.status', '=', 'ongoing')
+		    	 ->where('job_process.status_process', '=', 'ongoing')
 		    	 ->get();
 		    	 //var_dump($jobs); die;
 			return View::make('user_dashboard.ongoingjobs')->with('jobs', $jobs);
@@ -986,13 +989,95 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','cancelledjob')->get();
-			
-			return View::make('user_dashboard.cancelledjobs')->with('jobs', $jobs);
+			$cancelledJobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.user_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status', '=', 'cancelled')
+		    	 ->get();
+		    	 
+		 	
+			//var_dump($cancelledJobs[0]->cancelled_confirm); die;
+			return View::make('user_dashboard.cancelledjobs')->with(array('cancelledJobs'=> $cancelledJobs));
 		}
 		return Redirect::to('login');
 
 	}
+	
+public function postCustomerActionCancelled()
+	{  
+		if(Auth::check()) {
+		$input = Input::all();
+		
+		/*
+		 * Update Database:
+		 */
+		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+		//var_dump($newcode); die;
+			
+		DB::table('job_process')
+			->where('job_id', '=', Input::get('job_id'))
+			->where('builder_id', '=', Input::get('builder_id'))
+        	->update(array(
+			'status' => 'cancelled',
+        	'cancelled_confirm' => $newcode,
+			));
+		/*
+		 * Sent Alert by Email & Phone to Customer
+		 */
+		//--set email and phone to Customer----//
+	
+		$builder = DB::table('users')
+			->where('id', '=', Input::get('builder_id'))
+        	->first();
+        //$job_id = Input::get('job_id')
+        //var_dump($customer); die;
+			$data = array(
+					'email'     => $builder->email,
+					'clickUrl'  => URL::to('/') . '/cancelledjobconfirm/'.Input::get("user_id").','. $newcode
+			);
+			 
+			//---new send email----//
+			try {
+				Mail::send('emails.cancelledjob', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Cancelled Job');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $builder->email;
+				$subject = 'Cancelled Job';
+				$message = View::make('emails.cancelledjob', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}
+			
+			
+			//----send sms----//
+			
+			
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$token = "d94d47547950d199f065f365a51111a4"; 
+			$client = new Services_Twilio($sid, $token);
+			$message = "Customer has been cancelled your job, please check email to approve it.";
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$builder->phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			
+		return Redirect::to('ongoingjobs');
+		}
+		return Redirect::to('login');
+	}
+	
+	
 	public function getPendingReviewJobs()
 	{
 		if(Auth::check()) {
@@ -1009,7 +1094,10 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','completedjob')->get();
+			$jobs = DB::table('jobs')
+				->having('user_id', '=',Auth::user()->id)
+				->having('status','=','completed')
+				->get();
 			
 			return View::make('user_dashboard.completedjobs')->with('jobs', $jobs);
 		}
@@ -1025,7 +1113,7 @@ class BaseController extends Controller {
 		$jobtittles = "";
 		    $invites = DB::table('job_process')
 		    	->having('user_id', '=',Auth::user()->id )
-		    	->having('status', '=','inviting' )
+		    	->having('status_process', '=','inviting' )
 		    	->get(); 
 		    $builders = array(); 
 		    foreach($invites as $invite){
@@ -1058,17 +1146,129 @@ class BaseController extends Controller {
 	public function getMyFavorites()
 	{
 		if(Auth::check()) {
-						
+			if (Auth::user()->role == '0' ) {
+				$favorite_builders = DB::table('favorite-builders')
+        			->where('user_id', '=', Auth::user()->id)
+        			->get();
+        		//var_dump($favorite_builders[0]); die;
+        		
+        		$i = 0;
+        		$builder = "";
+				foreach ($favorite_builders as $favorite_builder) {
+					
+					$buildere = DB::table('users')
+					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+	        		->where('users.id', '=', $favorite_builder->builder_id)
+	        		->get();
+	      
+	        		$builder[$i] = $buildere;
+	        		$i++;
+				}
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('favorite','=','1')->get();
+				$count = count($builder);
+				//var_dump($builder); die;
+				
+				return View::make('user_dashboard.myfavorites')->with(array('builder'=> $builder, 'count' => $count ));
+				
+			} else {
+				return Redirect::to('login');
+			}
 			
-			return View::make('user_dashboard.myfavorites')->with('jobs', $jobs);
+		    
+		}
+		return Redirect::to('login');
+
+	}
+
+
+	public function getViewDetailInfoBuilder($builder_id)
+	{  
+		if(Auth::check()) {
+			//echo($builder_id); die;
+			$builder = "";//
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				
+        		->where('users.id', '=', $builder_id)
+        		
+        		->get();
+        		//var_dump($builder); die; 
+        	
+        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder));
 		}
 		return Redirect::to('login');
 
 	}
 	
-	public function getViewDetailInfoBuilder($builder_id, $job_id)
+	public function postCustomerActionDeleteFavoriteBuilder()
+	{  
+		if(Auth::check()) {
+			DB::table('favorite-builders')
+				->where('user_id', '=', Auth::user()->id)
+				->where('builder_id', '=', Input::get('builder_id'))
+				->delete();
+			return Redirect::to('myfavorites');
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postCustomerActionAddFavoriteBuilder()
+	{  
+		if(Auth::check()) {
+			DB::table('favorite-builders')
+				->insert(array(
+					'user_id' => Auth::user()->id, 
+					'builder_id' => Input::get('builder_id')));
+			return Redirect::to('myfavorites');
+		}
+		return Redirect::to('login');
+
+	}
+	
+	
+	public function postCustomerFindFavoriteBuilders()
+	{  
+		if(Auth::check()) {
+        		$builders_ori = DB::table('extend_builders_category')
+        			->join('users','users.id','=','extend_builders_category.builder_id')
+        			->join('extend_builders','extend_builders.builder_id','=','extend_builders_category.builder_id')
+        			->where('extend_builders_category.category', '=', Input::get('category'))
+        			->get();
+        			
+        	    $builders_favorited = DB::table('favorite-builders')
+        			->where('user_id', '=', Auth::user()->id)
+        			->get();
+        		$builders = "";
+        		$i = 0;
+        		
+				foreach ($builders_ori as $builder_ori) {
+					$enable = true;
+        			foreach ($builders_favorited as $builder_favorited) {
+        				if ($builder_ori->builder_id == $builder_favorited->builder_id) {
+	        				$enable = false;				
+        				}		
+        			};
+					if ($enable) {
+        				$builders[$i] = $builder_ori;
+        				$i++;
+					}
+        		}
+        		
+        		//var_dump($builders); die;
+        		return View::make('user_dashboard.results_findmyfavorites')->with(array('builders' => $builders));
+		}
+		return Redirect::to('login');
+
+	}
+	
+	
+	
+	
+	public function getViewDetailInfoBuilderWithJob($builder_id, $job_id)
 	{ 
 		if(Auth::check()) {
 			$builder = DB::table('users')
@@ -1079,7 +1279,7 @@ class BaseController extends Controller {
         	
         	$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
 			$radius = $jobProcess->radius; 
-        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder, 'radius' => $radius));
+        	return View::make('user_dashboard.builder_with_job__profile')->with(array('builder' => $builder, 'radius' => $radius));
 		}
 		return Redirect::to('login');
 
@@ -1101,7 +1301,7 @@ class BaseController extends Controller {
 			->where('job_id', '=', $job_id)
 			->where('builder_id', '=', $builder_id)
         	->update(array(
-			'status' => 'ongoing',
+			'status_process' => 'ongoing',
 			));
 			
 			DB::table('job_process')
@@ -1109,7 +1309,7 @@ class BaseController extends Controller {
 			->where('user_id', '=', Auth::user()->id)
 			->where('builder_id', '<>', $builder_id)
         	->update(array(
-			'status' => 'miss',
+			'status_process' => 'miss',
 			));
 			
 			DB::table('jobs')
@@ -1178,7 +1378,7 @@ class BaseController extends Controller {
 			->where('job_id', '=', $job_id)
 			->where('builder_id', '=', $builder_id)
         	->update(array(
-			'status' => 'miss',
+			'status_process' => 'miss',
 			));
 			return Redirect::to('ongoingjobs');
 		}
@@ -1444,7 +1644,10 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
-				$invites = DB::table('job_process')->having('builder_id', '=',Auth::user()->id )->having('status', '=','inviting' )->get();
+				$invites = DB::table('job_process')
+					->having('builder_id', '=',Auth::user()->id )
+					->having('status_process', '=','inviting' )
+					->get();
 			   
 				$customers = "";
 			    $categorys = "";
@@ -1455,7 +1658,11 @@ class BaseController extends Controller {
 			      
 	    			 $customers[$invite->user_id] = $customer;
 	    			 
-	    			 $category = DB::table('extend_builders_category')->having('builder_id', '=',$invite->builder_id )->get();
+	    			 
+	    			 	
+	    			 $category = DB::table('jobs')
+	    			 	->having('id', '=',$invite->job_id)
+	    			 	->get();	
 			      
 	    			 $categorys[$invite->user_id] = $category;
 			    	
@@ -1500,33 +1707,51 @@ class BaseController extends Controller {
 		//var_dump ($test); die;
 		$jobs = "";
 		$category = Input::get('category');
-		$jobs = DB::table('jobs')->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		
+		$jobs = DB::table('jobs')
+				->join('job_process', 'jobs.id', '=', 'job_process.job_id')
         		->having('jobs.category', '=', $category)
         		->having('job_process.builder_id', '<>', Auth::user()->id)
         		->having('jobs.status', '=', 'openjob')
         		->having('job_process.num_invite_sent', '<', '3')
         		->get();
-        //var_dump($jobs); die;
-        /*if($jobs == null){
-        	//echo "here"; die;
+	
+        $myjobs = "";		
+        $myjobs = DB::table('job_process')
+        		->having('builder_id', '=', Auth::user()->id)
+        		->get();		
+    
+        $jobs_resuilt = "";
+        $i = 0;
+        $isPlusJob = true;
+        foreach ($jobs as $job){
+        	foreach ($myjobs as $myjob){
+        		if ($myjob->job_id == $job->job_id){
+        			$isPlusJob = false;
+        		}
+        	}
+        	if ($isPlusJob){
+        		$jobs_resuilt[$i] = $job;
+        		$i++;
+        		
+        	}
+        	$isPlusJob = true;
+        }
+        /*
+         * When no Job no have any invited to Builders in Job_process
+         * 
+         */
+        /*if ( $jobs_3 == null ) {
         	$jobs = DB::table('jobs')
         		->having('jobs.category', '=', $category)
         		->get();
-        	$isHasNum = false;	
+        	$isHasNum = false;
+        	$jobs_resuilt = $jobs;		
         }*/
-        		
-		//var_dump($jobs); die;
-		/*
-		 * 
-		 * 
-		 * 
-		 * thieu truong hop khi chua co trong job_process
-		 * 
-		 */
-
-		//var_dump($jobs); die;
+        
+        
 		
-		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs'=>$jobs,'isHasNum'=>$isHasNum));;
+		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs));;
 	
 	}	
 	
@@ -1555,16 +1780,74 @@ class BaseController extends Controller {
 	
 	
 	public function postVoteJob()
-	{ 
+	{  
 		$input = Input::all();
+		
+	    if (Input::get('isAddToJobProcess') == 'true') {
+	    	/*
+	    	 * Update database: Create a row of Table "Job_process"
+	    	 */ 
+	    	
+	    	//calculate the radius:
+			function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
+			    $theta = $longitude1 - $longitude2;
+			    $miles = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta)));
+			    $miles = acos($miles);
+			    $miles = rad2deg($miles);
+			    $miles = $miles * 60 * 1.1515;
+			    
+			    return $miles;
+			}
+			$job_customer = DB::table('jobs')
+				->where('id', '=', Input::get('job_id'))
+        		->first();
+        	
+        	$extend_builder = DB::table('extend_builders')
+				->where('builder_id', '=', Auth::user()->id)
+        		->first();
+        		
+        	$num_invite_sent = DB:: table('job_process')
+				->where('job_id', '=', Input::get('job_id'))
+        		->get();
+        	$num_invite_sent_count = count($num_invite_sent);		
+        	$num_invite_sent_count++;
+        	
+        /*
+         * update num_invite_sent in all row has $job_id
+         */
+        	DB::table('job_process')
+				->where('job_id', '=', Input::get('job_id'))
+	        	->update(array(
+					'num_invite_sent' => $num_invite_sent_count,
+				));
+        			
+        	
+			$radius = get_distance_between_points($job_customer->lat, $job_customer->lng, $extend_builder->lat, $extend_builder->lng);
+		    //var_dump($radius);	die;
+	    
+	    		$job_process = new JobProcess();
+				
+	    		$job_process->job_id = Input::get('job_id');
+				$job_process->user_id = Input::get('user_id');
+				$job_process->builder_id = Auth::user()->id;
+				$job_process->num_invite_sent = $num_invite_sent_count;
+				$job_process->vote = Input::get('votePrice');
+				$job_process->status_process = 'inviting';
+				$job_process->radius = $radius;
+				
+				$job_process->save();
+				
 	
+			}
+			
+			
 		DB::table('job_process')
 			->where('job_id', '=', Input::get('job_id'))
 			->where('builder_id', '=', Auth::user()->id)
         	->update(array(
 			'vote' => Input::get('votePrice'),
 			));
-		//var_dump(); die;	
+
 		$customer = DB::table('users')
 			->where('id', '=', Input::get('user_id'))
         	->first();
@@ -1625,34 +1908,217 @@ class BaseController extends Controller {
 	public function getBuilderOngoingJobs()
 	{
 		if(Auth::check()) {
-			 /*$builders = DB::table('jobs_process')->join('job_process', 'jobs.builder_id', '=', 'job_process.builder_id')
-        		->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-        		->where('extend_builders_category.category', '=', $input['category'])->get();
-        	*/
-			$jobs = DB::table('job_process')
-				->having('builder_id', '=',Auth::user()->id)
-				->having('status','=','ongoing')
-				->get();
+		
 			
-			$OngoingJobs = array();
-			foreach( $jobs as $job ) {
-				/*$OngoingJob = DB::table('jobs')
-				->having('id', '=', $job->job_id)
-				
-				->first();*/
-				$OngoingJob = DB::table('jobs')
+			$OngoingJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
-		    	 ->where('jobs.id', '=', $job->job_id)
-		    	 ->first();
-		    	 //var_dump($OngoingJob); die;
-				$OngoingJobs[$job->id] = $OngoingJob;
-			}
-			//var_dump($OngoingJobs); die;
-			return View::make('builder_dashboard.ongoingjobs')->with(array('jobs'=> $jobs, 'OngoingJobs'=> $OngoingJobs));
+		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status_process', '=', 'ongoing')
+		    	 ->get();
+		    	 
+		    //var_dump($OngoingJobs); die; 
+		    	 
+			
+			return View::make('builder_dashboard.ongoingjobs')->with(array('OngoingJobs'=> $OngoingJobs));
 		}
 		return Redirect::to('login');
 
 	}
+	
+	public function getBuilderActionCompleted()
+	{ 
+		if(Auth::check()) {
+		$input = Input::all();
+		DB::table('jobs')
+			->where('id', '=', Input::get('job_id'))
+        	->update(array(
+			'status' => 'completed',
+        	'date_completed' => Input::get('date_completed'),
+			));
+		DB::table('job_process')
+			->where('job_id', '=', Input::get('job_id'))
+			->where('builder_id', '=', Input::get('builder_id'))
+        	->update(array(
+			'status_process' => 'completed',
+        	
+			));
+		return Redirect::to('builder-ongoing-jobs');
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postBuilderActionCancelled()
+	{  
+		if(Auth::check()) {
+		$input = Input::all();
+		
+		/*
+		 * Update Database:
+		 */
+		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
+		//var_dump($newcode); die;
+			
+		DB::table('job_process')
+			->where('job_id', '=', Input::get('job_id'))
+			->where('builder_id', '=', Auth::user()->id)
+        	->update(array(
+			'status' => 'cancelled',
+        	'cancelled_confirm' => $newcode,
+			));
+		/*
+		 * Sent Alert by Email & Phone to Customer
+		 */
+		//--set email and phone to Customer----//
+	
+		$customer = DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+        	->first();
+        //$job_id = Input::get('job_id')
+        //var_dump($customer); die;
+			$data = array(
+					'email'     => $customer->email,
+					'clickUrl'  => URL::to('/') . '/cancelledjobconfirm/'.Input::get("user_id").','. $newcode
+			);
+			 
+			//---new send email----//
+			try {
+				Mail::send('emails.cancelledjob', $data, function($message)
+				{
+					$message->to(Input::get('email'))->subject('Cancelled Job');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $customer->email;
+				$subject = 'Cancelled Job';
+				$message = View::make('emails.cancelledjob', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+	
+			}
+			
+			
+			//----send sms----//
+			
+			
+			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
+			$token = "d94d47547950d199f065f365a51111a4"; 
+			$client = new Services_Twilio($sid, $token);
+			$message = "Abuilder has been cancelled your job, please check email to approve it.";
+			$client->account->messages->sendMessage(
+					'+441544430006', // the text will be sent from your Twilio number
+					$customer->phone_number, // the phone number the text will be sent to
+					$message // the body of the text message
+			);
+			
+		return Redirect::to('builder-ongoing-jobs');
+		}
+		return Redirect::to('login');
+	}
+	
+	
+	public function getconfirmCancelledJob( $job_id, $confirm_code )
+	{   
+		if(Auth::check()) {
+			$job_process = DB::table('job_process')
+				->where('job_id', '=', $job_id)
+				->where('builder_id', '=', Auth::user()->id)
+				->where('cancelled_confirm','=', $confirm_code)
+	        	->first();
+	        	
+	        if ($job_process) {
+	        	DB::table('job_process')
+					->where('job_id', '=', $job_id)
+					->where('builder_id', '=', Auth::user()->id)
+		        	->update(array(
+		        	'cancelled_confirm' => '',
+					));
+	        }  
+			
+		
+		return Redirect::to('builder-cancelled-jobs');	
+		}
+		return Redirect::to('login');
+	
+	}
+	
+	public function getBuilderLostJobs()
+	{ 
+		if(Auth::check()) {
+			
+			$LostJobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status_process', '=', 'miss')
+		    	 ->get();
+		    	 
+		 	
+			
+			return View::make('builder_dashboard.lostjobs')->with(array('LostJobs'=> $LostJobs));
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getBuilderWonJobs()
+	{ 
+		if(Auth::check()) {
+			
+			$WonJobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status_process', '=', 'ongoing')
+		    	 ->get();
+		    	 
+		 	
+			
+			return View::make('builder_dashboard.wonjobs')->with(array('WonJobs'=> $WonJobs));
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getBuilderCompletedJobs()
+	{ 
+		if(Auth::check()) {
+			
+			$conpletedJobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status', '=', 'completed')
+		    	 ->get();
+		    	 
+		 	
+			
+			return View::make('builder_dashboard.completedjobs')->with(array('conpletedJobs'=> $conpletedJobs));
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getBuilderCancelledJobs()
+	{ 
+		if(Auth::check()) {
+			
+			$cancelledJobs = DB::table('jobs')
+		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
+		    	 ->where('job_process.status', '=', 'cancelled')
+		    	 ->get();
+		    	 
+		 	
+			//var_dump($cancelledJobs[0]->cancelled_confirm); die;
+			return View::make('builder_dashboard.cancelledjobs')->with(array('cancelledJobs'=> $cancelledJobs));
+		}
+		return Redirect::to('login');
+	}
+	
+
+	
+	
+	
 	
 }
 

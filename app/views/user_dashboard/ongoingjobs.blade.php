@@ -149,18 +149,18 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
 			      <th><em>Tittle</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			    
 			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+			    
+			       <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -171,11 +171,18 @@
 			    	<td>{{$job->tittle}}</td>
 			    	<td>{{$job->property}}</td>
 			    	<td>{{$job->category}}</td>
-			    	<td>{{$job->price}}</td>
+			    
 			 		<td>{{$job->timeoption}}</td>
 			 		<td>{{$job->local}}</td>
 			 		<td>{{$job->description}}</td>
-			 		<td>{{$job->status}}</td>
+			 		<td >
+			 		<form method = "post" action = "customer-action-cancelled" >
+				 		<input name = "job_id" value = "{{$job->job_id}}" hidden>
+				 		<input name = "builder_id" value = "{{$job->builder_id}}" hidden>
+				 		<input type="date" name = "date_cancelled" value="<?php echo date('Y-m-d'); ?>" hidden/>
+				 		<button class="btn btn-danger">Cancelled</button>
+			 		</form>
+			 		</td>
 			 		
 			 	</tr>	
 				@endforeach
@@ -184,7 +191,7 @@
 			</table>
 			
 			 
-			{{ Form::close() }}
+		
 			
     </div>
     

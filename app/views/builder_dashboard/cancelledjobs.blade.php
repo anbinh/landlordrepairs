@@ -10,7 +10,7 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					   <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
+					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
 					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
@@ -21,8 +21,6 @@
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="#" class="list-group-item">Credit</a>
-					  
-					  
 				</div>
 
 			</div>
@@ -153,61 +151,60 @@
 			  font-size: 12px;
 			}
 			</style>
-
+			 
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Title</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Description</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Property</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Time Option</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Date</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Local Code</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Num of Builder invited</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			      <th><em>Tittle</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
 			      
-			      
+			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+	
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($jobs_resuilt != null)
-              @foreach($jobs_resuilt as $job_resuilt)
+			
+			 @foreach($cancelledJobs as $cancelledJob)
 			 	<tr>
+			    	<td>{{$cancelledJob->tittle}}</td>
+			    	<td>{{$cancelledJob->property}}</td>
+			   		<td>{{$cancelledJob->category}}</td>
 			    	
-			    	<td>{{$job_resuilt->tittle}}</td>
-			    	<td>{{$job_resuilt->description}}</td>
-			    	<td>{{$job_resuilt->price}}</td>
-			    	<td>{{$job_resuilt->property}}</td>
-			    	<td>{{$job_resuilt->category}}</td>
-			    	<td>{{$job_resuilt->timeoption}}</td>
-			    	<td>{{$job_resuilt->date}}</td>
-			    	<td>{{$job_resuilt->local}}</td>
-			    	<td>{{$job_resuilt->local_code}}</td>
-			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
-			    	<td>
-			    	<form action="vote-job" method="post">
-	  					<input type = "number" name = "votePrice" value = "{{$job_resuilt->vote}}"/>
-	  					<input hidden name = "job_id" value = "{{$job_resuilt->job_id}}"/>
-	  					<input hidden name = "user_id" value = "{{$job_resuilt->user_id}}"/>
-	  					<input hidden name = "isAddToJobProcess" value = "true" />
-	  					<input type="submit" value="Vote">
-					</form>
-			    	</td>
+			 		<td>{{$cancelledJob->timeoption}}</td>
+			 		<td>{{$cancelledJob->local}}</td>
+			 		<td>{{$cancelledJob->description}}</td>
+			 		
+			 		<td>@if ( $cancelledJob->cancelled_confirm != "")
+			 				Waiting customer approve
+			 			@else
+			 				Approved
+			 			@endif
+			 		</td>
+	
 			 	</tr>	
 				@endforeach
-              @endif
+			    
 			   
 			</table>
-
+			
+			 
+			
+			
     </div>
+    
+
     <!-- end change phone number -->
 </div>
 			</div>
 		</div>
+		
+		
+
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
 		<!-- Bootstrap JavaScript -->

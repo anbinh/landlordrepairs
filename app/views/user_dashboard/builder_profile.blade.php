@@ -26,7 +26,7 @@
 			</div>
 			<div class="col-md-10">
 				<div class="row">
-				    <div class="col-lg-12">
+				    <div class="col-lg-6">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
 				                Builder Profile
@@ -34,21 +34,6 @@
 			            <div class="panel-body">
 			                <div class="row">
 			                    <div class="col-lg-12">
-			                       
-			                        @if(Session::get("success") == '1')
-			                        <div class="alert alert-success alert-dismissable">
-			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			                            Profile has been updated successfully.
-			                        </div>
-			                        @endif
-			                        @if(Session::get("success") == '0')
-			                        <div class="alert alert-danger alert-dismissable">
-			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			                            Wrong, The info you change is invalid, please try again.
-			                        </div>
-			                        @endif
-			                        
-			                       
 		                            <div class="form-group">
 		                                <label>Name</label>
 		                                {{$builder[0]->username}}
@@ -80,230 +65,104 @@
 		                            	
 		                            </div>
 		                            <div class="pad-top">
-								<div class="form-control-wrapper" >
-									
-								</div>	
-										
-							</div>
-		                            <!-- GOOGLE MAP -->
-							<script>$("#pac-input").val()</script>
-							<style>
-						      #map-canvas {
-						        height: 300px;
-								width: 100%;
-						        
-						      }
-						      .controls {
-						        margin-top: 16px;
-						        border: 1px solid transparent;
-						        border-radius: 2px 0 0 2px;
-						        box-sizing: border-box;
-						        -moz-box-sizing: border-box;
-						        height: 32px;
-						        outline: none;
-						        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-						      }
-						
-						      #pac-input {
-						        background-color: #fff;
-						        padding: 0 11px 0 13px;
-						        width: 400px;
-						        font-family: Roboto;
-						        font-size: 15px;
-						        font-weight: 300;
-						        text-overflow: ellipsis;
-						      }
-						
-						      #pac-input:focus {
-						        border-color: #4d90fe;
-						        margin-left: -1px;
-						        padding-left: 14px;  /* Regular padding-left + 1. */
-						        width: 401px;
-						      }
-						
-						      .pac-container {
-						        font-family: Roboto;
-						      }
-						
-						      #type-selector {
-						        color: #fff;
-						        background-color: #4d90fe;
-						        padding: 5px 11px 0px 11px;
-						      }
-						
-						      #type-selector label {
-						        font-family: Roboto;
-						        font-size: 13px;
-						        font-weight: 300;
-						      }
-							}
-						
-						    </style>
-						    <input type="hidden" id = "lat" name = "lat">
-							<input type="hidden" id = "lng" name = "lng">
-							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
-							
-						    <script>
-							// This example adds a search box to a map, using the Google Place Autocomplete
-							// feature. People can enter geographical searches. The search box will return a
-							// pick list containing a mix of places and predicted search terms.
-							
-							function initialize() {
-							
-							  var markers = [];
-							  var haightAshbury = new google.maps.LatLng({{$builder[0]->lat}},{{$builder[0]->lng}});
-							  var mapOptions = {
-							    zoom: 12,
-							    center: haightAshbury,
-							    //mapTypeId: google.maps.MapTypeId.TERRAIN
-							  };
-							  map = new google.maps.Map(document.getElementById('map-canvas'),
-							      mapOptions);
-								
-							 var marker=new google.maps.Marker({
-									position:haightAshbury,
-							  });
-								marker.setMap(map);
-								markers.push(marker); 	
-								$("#lat").val(haightAshbury.lat());
-								$("#lng").val(haightAshbury.lng()); 
-							  // Create the search box and link it to the UI element.
-							  var input = /** @type {HTMLInputElement} */(
-							      document.getElementById('local_code'));
-							  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-							
-							  var searchBox = new google.maps.places.SearchBox(
-							    /** @type {HTMLInputElement} */(input));
-							
-							  // [START region_getplaces]
-							  // Listen for the event fired when the user selects an item from the
-							  // pick list. Retrieve the matching places for that item.
-							  google.maps.event.addListener(searchBox, 'places_changed', function() {
-							    var places = searchBox.getPlaces();
-							
-							    if (places.length == 0) {
-							      return;
-							    }
-							    for (var i = 0, marker; marker = markers[i]; i++) {
-							      marker.setMap(null);
-							    }
-							
-							    // For each place, get the icon, place name, and location.
-							    markers = [];
-							    var bounds = new google.maps.LatLngBounds();
-							    for (var i = 0, place; place = places[i]; i++) {
-							      
-							
-							      // Create a marker for each place.
-							      var marker = new google.maps.Marker({
-							        map: map,
-							        title: place.name,
-							        position: place.geometry.location
-							      });
-									$("#lat").val(place.geometry.location.lat());
-									$("#lng").val(place.geometry.location.lng());
-									markers.push(marker);
-									bounds.extend(place.geometry.location);
-							    }
-							
-							    map.fitBounds(bounds);
-							  });
-							  // [END region_getplaces]
-							
-							  // Bias the SearchBox results towards places that are within the bounds of the
-							  // current map's viewport.
-							  google.maps.event.addListener(map, 'bounds_changed', function() {
-							    var bounds = map.getBounds();
-							    searchBox.setBounds(bounds);
-							  });
-							  
-							   google.maps.event.addListener(map, 'click', function(event) {
-									for (var i = 0; i < markers.length; i++) {
-										markers[i].setMap(null);
-									}
-									
-									var marker = new google.maps.Marker({
-										position: event.latLng,
-										map: map
-									}); 
-									$("#lat").val(event.latLng.lat());
-									$("#lng").val(event.latLng.lng());
-									markers.push(marker); 
-								});
-									
-							}
-							
-							google.maps.event.addDomListener(window, 'load', initialize);
-							
-							    </script>
-							
-    						<div id="map-canvas"></div>
-							<!-- END GOOGLE MAP -->
-							<div class="form-group">
-                                <label>Radius</label>
-                                {{$radius}} Miles
-                                
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Site Link</label>
-                                {{$builder[0]->site_link}}
-                                
-                            </div>
-                             <div class="form-group">
-                                <label>Social Link</label>
-                                {{$builder[0]->social_link}}
-                                
-                            </div>
-                            
-                             <div class="form-group">
-                                <label>Started At</label>
-                                {{$builder[0]->created_at}}
-                                
-                            </div>
-		                 <div class="pad-top">
-								<div class="form-control-wrapper" >
-								
-								<div class = "col-lg-12">
-								Category:
-								</div>
-								
-								
-								
-								
-								<div class = "col-lg-12">
-								@foreach($builder as $buildere)
-									{{$buildere->category}}
-								
-								@endforeach 
-								
-									
-								</div>
-								</div>
-	
-							   
-								
-						</div>
-							<div class = "col-lg-12">
-								Association:
-								</div>
-							<div class = "col-lg-12">
-								<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/> 
-								{{$builder[0]->association}}
-							</div>
-							
-									
+										<div class="form-control-wrapper" >
 											
-						
-
-		                         
+										</div>	
+										
+									</div>
+		                    
+                            
+		                            <div class="form-group">
+		                                <label>Site Link</label>
+		                                {{$builder[0]->site_link}}
+		                                
+		                            </div>
+		                             <div class="form-group">
+		                                <label>Social Link</label>
+		                                {{$builder[0]->social_link}}
+		                                
+		                            </div>
 		                            
-		                        
-		                    </div>	
-		                </div>
-		            </div>
-        </div>
-    </div>
+		                             <div class="form-group">
+		                                <label>Started At</label>
+		                                {{$builder[0]->created_at}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Association</label>
+		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
+		                                {{$builder[0]->association}}
+				                                
+				                    </div>
+			                    </div>	
+			                </div>
+			            </div>
+			        </div>
+			        
+			        <!-- <a class = "btn btn-primary" href = "{{URL::route('myfavorites')}}" >Back</a> -->
+			    </div>
+			    
+			    <div class="col-lg-6">
+				        <div class="panel panel-default">
+				            <div class="panel-heading">
+				                History Jobs
+				            </div>
+			            <div class="panel-body">
+			            @foreach ($builder as $buildere) 
+			                <div class="row">
+			                    <div class="col-lg-12">
+
+		                            <div class="form-group">
+		                                <label>Jobs tittle</label>
+		                                {{$buildere->tittle}}
+		                                
+		                            </div>
+		                            
+		                             <div class="form-group">
+		                                <label>Jobs property</label>
+		                                {{$buildere->property}}
+		                                
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Jobs category</label>
+		                                {{$buildere->category}}
+		                                
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Jobs decription</label>
+		                                {{$buildere->description}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>User price</label>
+		                                {{$buildere->price}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Builder vote</label>
+		                                {{$buildere->vote}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Created at</label>
+		                                {{$buildere->created_at}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Job status</label>
+		                                {{$buildere->status_process}}
+		                                
+		                            </div>
+
+			                    </div>	
+			                </div>
+			                <hr>
+			                @endforeach
+			            </div>
+			        </div>
+			    </div>
 
 
     <!-- end change phone number -->

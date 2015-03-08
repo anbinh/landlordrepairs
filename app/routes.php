@@ -310,17 +310,30 @@ Route::post('dashboard_postjob', 'HoangkhaController@postDashboardPostjob');
 
 
 Route::get('openjobs',array('as'=>'openjobs','uses' => 'BaseController@getOpenJobs' ));
+
 Route::get('ongoingjobs',array('as'=>'ongoingjobs','uses' => 'BaseController@getOngoingJobs' ));
+
 Route::get('cancelledjobs',array('as'=>'cancelledjobs','uses' => 'BaseController@getCancelledJobs' ));
+Route::post('customer-action-cancelled', array( 'uses' => 'BaseController@postCustomerActionCancelled' ));
+
 Route::get('pendingreview',array('as'=>'pendingreview','uses' => 'BaseController@getPendingReviewJobs' ));
+
 Route::get('completedjobs',array('as'=>'completedjobs','uses' => 'BaseController@getCompletedJobs' ));
+
 Route::get('myinvites',array('as'=>'myinvites','uses' => 'BaseController@getMyInvites' ));
+
 Route::get('myfavorites',array('as'=>'myfavorites','uses' => 'BaseController@getMyFavorites' ));
+Route::post('customer-find-favorite-builders', 'BaseController@postCustomerFindFavoriteBuilders');
+Route::get('view-detail-info-builder/{builder_id}', array('uses' => 'BaseController@getViewDetailInfoBuilder' ));
+Route::post('customer-action-delete-favorite-builder', 'BaseController@postCustomerActionDeleteFavoriteBuilder');
+Route::post('customer-action-add-favorite-builder', 'BaseController@postCustomerActionAddFavoriteBuilder');
+
 
 Route::get( 'accept-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getAcceptVote' ));
+
 Route::get( 'cancel-vote/{builder_id},{job_id}', array( 'uses' => 'BaseController@getCancelVote' ));
 
-Route::get('view-detail-info-builder/{builder_id},{job_id}', array('uses' => 'BaseController@getViewDetailInfoBuilder' ));
+Route::get('view-detail-info-builder-with-job/{builder_id},{job_id}', array('uses' => 'BaseController@getViewDetailInfoBuilderWithJob' ));
 //-----TEST DISTANCE GOOGLEMAP------//
 
 
@@ -330,6 +343,8 @@ Route::get('listbuilders', 'BaseController@getListbuilders');
 Route::post('listbuilders', 'BaseController@postListbuilders');
 
 //------BUILDERS--------------------//
+
+
 Route::get('register-builder', 'BaseController@getRegisterBuilder');
 Route::post('register-builder', 'BaseController@postRegisterBuilder');
 
@@ -347,12 +362,19 @@ Route::get('builder-find-jobs', array('as'=>'builder-find-jobs','uses' => 'BaseC
 Route::post('builder-find-jobs', 'BaseController@postBuilderFindJobs');
 
 Route::get('builder-ongoing-jobs', array('as'=>'builder-ongoing-jobs','uses' => 'BaseController@getBuilderOngoingJobs' ));
+
 Route::get('builder-lost-jobs', array('as'=>'builder-lost-jobs','uses' => 'BaseController@getBuilderLostJobs' ));
+
 Route::get('builder-won-jobs', array('as'=>'builder-won-jobs','uses' => 'BaseController@getBuilderWonJobs' ));
+
 Route::get('builder-cancelled-jobs', array('as'=>'builder-cancelled-jobs','uses' => 'BaseController@getBuilderCancelledJobs' ));
+
 Route::get('builder-completed-jobs', array('as'=>'builder-completed-jobs','uses' => 'BaseController@getBuilderCompletedJobs' ));
 
+Route::post( 'builder-action-completed', array( 'uses' => 'BaseController@getBuilderActionCompleted' ));
 
+Route::post( 'builder-action-cancelled', array( 'uses' => 'BaseController@postBuilderActionCancelled' ));
+Route::get( 'cancelledjobconfirm/{job_id},{confirm_code}', array( 'uses' => 'BaseController@getconfirmCancelledJob' ));
 
 
 

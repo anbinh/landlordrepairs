@@ -156,7 +156,7 @@
 			      <th><em>Tittle</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			     
 			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
@@ -166,17 +166,23 @@
 			  <tbody>
 			
 			
-			  @foreach($jobs as $job)
+			  @foreach($cancelledJobs as $cancelledJob)
 			 	<tr>
-			    	<td>{{$job->tittle}}</td>
-			    	<td>{{$job->property}}</td>
-			    	<td>{{$job->category}}</td>
-			    	<td>{{$job->price}}</td>
-			 		<td>{{$job->timeoption}}</td>
-			 		<td>{{$job->local}}</td>
-			 		<td>{{$job->description}}</td>
-			 		<td>{{$job->status}}</td>
+			    	<td>{{$cancelledJob->tittle}}</td>
+			    	<td>{{$cancelledJob->property}}</td>
+			   		<td>{{$cancelledJob->category}}</td>
+			    	
+			 		<td>{{$cancelledJob->timeoption}}</td>
+			 		<td>{{$cancelledJob->local}}</td>
+			 		<td>{{$cancelledJob->description}}</td>
 			 		
+			 		<td>@if ( $cancelledJob->cancelled_confirm != "")
+			 				Waiting customer approve
+			 			@else
+			 				Approved
+			 			@endif
+			 		</td>
+	
 			 	</tr>	
 				@endforeach
 			    
