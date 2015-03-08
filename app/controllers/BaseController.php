@@ -2088,7 +2088,7 @@ public function postCustomerActionCancelled()
 			$conpletedJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
-		    	 ->where('job_process.status', '=', 'completed')
+		    	 ->where('job_process.status_process', '=', 'completed')
 		    	 ->get();
 		    	 
 		 	
