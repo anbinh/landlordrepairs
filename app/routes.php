@@ -382,6 +382,19 @@ Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseC
 
 Route::post('vote-job', 'BaseController@postVoteJob');
 
+/*
+ * ADMIN
+ */
+Route::get('admin-manage-builders', array('as'=>'admin-manage-builders','uses' => 'BaseController@getAdminManageBuilders' ));
+Route::post('admin-action-delete', 'BaseController@postAdminDeleteBuilder');
+Route::post('admin-action-edit-builder', 'BaseController@postAdminEditBuilder');
+Route::post('admin-change_builder_profile','BaseController@postAdminChangeBuilderProfile');
+
+Route::get('admin-manage-users', array('as'=>'admin-manage-users','uses' => 'BaseController@getAdminManageUsers' ));
+Route::get('view-detail-info-user/{user_id}', array('uses' => 'BaseController@getViewDetailInfoUser' ));
+Route::post('admin-action-delete-user', 'BaseController@postAdminDeleteUser');
+Route::post('admin-action-edit-user', 'BaseController@postAdminEditUser');
+
 
 
 

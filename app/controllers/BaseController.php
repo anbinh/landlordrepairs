@@ -48,7 +48,7 @@ class BaseController extends Controller {
 			if(Auth::attempt($credentials, true))
 			{ 
 				if(Auth::user()->role == '2') {
-					return Redirect::route('admin-page');
+					return Redirect::route('admin-manage-builders');
 				}
 				else {
 					if (Auth::user()->role == '1') {
@@ -2115,11 +2115,214 @@ public function postCustomerActionCancelled()
 		return Redirect::to('login');
 	}
 	
+	/*
+	 * ADMIN
+	 */
+	
+	public function getAdminManageBuilders()
+	{  
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$builders = DB::table('users')
+			    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
+			    	 ->get();
+		   
+		 	$builderArr = "";
+			for ($i = 0; $i < count($builders); $i++) {
+				$builder = DB::table('users')
+			    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
+			    	 ->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
+			    	 ->where('users.id','=',$builders[$i]->builder_id)
+			    	 ->get();
+			    	 
+				$builderArr[$i] = $builder;
+			}// var_dump(($builderArr[0][0]->phone_number)); die;
+			return View::make('admin_dashboard.manage-builders')->with(array('builderArr'=> $builderArr,'count'=>count($builderArr)));
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postAdminDeleteBuilder()
+	{  
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				//echo (Input::get('builder_id')); die;
+				DB::table('users')
+					->where('id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('extend_builders')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('extend_builders_category')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('favorite-builders')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('job_process')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();		
+				return Redirect::to('admin-manage-builders');				
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postAdminEditBuilder()
+	{  
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				//$builder = Auth::user();
+				$builder = DB::table('users')
+					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+	        		->where('users.id', '=', Input::get('builder_id'))
+	        		->get();
+				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with('builder', $builder);			
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postAdminChangeBuilderProfile()
+	{ 	
+		$input = Input::all();
+		$email_old = $input['email'];
+		
+		DB::table('users')
+			->where('id', '=', Input::get('builder_id'))
+			->update(array(
+			'email' => "temp",
+			));
+			
+		$rules = array('email' => 'required|unique:users|email');
+		$v = Validator::make($input, $rules);
+		if($v->passes()) {
+		
+			DB::table('users')
+			->where('id', '=', Input::get('builder_id'))
+			->update(array(
+			'username' => $input['username'],
+			'email' => $input['email'],
+			));
 
+			
+			DB::table('extend_builders')
+			->where('extend_builders.builder_id', '=', Input::get('builder_id'))
+			->update(array(
+			'tittle' => $input['company'],
+			'local' => $input['local'],
+			'local_code' => $input['local_code'],
+			'lat' => $input['lat'],
+			'lng' => $input['lng'],
+			'site_link' => $input['site_link'],
+			'social_link' => $input['social_link'],
+			'association' => $input['association'],
+			'created_at' => $input['created_at'],
+			));
+			//---Change Category----//
+			DB::table('extend_builders_category')->where('builder_id', '=', Input::get('builder_id'))->delete();
+			//echo "dete";die;
+			$categorys = Input::get('check_builders');
+			$num_of_checked_builders = count($categorys);
+			for ($i = 0; $i < $num_of_checked_builders; $i++){
+				$extend_builder_category = new ExtendBuilderCategory();	
+				$extend_builder_category->builder_id = Input::get('builder_id');
+				$extend_builder_category->category = $categorys[$i];
+				$extend_builder_category->save();	
+			}
+			//----------------------//
+			
+				
+		
+		return Redirect::to('admin-manage-builders');
+		} else {
+			DB::table('users')
+			->where('id', '=', Input::get("builder_id"))
+			->update(array(
+			'email' => $email_old,
+			));
+			return Redirect::to('admin-manage-builders');	
+		}
+	}
 	
 	
+	public function getAdminManageUsers()
+	{  
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$users = DB::table('users')
+					->where('role','=','0')
+			    	->get();
+		   
+		 	
+			return View::make('admin_dashboard.manage-users')->with(array('users'=> $users));
+			}
+		}
+		return Redirect::to('login');
+	}
 	
 	
+	public function getViewDetailInfoUser($user_id)
+	{  
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$user = "";
+				$user = DB::table('users')
+	        		->where('id', '=', $user_id)
+	        		->get();
+	        		//var_dump($builder); die; 
+	        	
+	        	return View::make('admin_dashboard.view_user_profile')->with(array('user' => $user));
+			}
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postAdminDeleteUser()
+	{  die;
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				//echo (Input::get('builder_id')); die;
+				DB::table('users')
+					->where('id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('extend_builders')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('extend_builders_category')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('favorite-builders')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();
+				DB::table('job_process')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->delete();		
+				return Redirect::to('admin-manage-builders');				
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	
+	public function postAdminEditUser()
+	{  die;
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				//$builder = Auth::user();
+				$builder = DB::table('users')
+					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+	        		->where('users.id', '=', Input::get('builder_id'))
+	        		->get();
+				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with('builder', $builder);			
+			}
+		}
+		return Redirect::to('login');
+	}
 }
 
 

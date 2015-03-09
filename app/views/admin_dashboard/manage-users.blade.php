@@ -10,17 +10,9 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
-					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
+					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
+					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
+					 
 					  
 				</div>
 
@@ -153,7 +145,65 @@
 			}
 			</style>
 			 
+			<table id="country-list" class="sortable-table">
+			  <thead>
+			    <tr class="country-table-head">
+			      	<th><em>Name of Users</em> <span>&nbsp;</span></th>
 			
+			
+			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Email confirm</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Mobile confirm</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			
+			  @if($users != null)
+				 @foreach($users as $user)
+				 		<tr>
+				    		<td>{{$user->username}}</td>
+				 
+				      		<td>{{$user->email}}</td>
+				 
+				      		<td>
+				      			@if($user->email_confirm == "")
+				      				Yes
+				      			@else
+				      				No
+				      			@endif
+				      		</td>
+				   			<td>{{$user->phone_number}}</td>
+				 
+				      		<td>
+				      			@if($user->phone_confirm == "")
+				      				Yes
+				      			@else
+				      				No
+				      			@endif
+				      		</td>
+				      		<td class="date-sort"><em><a href="view-detail-info-user/{{$user->id}}">View</></em> <span>&nbsp;</span></td>
+				      		<td>
+				      			<form method = "post" action = "admin-action-delete-user" >
+							 		<input name = "user_id" value = "{{$user->id}}" hidden>
+							 		<button class="btn btn-danger">Delete</button>
+						 		</form>
+						 		
+						 		<form method = "post" action = "admin-action-edit-user" >
+							 		<input name = "user_id" value = "{{$user->id}}" hidden>
+							 		<button class="btn btn-success">Edit</button>
+						 		</form>
+						 		
+				      		</td>
+				 		</tr>	
+				@endforeach
+              @endif
+			  
+			    
+			   
+			</table>
 			
 			 
 			
