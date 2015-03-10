@@ -1,3 +1,6 @@
+
+
+
 @extends('layouts.default')
 @section('content')	
 <div class="row" style = "margin-top: 10%; margin-bottom: 80px;">

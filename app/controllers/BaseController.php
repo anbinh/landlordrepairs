@@ -377,10 +377,29 @@ class BaseController extends Controller {
 	
 	public function getPostjob()
 	{
-		if(Auth::check()) {
-			return Redirect::to('register');
+		if(Auth::check()) { 
+		if (Auth::user()->ban == ""){
+			return View::make('pages.postjob');
+		} else {// Baned
+			$date = new DateTime('today');
+		    $date =  $date->modify('+5 day')->format('Y-m-d');
+			if(Auth::user()->ban < $date){ //still Baning
+				return View::make('pages.AlertBanned')->with('date',Auth::user()->ban);
+			} else {
+				DB::table('users')
+					->where('id', '=', Auth::user()->id)
+					->update(array(
+					'ban' => '',
+					));
+				return View::make('pages.postjob');	
+			}	
 		}
-		return View::make('home.postjob');
+			
+		} else {
+			return Redirect::to('login');
+		}
+		
+		
 	}
 	public function postPostjob()
 	{
@@ -2272,9 +2291,18 @@ public function postCustomerActionCancelled()
 				$user = DB::table('users')
 	        		->where('id', '=', $user_id)
 	        		->get();
-	        		//var_dump($builder); die; 
+	        		
+	        	$jobs = DB::table('jobs')
+	        		->where('jobs.user_id', '=', $user_id)
+	        		->get();
+	        	//var_dump($jobs); die;	
+	        	$favorite_builders = DB::table('favorite-builders')
+	        		->join('users', 'users.id', '=', 'favorite-builders.user_id')
+	        		->where('users.id', '=', $user_id)
+	        		->get();		
+	        	//var_dump($favorite_builders); die;
 	        	
-	        	return View::make('admin_dashboard.view_user_profile')->with(array('user' => $user));
+	        	return View::make('admin_dashboard.view_user_profile')->with(array('user' => $user,'jobs'=>$jobs,'favorite_builders'=>$favorite_builders));
 			}
 		}
 		return Redirect::to('login');
@@ -2282,26 +2310,25 @@ public function postCustomerActionCancelled()
 	}
 	
 	public function postAdminDeleteUser()
-	{  die;
+	{ 
 		if(Auth::check()) { 
 			if ( Auth::user()->role == '2') {
-				//echo (Input::get('builder_id')); die;
+				//echo (Input::get('user_id')); die;
 				DB::table('users')
-					->where('id', '=', Input::get('builder_id'))
+					->where('id', '=', Input::get('user_id'))
 					->delete();
-				DB::table('extend_builders')
-					->where('builder_id', '=', Input::get('builder_id'))
-					->delete();
-				DB::table('extend_builders_category')
-					->where('builder_id', '=', Input::get('builder_id'))
-					->delete();
+				
 				DB::table('favorite-builders')
-					->where('builder_id', '=', Input::get('builder_id'))
+					->where('user_id', '=', Input::get('user_id'))
 					->delete();
+				DB::table('jobs')
+					->where('user_id', '=', Input::get('user_id'))
+					->delete();
+						
 				DB::table('job_process')
-					->where('builder_id', '=', Input::get('builder_id'))
+					->where('user_id', '=', Input::get('user_id'))
 					->delete();		
-				return Redirect::to('admin-manage-builders');				
+				return Redirect::to('admin-manage-users');				
 			}
 		}
 		return Redirect::to('login');
@@ -2309,20 +2336,184 @@ public function postCustomerActionCancelled()
 	
 	
 	public function postAdminEditUser()
-	{  die;
+	{  
+		$user = "";
+			$user = DB::table('users')
+        		->where('id', '=', Input::get('user_id'))
+        		->first();
+		return View::make('admin_dashboard.viewUserProfileToEdit')->with('user', $user);			
+	}
+	
+	public function postAdminChanegUserProfile()
+	{  
+ 
+		$input = Input::all();
+		$email_old = $input['email'];
+		
+		DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'email' => "temp",
+			));
+			
+		$rules = array('email' => 'required|unique:users|email');
+		$v = Validator::make($input, $rules);
+		if($v->passes()) {
+			DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'username' => $input['username'],
+			'email' => $input['email'],
+			));
+			return Redirect::to('admin-manage-users')->with('success', '1');
+		}
+		else {
+			DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'email' => $email_old,
+			));
+			return Redirect::to('admin-manage-users')->withInput()->withErrors($v);	
+		}
+		
+		
+		
+		
+		$input = Input::all();
+		$rules = array('email' => 'required|unique:users|email');
+		//var_dump($input['email'] ); die	;	
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+			DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'username' => Input::get('username'),
+			'email' => Input::get('email'),
+			'phone_number' => Input::get('phone_number'),
+			));
+			return Redirect::to('admin-manage-users')->with('success', '1');	
+		} else {
+			return Redirect::to('admin-manage-users')->withInput()->withErrors($v);	
+		}
+	}
+	
+	public function getAdminTodayJobs()
+	{   $date = date('Y-m-d');
+		$jobs = "";
+			$jobs = DB::table('jobs')
+				->where('created_at','=', $date)
+        		->get();
+        		
+		return View::make('admin_dashboard.viewTodayJobs')->with('jobs', $jobs);			
+	}
+	
+	public function getAdminNewUsers()
+	{  	$date = new DateTime('today');
+		$date =  $date->modify('-5 day')->format('Y-m-d');
 		if(Auth::check()) { 
 			if ( Auth::user()->role == '2') {
-				//$builder = Auth::user();
-				$builder = DB::table('users')
-					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-	        		->where('users.id', '=', Input::get('builder_id'))
-	        		->get();
-				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with('builder', $builder);			
+				$users = DB::table('users')
+					->where('role','=','0')
+					->where('created_at','>', $date)
+			    	->get();
+		   
+		 	
+
+			return View::make('admin_dashboard.viewNewUsers')->with('users', $users);
 			}
 		}
 		return Redirect::to('login');
 	}
+	
+	public function getAdminNewBuilders()
+	{  	$date = new DateTime('today');
+		$date =  $date->modify('-5 day')->format('Y-m-d');
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$builders = "";
+				$builders = DB::table('users')
+			    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
+			    	 ->where('users.created_at','>', $date)
+			    	 ->get();
+		   
+			 	$builderArr = "";
+				for ($i = 0; $i < count($builders); $i++) {
+					$builder = DB::table('users')
+				    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
+				    	 ->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
+				    	 ->where('users.id','=',$builders[$i]->builder_id)
+				    	 ->get();
+				    	 
+					$builderArr[$i] = $builder;
+				}// var_dump(($builderArr[0][0]->phone_number)); die;
+			return View::make('admin_dashboard.viewNewBuilders')->with(array('builderArr'=> $builderArr,'count'=>count($builderArr)));
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getAdminInviteSentByUsers()
+	{  	
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$jobs_process = "";
+				$jobs_process = DB::table('job_process')
+					 ->where('status_process', '=', 'inviting')
+			    	 ->get();
+
+		   		$user = "";
+		   		$builder = "";
+		   		$users = "";
+		   		$builders = "";
+		   		$job = "";
+		   		$jobs = "";
+		   		
+		   		for ($i = 0; $i < count($jobs_process); $i++) {
+		   			$user = DB::table('users')
+					 ->where('id', '=',$jobs_process[$i]->user_id)
+			    	 ->first();
+			    	$builder = DB::table('users')
+					 ->where('id', '=',$jobs_process[$i]->builder_id)
+			    	 ->first();
+			    	 $job = DB::table('jobs')
+					 ->where('id', '=',$jobs_process[$i]->job_id)
+			    	 ->first(); 
+		   			$users[$i] = $user;
+		   			$builders[$i] = $builder;
+		   			$jobs[$i] = $job;  
+		   		}
+			return View::make('admin_dashboard.viewInviteSent')->with(array('jobs_process'=> $jobs_process,'users' => $users, 'builders' => $builders, 'jobs' => $jobs));
+			}
+		}
+		return Redirect::to('login');
+	}
+		
+	public function postAdminBan()
+	{   
+		$date = date('Y-m-d');
+		DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'ban' => $date,
+			));
+    		
+		return Redirect::to('admin-manage-users	');	
+	}
+	
+	public function postAdminUnBan()
+	{   
+		
+		DB::table('users')
+			->where('id', '=', Input::get('user_id'))
+			->update(array(
+			'ban' => '',
+			));
+    		
+		return Redirect::to('admin-manage-users	');			
+	}
+	
+				
 }
 
 

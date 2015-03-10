@@ -152,68 +152,34 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      	<th><em>Name of Users</em> <span>&nbsp;</span></th>
-			
-			
-			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Email confirm</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Mobile confirm</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			      	<th><em>Tittle</em> <span>&nbsp;</span></th>
+			     	<th><em>Decription</em> <span>&nbsp;</span></th>
+			     	<th><em>Property</em> <span>&nbsp;</span></th>
+			     	<th><em>Category</em> <span>&nbsp;</span></th>
+			     	<th><em>Time Option</em> <span>&nbsp;</span></th>
+			     	<th><em>Local</em> <span>&nbsp;</span></th>
+			     	<th><em>Local code</em> <span>&nbsp;</span></th>
+			     	<th><em>Created At</em> <span>&nbsp;</span></th>
+			     	
+			     	
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($users != null)
-				 @foreach($users as $user)
-				 		<tr>
-				    		<td>{{$user->username}}</td>
-				 
-				      		<td>{{$user->email}}</td>
-				 
-				      		<td>
-				      			@if($user->email_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				   			<td>{{$user->phone_number}}</td>
-				 
-				      		<td>
-				      			@if($user->phone_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				      		<td class="date-sort"><em><a href="view-detail-info-user/{{$user->id}}">View</></em> <span>&nbsp;</span></td>
-				      		<td>
-				      			<form method = "post" action = "admin-action-delete-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Delete</button>
-						 		</form>
-						 		
-						 		<form method = "post" action = "admin-action-edit-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Edit</button>
-						 		</form>
-						 		@if ($user->ban == "")
-						 		<form method = "post" action = "admin-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Ban</button>
-						 		</form>
-						 		@else
-						 		<form method = "post" action = "admin-un-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Un Ban</button>
-						 		</form>
-						 		@endif
-						 		
-				      		</td>
-				 		</tr>	
-				@endforeach
+			  @if($jobs != null)
+			      	@foreach($jobs as $job)
+     					 <tr>
+					  		<td>{{$job->tittle}}</td>
+					  		<td>{{$job->description}}</td>
+					  		<td>{{$job->property}}</td>
+					  		<td>{{$job->category}}</td>
+					  		<td>{{$job->timeoption}}</td>
+					  		<td>{{$job->local}}</td>
+					  		<td>{{$job->local_code}}</td>
+					  		<td>{{$job->created_at}}</td>
+					  		
+					  	 </tr>
+      				@endforeach
               @endif
 			  
 			    

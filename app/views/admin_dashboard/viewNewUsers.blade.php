@@ -199,32 +199,15 @@
 							 		<input name = "user_id" value = "{{$user->id}}" hidden>
 							 		<button class="btn btn-success">Edit</button>
 						 		</form>
-						 		@if ($user->ban == "")
-						 		<form method = "post" action = "admin-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Ban</button>
-						 		</form>
-						 		@else
-						 		<form method = "post" action = "admin-un-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Un Ban</button>
-						 		</form>
-						 		@endif
 						 		
 				      		</td>
 				 		</tr>	
 				@endforeach
               @endif
-			  
-			    
-			   
+
 			</table>
-			
-			 
-			
-			
+
     </div>
-    
 
     <!-- end change phone number -->
 </div>

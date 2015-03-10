@@ -250,10 +250,8 @@ Route::post('restore', 'BaseController@postForgetpass');
 
 Route::get( 'changepass/{id_code}', array( 'uses' => 'BaseController@changepass' ));
 
-Route::get('postjob',array ('as'=>'postjob-page', function()
-{
-	return View::make('pages.postjob');
-}));
+
+Route::get('postjob', array('as'=>'postjob','uses'=>'BaseController@getPostjob'));
 Route::post('postjob', 'BaseController@postPostjob');
 
 
@@ -394,6 +392,19 @@ Route::get('admin-manage-users', array('as'=>'admin-manage-users','uses' => 'Bas
 Route::get('view-detail-info-user/{user_id}', array('uses' => 'BaseController@getViewDetailInfoUser' ));
 Route::post('admin-action-delete-user', 'BaseController@postAdminDeleteUser');
 Route::post('admin-action-edit-user', 'BaseController@postAdminEditUser');
+Route::post('admin-change_user_profile', 'BaseController@postAdminChanegUserProfile');
+
+Route::get('admin-today-jobs', array('as'=>'admin-today-jobs','uses' => 'BaseController@getAdminTodayJobs' ));
+
+Route::get('admin-new-users', array('as'=>'admin-new-users','uses' => 'BaseController@getAdminNewUsers' ));
+
+Route::get('admin-new-builders', array('as'=>'admin-new-builders','uses' => 'BaseController@getAdminNewBuilders' ));
+
+Route::get('admin-invites-sent-by-users', array('as'=>'admin-invites-sent-by-users','uses' => 'BaseController@getAdminInviteSentByUsers' ));
+
+Route::post('admin-ban','BaseController@postAdminBan');
+Route::post('admin-un-ban','BaseController@postAdminUnBan');
+
 
 
 

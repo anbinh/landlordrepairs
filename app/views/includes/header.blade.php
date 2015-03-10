@@ -31,9 +31,15 @@
                         			dashboard
                         		</a>
                         	@else
+                        		@if (Auth::user()->role == 1)
                         		<a href="customer-invited">
                         			dashboard
                         		</a>
+                        		@else
+                        		<a href="admin-manage-builders">
+                        			dashboard
+                        		</a>
+                        		@endif
                         	@endif
                         	
                         @else

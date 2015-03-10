@@ -152,68 +152,65 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      	<th><em>Name of Users</em> <span>&nbsp;</span></th>
-			
-			
+			      	<th><em>Name of Builders</em> <span>&nbsp;</span></th>
+			     	<th><em>Association</em> <span>&nbsp;</span></th>
+			     	<th><em>Category</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Email confirm</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Mobile confirm</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Mobile cofirm</em> <span>&nbsp;</span></th>
+			      	
 			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($users != null)
-				 @foreach($users as $user)
+			  @if($builderArr != null)
+			  	@for($i = 0; $i< $count; $i++)
+	              	
 				 		<tr>
-				    		<td>{{$user->username}}</td>
-				 
-				      		<td>{{$user->email}}</td>
-				 
+				    		<td>{{$builderArr[$i][0]->username}}</td>
+				    		<td>{{$builderArr[$i][0]->association}}</td>
+				      		<td><ol>
+				      			@foreach($builderArr[$i] as $builder)
+									  <li>{{$builder->category}}</li>
+				      			@endforeach
+				      			</ol>
+				      		</td>
+				      		<td>{{$builderArr[$i][0]->email}}</td>
 				      		<td>
-				      			@if($user->email_confirm == "")
+				      			@if($builderArr[$i][0]->email_confirm == "")
 				      				Yes
 				      			@else
 				      				No
 				      			@endif
 				      		</td>
-				   			<td>{{$user->phone_number}}</td>
+				      		<td>{{$builderArr[$i][0]->phone_number}}</td>
 				 
 				      		<td>
-				      			@if($user->phone_confirm == "")
+				      			@if($builderArr[$i][0]->phone_confirm == "")
 				      				Yes
 				      			@else
 				      				No
 				      			@endif
 				      		</td>
-				      		<td class="date-sort"><em><a href="view-detail-info-user/{{$user->id}}">View</></em> <span>&nbsp;</span></td>
+				      		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builderArr[$i][0]->builder_id}}">View</></em> <span>&nbsp;</span></td>
 				      		<td>
-				      			<form method = "post" action = "admin-action-delete-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
+				      			<form method = "post" action = "admin-action-delete" >
+							 		<input name = "builder_id" value = "{{$builderArr[$i][0]->builder_id}}" hidden>
 							 		<button class="btn btn-danger">Delete</button>
 						 		</form>
 						 		
-						 		<form method = "post" action = "admin-action-edit-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
+						 		<form method = "post" action = "admin-action-edit-builder" >
+							 		<input name = "builder_id" value = "{{$builderArr[$i][0]->builder_id}}" hidden>
 							 		<button class="btn btn-success">Edit</button>
 						 		</form>
-						 		@if ($user->ban == "")
-						 		<form method = "post" action = "admin-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Ban</button>
-						 		</form>
-						 		@else
-						 		<form method = "post" action = "admin-un-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Un Ban</button>
-						 		</form>
-						 		@endif
 						 		
 				      		</td>
 				 		</tr>	
-				@endforeach
+					
+				@endfor
               @endif
 			  
 			    
