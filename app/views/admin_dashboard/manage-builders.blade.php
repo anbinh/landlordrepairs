@@ -197,7 +197,7 @@
 				      				No
 				      			@endif
 				      		</td>
-				      		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builderArr[$i][0]->builder_id}}">View</></em> <span>&nbsp;</span></td>
+				      		<td class="date-sort"><em><a href="admin-view-detail-info-builder/{{$builderArr[$i][0]->builder_id}}">View</></em> <span>&nbsp;</span></td>
 				      		<td>
 				      			<form method = "post" action = "admin-action-delete" >
 							 		<input name = "builder_id" value = "{{$builderArr[$i][0]->builder_id}}" hidden>

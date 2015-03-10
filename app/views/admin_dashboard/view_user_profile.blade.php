@@ -70,6 +70,10 @@
 					  </a>
 					 	<a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
 					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
+					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
+					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
+					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
+					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
 					 
 					  
 					  

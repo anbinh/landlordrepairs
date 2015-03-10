@@ -2162,6 +2162,27 @@ public function postCustomerActionCancelled()
 		return Redirect::to('login');
 	}
 	
+	public function getAdminViewDetailInfoBuilder($builder_id)
+	{  
+		if(Auth::check()) {
+			
+			$builder = "";
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				
+        		->where('users.id', '=', $builder_id)
+        		
+        		->get();
+        		//var_dump($builder); die; 
+        	
+        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder));
+		}
+		return Redirect::to('login');
+
+	}
+	
 	public function postAdminDeleteBuilder()
 	{  
 		if(Auth::check()) { 

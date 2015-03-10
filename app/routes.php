@@ -251,7 +251,7 @@ Route::post('restore', 'BaseController@postForgetpass');
 Route::get( 'changepass/{id_code}', array( 'uses' => 'BaseController@changepass' ));
 
 
-Route::get('postjob', array('as'=>'postjob','uses'=>'BaseController@getPostjob'));
+Route::get('postjob', array('as'=>'postjob-page','uses'=>'BaseController@getPostjob'));
 Route::post('postjob', 'BaseController@postPostjob');
 
 
@@ -384,6 +384,7 @@ Route::post('vote-job', 'BaseController@postVoteJob');
  * ADMIN
  */
 Route::get('admin-manage-builders', array('as'=>'admin-manage-builders','uses' => 'BaseController@getAdminManageBuilders' ));
+Route::get('admin-view-detail-info-builder/{builder_id}', array('uses' => 'BaseController@getAdminViewDetailInfoBuilder' ));
 Route::post('admin-action-delete', 'BaseController@postAdminDeleteBuilder');
 Route::post('admin-action-edit-builder', 'BaseController@postAdminEditBuilder');
 Route::post('admin-change_builder_profile','BaseController@postAdminChangeBuilderProfile');

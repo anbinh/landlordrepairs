@@ -177,7 +177,7 @@
 			  			
 			  			<td>
 			  				{{$builders[$i]->username}}
-			  				<span>&nbsp;</span><em><a href="view-detail-info-builder/{{$builders[$i]->id}}">View Details</></em> 
+			  				<span>&nbsp;</span><em><a href="admin-view-detail-info-builder/{{$builders[$i]->id}}">View Details</></em> 
 			  			</td>
 			  			<td>{{$jobs[$i]->created_at}}</td>
 			  			<td>{{$jobs_process[$i]->updated_at}}</td>
