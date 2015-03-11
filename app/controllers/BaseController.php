@@ -2175,7 +2175,7 @@ public function postCustomerActionCancelled()
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.builder_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
 				
         		->where('users.id', '=', $builder_id)
