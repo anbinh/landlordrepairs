@@ -2534,6 +2534,39 @@ public function postCustomerActionCancelled()
 		return Redirect::to('admin-manage-users	');			
 	}
 	
+	public function getAdminManageAssociations()
+	{   
+		
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				$associations = "";
+				$associations = DB::table('association_logo')
+			    	 ->get(); 
+		   		return View::make('admin_dashboard.associationsManage')->with(array('associations'=> $associations));
+			}
+		}
+		return Redirect::to('login');			
+	}
+	
+	public function postSubmitSaveAssociationLogo()
+	{   
+		if (Input::get('association_filename') != "" ) {
+			$association_filename = Input::get('association_filename');	
+			$association_filename = $association_filename.'.'.Input::file('file')->guessClientExtension();
+		} else {
+			$association_filename = Input::file('file')->getClientOriginalName();
+		}	
+ 			Input::file('file')->move(__DIR__.'/storage',$association_filename);
+ 			/*
+ 			 * Save to databse
+ 			 */
+ 			DB::table('association_logo')
+				->where('id', '=', Input::get('association_id'))
+				->update(array(
+				'association_src' => __DIR__.'/storage/'.$association_filename,
+			));
+ 			return Redirect::to('admin-manage-associations');				
+	}
 				
 }
 

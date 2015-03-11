@@ -406,6 +406,12 @@ Route::get('admin-invites-sent-by-users', array('as'=>'admin-invites-sent-by-use
 Route::post('admin-ban','BaseController@postAdminBan');
 Route::post('admin-un-ban','BaseController@postAdminUnBan');
 
+Route::get('admin-manage-associations', array('as'=>'admin-manage-associations','uses' => 'BaseController@getAdminManageAssociations' ));
+
+Route::any('form-submit-save-association-logo','BaseController@postSubmitSaveAssociationLogo');
+
+
+
 
 
 
