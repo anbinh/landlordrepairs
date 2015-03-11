@@ -2560,6 +2560,7 @@ public function postCustomerActionCancelled()
  			/*
  			 * Save to databse
  			 */
+ 			echo public_path(); die;
  			DB::table('association_logo')
 				->where('id', '=', Input::get('association_id'))
 				->update(array(
