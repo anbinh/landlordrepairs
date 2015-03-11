@@ -2589,7 +2589,7 @@ public function postCustomerActionCancelled()
             $upload_success = Input::file('photo')->move($destinationPath, $filename.'.'.$extension);
         }
 	} 
-	var_dump (asset(str_replace(public_path(), '' , $photo->getRealPath()))); die;			
+	var_dump (asset(str_replace(public_path(), '' , 'uploads'))); die;			
 	
 	}
 	
