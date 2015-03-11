@@ -2550,24 +2550,49 @@ public function postCustomerActionCancelled()
 	
 	public function postSubmitSaveAssociationLogo()
 	{   
-		if (Input::get('association_filename') != "" ) {
+		/*if (Input::get('association_filename') != "" ) {
 			$association_filename = Input::get('association_filename');	
 			$association_filename = $association_filename.'.'.Input::file('file')->guessClientExtension();
 		} else {
 			$association_filename = Input::file('file')->getClientOriginalName();
 		}	
  			Input::file('file')->move(__DIR__.'/storage',$association_filename);
- 			/*
- 			 * Save to databse
- 			 */
+ 			
  			echo public_path(); die;
  			DB::table('association_logo')
 				->where('id', '=', Input::get('association_id'))
 				->update(array(
 				'association_src' => __DIR__.'/storage/'.$association_filename,
 			));
- 			return Redirect::to('admin-manage-associations');				
+ 			return Redirect::to('admin-manage-associations');*/
+	//-----
+	//create two empty variables outside of conditional statement because we gonna access them later on 
+    $filename = "";
+    $extension = "";
+//check if you get a file from input, assuming that the input box is named photo
+    if (Input::hasFile('photo'))
+    {
+//create an array with allowed extensions
+        $allowedext = array("png","jpg","jpeg","gif");
+//get the file uploaded by user
+        $photo = Input::file('photo');
+//set the destination path assuming that you have chmod 777 the upoads folder under public directory
+        $destinationPath = public_path().'/uploads';
+//generate a random filename 
+        $filename = str_random(12);
+//get the extension of file uploaded by user
+        $extension = $photo->getClientOriginalExtension();
+//validate if the uploaded file extension is allowed by us in the $allowedext array
+        if(in_array($extension, $allowedext ))
+        {
+//everything turns to be true move the file to the destination folder
+            $upload_success = Input::file('photo')->move($destinationPath, $filename.'.'.$extension);
+        }
+	} 
+	var_dump (asset(str_replace(public_path(), '' , $photo->getRealPath()))); die;			
+	
 	}
+	
 				
 }
 

@@ -178,7 +178,7 @@
 								<input name = "association_id" value = "{{$association->id}}" hidden/>
 							  	{{ Form::label('File','File name',array('id'=>'','class'=>'')) }}
 							  	<input name = "association_filename" value = ""/>
-							  	{{ Form::file('file','',array('id'=>'','class'=>'')) }}
+							  	{{ Form::file('photo','',array('id'=>'','class'=>'')) }}
 							  	  <!-- submit buttons -->
 							  	{{ Form::submit('Submit') }}  
 								  <!-- reset buttons -->
