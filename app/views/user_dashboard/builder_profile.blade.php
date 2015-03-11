@@ -90,8 +90,8 @@
 		                            </div>
 		                            <div class="form-group">
 		                                <label>Association</label>
-		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-		                                {{$builder[0]->association}}
+		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$builder[0]->association_src}}"/>
+		                                {{$builder[0]->association_name}}
 				                                
 				                    </div>
 			                    </div>	

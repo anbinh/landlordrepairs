@@ -1210,12 +1210,14 @@ public function postCustomerActionCancelled()
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
-				
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		
         		->get();
-        		//var_dump($builder); die; 
         	
+        	
+        		
+        		
         	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder));
 		}
 		return Redirect::to('login');
@@ -1415,13 +1417,13 @@ public function postCustomerActionCancelled()
 		if(Auth::check()) {
 			return Redirect::route('landing-page');
 		}
-		return View::make('pages.register-builder');
+		$associations = DB::table('association_logo')
+					->get();
+		return View::make('pages.register-builder')->with ('associations',$associations);
 	}
 	
 	public function postRegisterBuilder()
 	{   
-		
-	
 		$input = Input::all();
 		
 		
@@ -1585,9 +1587,12 @@ public function postCustomerActionCancelled()
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
         		->where('users.id', '=', Auth::user()->id)->get();
         		//var_dump($builder[0]); die;
-			return View::make('builder_dashboard.profile')->with('builder', $builder);
+        	$associations = DB::table('association_logo')
+        		->get();	
+			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations));
 		}
 		return Redirect::to('login');
 
@@ -2170,6 +2175,7 @@ public function postCustomerActionCancelled()
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
 				
         		->where('users.id', '=', $builder_id)
@@ -2217,9 +2223,12 @@ public function postCustomerActionCancelled()
 				$builder = DB::table('users')
 					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+					->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
 	        		->where('users.id', '=', Input::get('builder_id'))
 	        		->get();
-				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with('builder', $builder);			
+	        	$associations = DB::table('association_logo')
+	        		->get();	
+				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with(array('builder'=> $builder, 'associations'=> $associations));			
 			}
 		}
 		return Redirect::to('login');
@@ -2550,49 +2559,58 @@ public function postCustomerActionCancelled()
 	
 	public function postSubmitSaveAssociationLogo()
 	{   
-		/*if (Input::get('association_filename') != "" ) {
-			$association_filename = Input::get('association_filename');	
-			$association_filename = $association_filename.'.'.Input::file('file')->guessClientExtension();
-		} else {
-			$association_filename = Input::file('file')->getClientOriginalName();
-		}	
- 			Input::file('file')->move(__DIR__.'/storage',$association_filename);
- 			
- 			echo public_path(); die;
- 			DB::table('association_logo')
-				->where('id', '=', Input::get('association_id'))
-				->update(array(
-				'association_src' => __DIR__.'/storage/'.$association_filename,
-			));
- 			return Redirect::to('admin-manage-associations');*/
-	//-----
-	//create two empty variables outside of conditional statement because we gonna access them later on 
-    $filename = "";
-    $extension = "";
-//check if you get a file from input, assuming that the input box is named photo
-    if (Input::hasFile('photo'))
-    {
-//create an array with allowed extensions
-        $allowedext = array("png","jpg","jpeg","gif");
-//get the file uploaded by user
-        $photo = Input::file('photo');
-//set the destination path assuming that you have chmod 777 the upoads folder under public directory
-        $destinationPath = public_path().'/uploads';
-//generate a random filename 
-        $filename = str_random(12);
-//get the extension of file uploaded by user
-        $extension = $photo->getClientOriginalExtension();
-//validate if the uploaded file extension is allowed by us in the $allowedext array
-        if(in_array($extension, $allowedext ))
-        {
-//everything turns to be true move the file to the destination folder
-            $upload_success = Input::file('photo')->move($destinationPath, $filename.'.'.$extension);
-        }
-	} 
-	var_dump (asset(str_replace(public_path(), '' , 'uploads'))); die;			
+		$filename = "";
+	    $extension = "";
+	
+	    if (Input::hasFile('photo'))
+	    {
+	        $allowedext = array("png","jpg","jpeg","gif");
+	        $photo = Input::file('photo');
+	        $destinationPath = public_path().'/uploads';
+			$filename = str_random(12);
+	        $extension = $photo->getClientOriginalExtension();
+	
+	        if(in_array($extension, $allowedext ))
+	        {
+	            $upload_success = Input::file('photo')->move($destinationPath, $filename.'.'.$extension);
+	        }
+		} 
+		$base_root = asset(str_replace(public_path(), '' , 'uploads'));
+		$des_root = $base_root."/".$filename.'.'.$extension; 
+		DB::table('association_logo')
+					->where('id', '=', Input::get('association_id'))
+					->update(array(
+					'association_src' => $des_root,
+				));
+		return Redirect::to('admin-manage-associations');	
 	
 	}
 	
+	public function postSubmitSaveAssociationLogoURL()
+	{   
+		if (Input::get('association_src') != ""){
+			DB::table('association_logo')
+					->where('id', '=', Input::get('association_id'))
+					->update(array(
+					'association_src' => Input::get('association_src'),
+				));
+		}
+		return Redirect::to('admin-manage-associations');	
+	
+	}
+	
+	public function postSubmitChangeAssociationName()
+	{   
+		if (Input::get('association_name') != ""){
+			DB::table('association_logo')
+					->where('id', '=', Input::get('association_id'))
+					->update(array(
+					'association_name' => Input::get('association_name'),
+				));
+		}
+		return Redirect::to('admin-manage-associations');	
+	
+	}
 				
 }
 

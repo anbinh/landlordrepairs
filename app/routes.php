@@ -409,6 +409,8 @@ Route::post('admin-un-ban','BaseController@postAdminUnBan');
 Route::get('admin-manage-associations', array('as'=>'admin-manage-associations','uses' => 'BaseController@getAdminManageAssociations' ));
 
 Route::any('form-submit-save-association-logo','BaseController@postSubmitSaveAssociationLogo');
+Route::any('form-submit-save-association-logo-url','BaseController@postSubmitSaveAssociationLogoURL');
+Route::any('form-submit-change-association-name','BaseController@postSubmitChangeAssociationName');
 
 
 

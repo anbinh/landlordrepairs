@@ -465,93 +465,23 @@
 								</div>
 								<div class="form-control-wrapper" >
 									<div class="radio">
-											<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
+									@for  ($i = 0; $i < 4; $i++)
+										<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
 										  <label>											  	
-										    <input type="radio" name="association" value="association_1" id = "detail1">
-										    Association 1
+										    <input type="radio" name="association" value="{{$associations[$i]->association_name}}" id = "detail1">
+										    {{$associations[$i]->association_name}}
 										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_2">
-										    Association 2
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_3">
-										    Association 3
-										  </label>
-										 <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_4">
-										    Association 4
-										  </label>
+									@endfor
+											
 										  
 										   <div class = "list_associations" hidden>
-										   <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_5">
-										    Association 5
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_6">
-										    
-										    Association 6
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_7">
-										    Association 7
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_8">
-										    Association 8
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_9">
-										    
-										    Association 9
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_10">
-										    Association 10
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_11">
-										    Association 11
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_12">
-										    
-										    Association 12
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_13">
-										    Association 13
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_14">
-										    Association 14
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_15">
-										    
-										    Association 15
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_16">
-										    
-										    Association 16
-										  </label>
+										  @for  ($i = 4; $i < 16; $i++)
+											<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
+												  <label>											  	
+												    <input type="radio" name="association" value="{{$associations[$i]->association_name}}" id = "detail1">
+												    {{$associations[$i]->association_name}}
+												  </label>
+											@endfor
 										  </div>
 										  <input type = "button" onclick = "showAllAssociations()" id = "show_all_associations" value = "Show all"/>
 								<script>

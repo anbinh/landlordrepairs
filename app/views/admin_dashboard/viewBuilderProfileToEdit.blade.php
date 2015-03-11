@@ -16,7 +16,7 @@
 					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
 					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
 					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
-					  
+					   <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
 					  
 					  
 				</div>
@@ -542,96 +542,31 @@
 								Association 
 								</div>
 								
-									<div class="">
-											<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
+									<div>
+									@for  ($i = 0; $i < 4; $i++)
+										<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
 										  <label>											  	
-										    <input type="radio" name="association" value="association_1" id = "detail1"   @if ($builder[0]->association == 'association_1') checked @endif />
-										    Association 1
+										    <input type="radio" name="association" value="{{$associations[$i]->association_name}}" id = "detail1"
+										    @if ( $associations[$i]->association_name == $builder[0]->association_name)
+										    	checked
+										    @endif>
+										    {{$associations[$i]->association_name}}
 										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_2" @if ($builder[0]->association == 'association_2') checked @endif>
-										    Association 2
+									@endfor
+					
+								   <div class = "list_associations" hidden>
+								  @for  ($i = 4; $i < 16; $i++)
+										<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
+										  <label>											  	
+										    <input type="radio" name="association" value="{{$associations[$i]->association_name}}" id = "detail1"
+										    @if ( $associations[$i]->association_name == $builder[0]->association_name)
+										    	checked
+										    @endif>
+										    {{$associations[$i]->association_name}}
 										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_3" @if ($builder[0]->association == 'association_3') checked @endif>
-										    Association 3
-										  </label>
-										 <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_4" @if ($builder[0]->association == 'association_4') checked @endif>
-										    Association 4
-										  </label>
-										  
-										   <div class = "list_associations" hidden>
-										   <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_5" @if ($builder[0]->association == 'association_5') checked @endif>
-										    Association 5
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_6" @if ($builder[0]->association == 'association_6') checked @endif>
-										    
-										    Association 6
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_7" @if ($builder[0]->association == 'association_7') checked @endif>
-										    Association 7
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_8" @if ($builder[0]->association == 'association_8') checked @endif>
-										    Association 8
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_9" @if ($builder[0]->association == 'association_9') checked @endif>
-										    
-										    Association 9
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_10" @if ($builder[0]->association == 'association_10') checked @endif>
-										    Association 10
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_11" @if ($builder[0]->association == 'association_11') checked @endif>
-										    Association 11
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_12" @if ($builder[0]->association == 'association_12') checked @endif>
-										    
-										    Association 12
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_13" @if ($builder[0]->association == 'association_13') checked @endif>
-										    Association 13
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_14" @if ($builder[0]->association == 'association_14') checked @endif>
-										    Association 14
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										  <label>
-										    <input type="radio" name="association" value="association_15" @if ($builder[0]->association == 'association_15') checked @endif>
-										    
-										    Association 15
-										  </label>
-										  <img style = "width: 50px; height: 50px; margin-left: 5px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/>
-										   <label>
-										    <input type="radio" name="association" value="association_16" @if ($builder[0]->association == 'association_16') checked @endif>
-										    
-										    Association 16
-										  </label>
-										  </div>
-										  <input type = "button" onclick = "showAllAssociations()" id = "show_all_associations" value = "Show all"/>
+									@endfor
+								  </div>
+								  <input type = "button" onclick = "showAllAssociations()" id = "show_all_associations" value = "Show all"/>
 								<script>
 								function showAllAssociations() {
 									if ($("#show_all_associations").val() == "Show all"){

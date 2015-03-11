@@ -16,6 +16,8 @@
 					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
 					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
 					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
+					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
+					  
 					 
 					  
 				</div>
@@ -153,31 +155,40 @@
 			  <thead>
 			    <tr class="country-table-head">
 			      	<th><em>Association name</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Association source</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Logo</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Source</em> <span>&nbsp;</span></th>
 			      	
 			      	
 			    </tr>
 			  </thead>
+			 
 			  <tbody>
 			
 			  @if($associations != null)
 				 @foreach($associations as $association)
 				 		<tr>
-				    		<td>{{$association->association_name}}</td>
-				 
-				      		<td>
-				      			<form action = "" method = "post">
+				    		<td>{{$association->association_name}}
+				    			<form action = "form-submit-change-association-name" method = "post">
 				      			<input name = "association_id" value = "{{$association->id}}" hidden/>
-				      			<input name = "association_src" value = "{{$association->association_src}}" class="form-control"/>
-				      			<button type = "submit">Save</button>
-				      		
-				      		
+				      			<input name = "association_name" value = "" placeholder = "Type New Name" class="form-control"/>
+				      			<button type = "submit">Submit</button>
 				      			</form>
+				      		</td>
+				 			<td><img src = "{{$association->association_src}}" style = "width: 50px; height: 50px"/></td>
+				      		<td>
+				      			<form action = "form-submit-save-association-logo-url" method = "post">
+				      			<input name = "association_id" value = "{{$association->id}}" hidden/>
+				      			<input name = "association_src" value = "" placeholder = "URL://" class="form-control"/>
+				      			<button type = "submit">Submit</button>
+				      		
+				      		 
+				      			</form>
+				      			<hr>
 				      			{{ Form::open(array('url'=>'form-submit-save-association-logo','files'=>true)) }}
 								
 								<input name = "association_id" value = "{{$association->id}}" hidden/>
-							  	{{ Form::label('File','File name',array('id'=>'','class'=>'')) }}
-							  	<input name = "association_filename" value = ""/>
+							  	
+							  	
 							  	{{ Form::file('photo','',array('id'=>'','class'=>'')) }}
 							  	  <!-- submit buttons -->
 							  	{{ Form::submit('Submit') }}  
