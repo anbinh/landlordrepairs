@@ -1,5 +1,1 @@
-Please click on:<br /><br />
-
-{{ HTML::link( $clickUrl ) }} <br /><br />
-
-to change your password.
+Please click on: {{ HTML::link( $clickUrl ) }} to change your password.

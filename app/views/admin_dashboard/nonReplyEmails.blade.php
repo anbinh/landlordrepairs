@@ -10,17 +10,14 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
-					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
+					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
+					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
+					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
+					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
+					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
+					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
+					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
+					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
 				</div>
 
 			</div>
@@ -155,31 +152,123 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Tittle</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
 	
+			      	<th class="date-sort"><em>Type Email</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Content</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Edit</em> <span>&nbsp;</span></th>
+			      	
+			      	
 			    </tr>
 			  </thead>
 			  <tbody>
 			
+			 
+				
+				 		<tr>
+				    		<td>Register Confirm</td>
+				 
+				      		<td>{{$email_register_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_register_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		<tr>
+				    		<td>Change Pass Request</td>
+				 
+				      		<td>{{$email_changepass_request_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_changepass_request_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		<tr>
+				    		<td>Change Pass Link</td>
+				 
+				      		<td>{{$email_changepass_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_changepass_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		<tr>
+				    		<td>New Password</td>
+				 
+				      		<td>{{$email_newpass_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_newpass_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		<tr>
+				    		<td>Builder Vote Job</td>
+				 
+				      		<td>{{$email_builder_vote_job_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_builder_vote_job_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		<tr>
+				    		<td>User Accept Vote</td>
+				 
+				      		<td>{{$email_user_accept_vote_content}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_user_accept_vote_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>	
 			
-			 @foreach($WonJobs as $WonJob)
-			 	<tr>
-			    	<td>{{$WonJob->tittle}}</td>
-			    	<td>{{$WonJob->property}}</td>
-			   		<td>{{$WonJob->category}}</td>
-			    	<td>{{$WonJob->price}}</td>
-			 		<td>{{$WonJob->timeoption}}</td>
-			 		<td>{{$WonJob->local}}</td>
-			 		<td>{{$WonJob->description}}</td>
-	
-			 	</tr>	
-				@endforeach
+             
+			  
 			    
 			   
 			</table>
@@ -195,8 +284,7 @@
 			</div>
 		</div>
 		
-		
-
+	
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
 		<!-- Bootstrap JavaScript -->

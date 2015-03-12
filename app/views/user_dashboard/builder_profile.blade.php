@@ -108,7 +108,8 @@
 				                History Jobs
 				            </div>
 			            <div class="panel-body">
-			            @foreach ($builder as $buildere) 
+			            @if ($builder_jobs != "")
+			            @foreach ($builder_jobs as $buildere) 
 			                <div class="row">
 			                    <div class="col-lg-12">
 
@@ -160,6 +161,7 @@
 			                </div>
 			                <hr>
 			                @endforeach
+			                @endif
 			            </div>
 			        </div>
 			    </div>

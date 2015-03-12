@@ -656,7 +656,73 @@
             </div>
         </div>
     </div>
+<div class="col-lg-6">
+				        <div class="panel panel-default">
+				            <div class="panel-heading">
+				                Portfolio
+				            </div>
+			            <div class="panel-body">
+			            @if ($builder_jobs != "")
+			            @foreach ($builder_jobs as $buildere) 
+			                <div class="row">
+			                    <div class="col-lg-12">
 
+		                            <div class="form-group">
+		                                <label>Jobs tittle</label>
+		                                {{$buildere->tittle}}
+		                                
+		                            </div>
+		                            
+		                             <div class="form-group">
+		                                <label>Jobs property</label>
+		                                {{$buildere->property}}
+		                                
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Jobs category</label>
+		                                {{$buildere->category}}
+		                                
+		                            </div>		                            
+		                           
+		                            <div class="form-group">
+		                                <label>User price</label>
+		                                {{$buildere->price}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Builder vote</label>
+		                                {{$buildere->vote}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Created at</label>
+		                                {{$buildere->created_at}}
+		                                
+		                            </div>
+		                            <div class="form-group">
+		                                <label>Job status</label>
+		                                {{$buildere->status_process}}
+		                                
+		                            </div>
+		                             <div class="form-group">
+		                                <label>Jobs details</label>
+		                                <form action = "builder-submit-job-details" method = "post">
+		                                <input name = "builder_id" value = "{{Auth::user()->id}}" hidden>
+		                                <input name = "job_id" value = "{{$buildere->job_id}}" hidden>
+		                                <textarea name = "builder_note_job" rows="4" cols="50">{{$buildere->builder_note_job}}</textarea>
+		                               	<button class = "btn btn-primary" type = "submit">Submit</button>
+		                               </form>
+		                            </div>
+
+			                    </div>	
+			                </div>
+			                <hr>
+			                @endforeach
+			                @endif
+			            </div>
+			        </div>
+			    </div>
     <!-- end change phone number -->
 </div>
 			</div>

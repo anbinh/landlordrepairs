@@ -1,3 +1,1 @@
-New login information:<br>
-Your email: {{$email}}<br/>
-Your new password: {{ $password }}<br/>
+New login information: Your email: {{$email}} Your new password: {{ $password }}

@@ -1208,17 +1208,21 @@ public function postCustomerActionCancelled()
 			$builder = "";//
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
-				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		
         		->get();
-        	
+        	$builder_jobs = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+        		->where('users.id', '=', $builder_id)
+        		->get();
         	
         		
         		
-        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder));
+        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs));
 		}
 		return Redirect::to('login');
 
@@ -1254,12 +1258,13 @@ public function postCustomerActionCancelled()
 	public function postCustomerFindFavoriteBuilders()
 	{  
 		if(Auth::check()) {
+				$builders_ori = "";
         		$builders_ori = DB::table('extend_builders_category')
         			->join('users','users.id','=','extend_builders_category.builder_id')
         			->join('extend_builders','extend_builders.builder_id','=','extend_builders_category.builder_id')
         			->where('extend_builders_category.category', '=', Input::get('category'))
         			->get();
-        			
+        		$builders_favorited = "";	
         	    $builders_favorited = DB::table('favorite-builders')
         			->where('user_id', '=', Auth::user()->id)
         			->get();
@@ -1487,7 +1492,10 @@ public function postCustomerActionCancelled()
 			$extend_builder->lat = $input['lat'];
 			$extend_builder->site_link = $input['site_link'];
 			$extend_builder->social_link = $input['social_link'];
-			$extend_builder->association = $input['association'];
+			
+			
+				$extend_builder->association = $input['association'];	
+			
 			
 			$extend_builder->save();
 			
@@ -1591,8 +1599,17 @@ public function postCustomerActionCancelled()
         		->where('users.id', '=', Auth::user()->id)->get();
         		//var_dump($builder[0]); die;
         	$associations = DB::table('association_logo')
-        		->get();	
-			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations));
+        		->get();
+        		
+        	$builder_jobs = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+        		->where('users.id', '=', Auth::user()->id)
+        		->get();
+        		//var_dump($builder_jobs); die;	
+			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs));
 		}
 		return Redirect::to('login');
 
@@ -2139,6 +2156,23 @@ public function postCustomerActionCancelled()
 		return Redirect::to('login');
 	}
 	
+	public function postBuilderSubmitJobDetails()
+	{ 
+		if(Auth::check()) {
+			
+			DB::table('job_process')
+				->where('builder_id', '=', Input::get('builder_id'))
+				->where('job_id', '=', Input::get('job_id'))
+				->update(array(
+				'builder_note_job' => Input::get('builder_note_job'),
+				));
+			
+			return Redirect::to('builder-profile');
+		}
+		return Redirect::to('login');
+	}
+	
+	
 	/*
 	 * ADMIN
 	 */
@@ -2481,7 +2515,7 @@ public function postCustomerActionCancelled()
 			}
 		}
 		return Redirect::to('login');
-	}
+	}	
 	
 	public function getAdminInviteSentByUsers()
 	{  	
@@ -2607,8 +2641,89 @@ public function postCustomerActionCancelled()
 					->update(array(
 					'association_name' => Input::get('association_name'),
 				));
+			DB::table('extend_builders')
+					->where('association', '=', Input::get('association_name_old'))
+					->update(array(
+					'association' => Input::get('association_name'),
+				));	
+				
 		}
 		return Redirect::to('admin-manage-associations');	
+	
+	}
+	
+	public function getAdminNonReplyEmail()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				 
+				 $base = asset(str_replace('', '' , ''));
+				 $base_root = substr($base,0,strlen($base)-7).'app/views/emails/';
+				 
+				 $email_register_root = $base_root.'signup.blade.php';
+				 $email_builder_vote_job_root = $base_root.'alertBuilderVoteJob.blade.php';
+				 $email_user_accept_vote_root = $base_root.'alertCustommerAcceptVoteJob.blade.php';
+				 $email_cancelledjob_root = $base_root.'cancelledjob.blade.php';
+				 $email_changepass_root = $base_root.'changepass.blade.php';
+				 $email_changepass_request_root = $base_root.'changepassrequest.blade.php';
+				 $email_newpass_root = $base_root.'newpass.blade.php';
+				 
+				 
+				 
+				 $email_register_content = file_get_contents($email_register_root);
+				 $email_builder_vote_job_content = file_get_contents($email_builder_vote_job_root);
+				 $email_user_accept_vote_content = file_get_contents($email_user_accept_vote_root);
+				 $email_cancelledjob_content = file_get_contents($email_cancelledjob_root);
+				 $email_changepass_content = file_get_contents($email_changepass_root);
+				 $email_changepass_request_content = file_get_contents($email_changepass_request_root);
+				 $email_newpass_content = file_get_contents($email_newpass_root);
+				 
+		   		return View::make('admin_dashboard.nonReplyEmails')
+		   			->with(array(
+		   				'email_register_content'=> $email_register_content,
+			   			'email_builder_vote_job_content'=> $email_builder_vote_job_content,
+			   			'email_user_accept_vote_content'=> $email_user_accept_vote_content,
+		   				'email_cancelledjob_content'=> $email_cancelledjob_content,
+			   			'email_changepass_content'=> $email_changepass_content,
+			   			'email_changepass_request_content'=> $email_changepass_request_content,
+			   			'email_newpass_content'=> $email_newpass_content,
+			   
+		   			));
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postAdminChangeContentEmail()
+	{   
+		$base_root = substr(public_path(),0,strlen(public_path())-7).'/app/views/emails/';
+		switch (Input::get('email_id')) {
+	    case 'email_register_content':
+	        file_put_contents($base_root.'signup.blade.php',Input::get('email_content'));
+	        break;
+	    case 'email_builder_vote_job_content':
+	        file_put_contents($base_root.'alertBuilderVoteJob.blade.php',Input::get('email_content'));
+	        break;
+	    case 'email_user_accept_vote_content':
+	        file_put_contents($base_root.'alertCustommerAcceptVoteJob.blade.php',Input::get('email_content'));
+	        break;
+        case 'email_cancelledjob_content':
+	        file_put_contents($base_root.'cancelledjob.blade.php',Input::get('email_content'));
+	        break;
+        case 'email_changepass_content':
+	        file_put_contents($base_root.'changepass.blade.php',Input::get('email_content'));
+	        break;
+        case 'email_changepass_request_content':
+	        file_put_contents($base_root.'changepassrequest.blade.php',Input::get('email_content'));
+	        break;
+        case 'email_newpass_content':
+	        file_put_contents($base_root.'newpass.blade.php',Input::get('email_content'));
+	        break;
+	    default:
+	    	var_dump(Input::get('email_id'));die;
+       	}
+		return Redirect::to('admin-non-reply-email');			
 	
 	}
 				

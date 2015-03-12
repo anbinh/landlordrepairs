@@ -374,6 +374,7 @@ Route::post( 'builder-action-completed', array( 'uses' => 'BaseController@getBui
 Route::post( 'builder-action-cancelled', array( 'uses' => 'BaseController@postBuilderActionCancelled' ));
 Route::get( 'cancelledjobconfirm/{job_id},{confirm_code}', array( 'uses' => 'BaseController@getconfirmCancelledJob' ));
 
+Route::post( 'builder-submit-job-details', array( 'uses' => 'BaseController@postBuilderSubmitJobDetails' ));
 
 
 Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
@@ -411,6 +412,11 @@ Route::get('admin-manage-associations', array('as'=>'admin-manage-associations',
 Route::any('form-submit-save-association-logo','BaseController@postSubmitSaveAssociationLogo');
 Route::any('form-submit-save-association-logo-url','BaseController@postSubmitSaveAssociationLogoURL');
 Route::any('form-submit-change-association-name','BaseController@postSubmitChangeAssociationName');
+
+Route::get('admin-non-reply-email', array('as'=>'admin-non-reply-email','uses' => 'BaseController@getAdminNonReplyEmail' ));
+
+Route::post('admin-change-content-email','BaseController@postAdminChangeContentEmail');
+
 
 
 

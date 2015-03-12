@@ -17,7 +17,7 @@
 					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
 					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
 					   <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
-					  
+					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
 				</div>
 
 			</div>
