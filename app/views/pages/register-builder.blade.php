@@ -1,7 +1,9 @@
 @extends('layouts.default')
 @section('content')	
-<div class="row">
+<div class="row" style = "BACKGROUND: rgb(173, 179, 158);">
 <style>
+
+
 .col-lg-8 {
 	padding-left: 0px;
 	padding-right: 0px;
@@ -278,15 +280,41 @@
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "site_link" type="text" class="form-control" required placeholder = 'Site link'>
+									<input name = "site_link" type="text" class="form-control"  placeholder = 'Site link'>
 								</div>			
 							</div>
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									<input name = "social_link" type="text" class="form-control" required placeholder = 'Social link'>
+									<input name = "social_link" type="text" class="form-control"  placeholder = 'Facebook link'>
 								</div>			
 							</div>
+							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "social_link_twitter" type="text" class="form-control"  placeholder = 'Twitter link'>
+								</div>			
+							</div>
+							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "qualification" type="text" class="form-control"  placeholder = 'Qualification'>
+								</div>			
+							</div>
+							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<input name = "howmanyteam" type="text" class="form-control"  placeholder = 'How many team?'>
+								</div>			
+							</div>
+							About
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									
+									<textarea rows="4" cols="50" name = "about" required placeholder = 'Description' class="form-control"> </textarea>
+								</div>			
+							</div>
+							
 					</div>	
 					<div class="panel-heading">
 		                <h3 class="panel-title" style = "text-align: center">About Service</h3>
@@ -308,35 +336,52 @@
 								
 								
 								
+								@if ($categorys != null)
+									@if (count($categorys) < 5)
+									<div class = "col-lg-12">
+									<div class="checkbox">
 								
-								<div class = "col-lg-6">
-								<div class="checkbox">
-									  
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters" checked> Bathroom Fitters
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Bricklayers"> Bricklayers
-								    </label>
-								    
-						
-								</div>
+										@foreach ($categorys as $category)
+											<label>
+									        <input type="checkbox" name = "check_builders[]" value = "{{$category->id}}"> {{$category->content}}
+										    </label>
+										    	
+										@endforeach
+										
+									</div>
+										
+									</div>
+									@else
 									
-								</div>
+										<div class = "col-lg-12">
+										<div class="checkbox">
+											@for ($i = 0; $i < 2; $i++)
+												<label>
+										        <input type="checkbox" name = "check_builders[]" value = "{{$categorys[$i]->id}}"> {{$categorys[$i]->content}}
+											    </label>
+											@endfor
+										</div>
+											
+										</div>
+
+										<div class = "col-lg-12 listCategorys" hidden>
+											<div class="checkbox">
+											    
+											    @for ($i = 2; $i < count($categorys); $i++)
+													<label>
+											        <input type="checkbox" name = "check_builders[]" value = "{{$categorys[$i]->id}}"> {{$categorys[$i]->content}}
+												    </label>
+												@endfor
+											    				
+											</div>			
+										</div>
+
+									@endif
+								@endif 
+								
 								</div>	
-								<div class = "col-lg-6">
-								<div class="checkbox">
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Handymen"> Handymen
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Heating Engineers"> Heating Engineers
-								    </label>
-								    
-								</div>
-									
-								</div>
 								
+									
 								<script>
 								function showAllCategory() {
 									if ($("#show_all_category").val() == "Show all"){
@@ -348,111 +393,13 @@
 									}
 								}
 								</script>
-								
-								
-								<div class = "col-lg-6 listCategorys" hidden>
-								<div class="checkbox">
-								    
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Carpenters & Joiners"> Carpenters & Joiners
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Carpet fitters"> Carpet fitters
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Chimney & Fireplace Specialists"> Chimney & Fireplace Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Conservatory Installers"> Conservatory Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Conversion Specialists"> Conversion Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Damp Proofing Specialists"> Damp Proofing Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Driveway Pavers"> Driveway Pavers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Electricians"> Electricians
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Extension Builders"> Extension Builders
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Fencers"> Fencers
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Flooring Fitters"> Flooring Fitters
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Garage & Shed Builders"> Garage & Shed Builders
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Gas Engineers"> Gas Engineers
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Groundworkers"> Groundworkers
-								    </label>
-						
-								</div>
-									
-								</div>
-								
-								<div class = "col-lg-6 listCategorys" hidden>
-								<div class="checkbox">
-								    		    
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Insulation Installers"> Insulation Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Kitchen Fitters"> Kitchen Fitters
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Landscape Gardeners"> Landscape Gardeners
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Loft Conversion Specialists"> Loft Conversion Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "New Home Builders"> New Home Builders
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Painters & Decorators"> Painters & Decorators
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Plasterers"> Plasterers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Plumbers"> Plumbers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Restoration & Refurb Specialists"> Restoration & Refurb Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Roofers"> Roofers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Security System Installers"> Security System Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "CTilers"> CTilers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Tree Surgeons"> Tree Surgeons
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Window Fitters"> Window Fitters
-								    </label>
-								</div>
-								
-								</div>
+				
 								<div class = "col-lg-12">
 								<input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
 								</div>
 								</div>			
 							</div>
+							Description
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									

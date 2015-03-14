@@ -31,7 +31,7 @@
                         			dashboard
                         		</a>
                         	@else
-                        		@if (Auth::user()->role == 1)
+                        		@if (Auth::user()->username == 1)
                         		<a href="customer-invited">
                         			dashboard
                         		</a>
@@ -49,6 +49,24 @@
                         @endif
                         
                     </li>
+                    
+                       <li class="page-scroll">
+                        @if(Auth::check())
+                        	@if(Auth::user()->role == 0)
+                        		<a href="{{URL::route('FAQ-User')}}">
+                        			FAQ
+                        		</a>
+                        	@else
+                        		<a href="{{URL::route('FAQ-Builder')}}">
+                        			FAQ
+                        		</a>
+                        	@endif
+                        	
+                    
+                        @endif
+                        
+                    </li>
+                     
                     <li class="page-scroll">
                     	@if(Auth::check())
                         	<a href="{{URL::route('logout')}}">logout</a>

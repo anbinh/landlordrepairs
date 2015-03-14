@@ -49,7 +49,7 @@
 				                                 @if($builders != null)
               										@foreach($builders as $builder)
 				                                
-													<option value = "{{$builder->category}}">{{$builder->category}}</option>
+													<option value = "{{$builder->category_id}}">{{$builder->content}}</option>
 											
 													@endforeach
               									@endif

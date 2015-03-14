@@ -175,7 +175,7 @@
               @foreach($invites as $invite)
 			 	<tr>
 			    	<td>{{$customers[$invite->user_id][0]->username}}</td>
-			    	<td>{{$categorys[$invite->user_id][0]->category}}</td>
+			    	<td>{{$categorys[$invite->user_id][0]->content}}</td>
 			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
 			      	
 			      	

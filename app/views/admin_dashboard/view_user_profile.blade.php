@@ -151,7 +151,7 @@
 											  		<td>{{$job->description}}</td>
 											  		<td>{{$job->price}}</td>
 											  		<td>{{$job->property}}</td>
-											  		<td>{{$job->category}}</td>
+											  		<td>{{$job->content}}</td>
 											  		<td>{{$job->timeoption}}</td>
 											  		<td>{{$job->local}}</td>
 											  		<td>{{$job->local_code}}</td>

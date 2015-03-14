@@ -127,7 +127,7 @@
 		                            
 		                            <div class="form-group">
 		                                <label>Jobs category</label>
-		                                {{$buildere->category}}
+		                                {{$buildere->content}}
 		                                
 		                            </div>
 		                            

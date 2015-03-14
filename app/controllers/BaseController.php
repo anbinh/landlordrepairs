@@ -72,9 +72,12 @@ class BaseController extends Controller {
 			Session::forget('phone_code');
 		}
 		if(Auth::check()) {
+			
 			return Redirect::route('landing-page');
 		}
-		return View::make('pages.register');
+		$categorys = DB::table('category')
+			->get();
+		return View::make('pages.register')->with('categorys',$categorys);
 	}
 	
 	public function postRegister()
@@ -162,7 +165,7 @@ class BaseController extends Controller {
 			$job->user_id = $userpostjob->id;
 			$job->status = 'openjob';
 			$job->property = $input['property'];
-			$job->category = $input['category'];
+			$job->category_id = $input['category_id'];
 			$job->save();
 			//Session::put('job_id', $job->id);Session::get('job_id');
 			//Send confirmation email
@@ -980,7 +983,11 @@ class BaseController extends Controller {
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','openjob')->get();
+			$jobs = DB::table('jobs')
+				->join('category','jobs.category_id','=','category.id')
+				->having('user_id', '=',Auth::user()->id)
+				->having('status','=','openjob')
+				->get();
 			
 			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
 		}
@@ -994,6 +1001,7 @@ class BaseController extends Controller {
 							
 			$jobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.user_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'ongoing')
 		    	 ->get();
@@ -1010,12 +1018,13 @@ class BaseController extends Controller {
 			
 			$cancelledJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'jobs.category_id', '=', 'category.id')
 		    	 ->where('job_process.user_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'cancelled')
 		    	 ->get();
 		    	 
 		 	
-			//var_dump($cancelledJobs[0]->cancelled_confirm); die;
+			//var_dump($cancelledJobs); die;
 			return View::make('user_dashboard.cancelledjobs')->with(array('cancelledJobs'=> $cancelledJobs));
 		}
 		return Redirect::to('login');
@@ -1101,7 +1110,10 @@ public function postCustomerActionCancelled()
 	{
 		if(Auth::check()) {
 			
-			$jobs = DB::table('jobs')->having('user_id', '=',Auth::user()->id)->having('status','=','pending review')->get();
+			$jobs = DB::table('jobs')
+				->having('user_id', '=',Auth::user()->id)
+				->having('status','=','pending review')
+				->get();
 			
 			return View::make('user_dashboard.pendingreview')->with('jobs', $jobs);
 		}
@@ -1114,6 +1126,7 @@ public function postCustomerActionCancelled()
 		if(Auth::check()) {
 			
 			$jobs = DB::table('jobs')
+				->join('category', 'category.id', '=', 'jobs.category_id')
 				->having('user_id', '=',Auth::user()->id)
 				->having('status','=','completed')
 				->get();
@@ -1145,6 +1158,7 @@ public function postCustomerActionCancelled()
     			 $builders[$invite->builder_id] = $builder;
 		    	 
     			 $category = DB::table('extend_builders_category')
+    			 	->join ('category','category.id','=','extend_builders_category.category_id')
     			 	->having('builder_id', '=',$invite->builder_id)
     			 	->get();
 		    	 $categorys[$invite->builder_id] = $category;
@@ -1169,7 +1183,7 @@ public function postCustomerActionCancelled()
 				$favorite_builders = DB::table('favorite-builders')
         			->where('user_id', '=', Auth::user()->id)
         			->get();
-        		//var_dump($favorite_builders[0]); die;
+        		
         		
         		$i = 0;
         		$builder = "";
@@ -1178,17 +1192,20 @@ public function postCustomerActionCancelled()
 					$buildere = DB::table('users')
 					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+					->join ('category','category.id','=','extend_builders_category.category_id')
 	        		->where('users.id', '=', $favorite_builder->builder_id)
 	        		->get();
 	      
 	        		$builder[$i] = $buildere;
 	        		$i++;
 				}
+				$categorys = DB::table('category')
+					->get();
 			
 				$count = count($builder);
 				//var_dump($builder); die;
 				
-				return View::make('user_dashboard.myfavorites')->with(array('builder'=> $builder, 'count' => $count ));
+				return View::make('user_dashboard.myfavorites')->with(array('builder'=> $builder, 'count' => $count,'categorys'=> $categorys ));
 				
 			} else {
 				return Redirect::to('login');
@@ -1208,6 +1225,7 @@ public function postCustomerActionCancelled()
 			$builder = "";//
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		
@@ -1216,6 +1234,7 @@ public function postCustomerActionCancelled()
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		->get();
@@ -1261,8 +1280,9 @@ public function postCustomerActionCancelled()
 				$builders_ori = "";
         		$builders_ori = DB::table('extend_builders_category')
         			->join('users','users.id','=','extend_builders_category.builder_id')
+        			->join('category','category.id','=','extend_builders_category.category_id')
         			->join('extend_builders','extend_builders.builder_id','=','extend_builders_category.builder_id')
-        			->where('extend_builders_category.category', '=', Input::get('category'))
+        			->where('extend_builders_category.category_id', '=', Input::get('category_id'))
         			->get();
         		$builders_favorited = "";	
         	    $builders_favorited = DB::table('favorite-builders')
@@ -1423,15 +1443,20 @@ public function postCustomerActionCancelled()
 			return Redirect::route('landing-page');
 		}
 		$associations = DB::table('association_logo')
-					->get();
-		return View::make('pages.register-builder')->with ('associations',$associations);
+			->get();
+		$categorys = DB::table('category')
+			->get();
+		return View::make('pages.register-builder')->with (array('associations' =>$associations, 'categorys' => $categorys ));
 	}
 	
 	public function postRegisterBuilder()
 	{   
 		$input = Input::all();
-		
-		
+		$social_link_twitter = Input::get('social_link_twitter')?Input::get('social_link_twitter'):"";
+		$about = Input::get('about')?Input::get('about'):"";
+		$qualification = Input::get('qualification')?Input::get('qualification'):"";
+		$howmanyteam = Input::get('howmanyteam')?Input::get('howmanyteam'):"";
+		 
 		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
@@ -1492,6 +1517,10 @@ public function postCustomerActionCancelled()
 			$extend_builder->lat = $input['lat'];
 			$extend_builder->site_link = $input['site_link'];
 			$extend_builder->social_link = $input['social_link'];
+			$extend_builder->social_link_twitter = $social_link_twitter;
+			$extend_builder->about = $about;
+			$extend_builder->qualification = $qualification;
+			$extend_builder->howmanyteam = $howmanyteam;
 			
 			
 				$extend_builder->association = $input['association'];	
@@ -1503,7 +1532,7 @@ public function postCustomerActionCancelled()
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
 				$extend_builder_category = new ExtendBuilderCategory();	
 				$extend_builder_category->builder_id = $user->id;
-				$extend_builder_category->category = $categorys[$i];
+				$extend_builder_category->category_id = $categorys[$i];
 				$extend_builder_category->save();
 			
 			}
@@ -1595,8 +1624,10 @@ public function postCustomerActionCancelled()
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
-        		->where('users.id', '=', Auth::user()->id)->get();
+        		->where('users.id', '=', Auth::user()->id)
+        		->get();
         		//var_dump($builder[0]); die;
         	$associations = DB::table('association_logo')
         		->get();
@@ -1605,11 +1636,14 @@ public function postCustomerActionCancelled()
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', Auth::user()->id)
         		->get();
+        	$categorys = DB::table('category')
+        		->get();	
         		//var_dump($builder_jobs); die;	
-			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs));
+			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys));
 		}
 		return Redirect::to('login');
 
@@ -1648,18 +1682,23 @@ public function postCustomerActionCancelled()
 			'lng' => $input['lng'],
 			'site_link' => $input['site_link'],
 			'social_link' => $input['social_link'],
-			'association' => $input['association'],
+			'social_link_twitter' => $input['social_link_twitter'],
+			'qualification' => $input['qualification'],
+			'howmanyteam' => $input['howmanyteam'],
+			'about' => $input['about'],
 			'created_at' => $input['created_at'],
 			));
 			//---Change Category----//
-			DB::table('extend_builders_category')->where('builder_id', '=', Auth::user()->id)->delete();
-			//echo "dete";die;
+			DB::table('extend_builders_category')
+				->where('builder_id', '=', Auth::user()->id)
+				->delete();
+			
 			$categorys = Input::get('check_builders');
-			$num_of_checked_builders = count($categorys);
+			$num_of_checked_builders = count($categorys); 
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
 				$extend_builder_category = new ExtendBuilderCategory();	
 				$extend_builder_category->builder_id = Auth::user()->id;
-				$extend_builder_category->category = $categorys[$i];
+				$extend_builder_category->category_id = $categorys[$i];
 				$extend_builder_category->save();	
 			}
 			//----------------------//
@@ -1695,14 +1734,17 @@ public function postCustomerActionCancelled()
 				if ($invites != null) {
 			    foreach($invites as $invite){
 			    	
-			    	 $customer = DB::table('users')->having('id', '=',$invite->user_id )->get();
+			    	 $customer = DB::table('users')
+			    	 	->having('id', '=',$invite->user_id )
+			    	 	->get();
 			      
 	    			 $customers[$invite->user_id] = $customer;
 	    			 
 	    			 
 	    			 	
 	    			 $category = DB::table('jobs')
-	    			 	->having('id', '=',$invite->job_id)
+	    			 	->join ('category','category.id','=','jobs.category_id')
+	    			 	->having('jobs.id', '=',$invite->job_id)
 	    			 	->get();	
 			      
 	    			 $categorys[$invite->user_id] = $category;
@@ -1726,8 +1768,10 @@ public function postCustomerActionCancelled()
 	{
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
-				$builders = DB::table('users')->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-        		->where('users.id', '=', Auth::user()->id)->get();
+				$builders = DB::table('users')
+					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+					->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+        			->where('users.id', '=', Auth::user()->id)->get();
         		//var_dump($builders); die;
 				return View::make('builder_dashboard.findJobs')->with(array('builders'=>$builders));;			
 			} else {
@@ -1747,11 +1791,12 @@ public function postCustomerActionCancelled()
 		$isHasNum = true;
 		//var_dump ($test); die;
 		$jobs = "";
-		$category = Input::get('category');
+		$category_id = Input::get('category_id');
 		
 		$jobs = DB::table('jobs')
 				->join('job_process', 'jobs.id', '=', 'job_process.job_id')
-        		->having('jobs.category', '=', $category)
+				->join('category', 'category.id', '=', 'jobs.category_id')
+        		->having('jobs.category_id', '=', $category_id)
         		->having('job_process.builder_id', '<>', Auth::user()->id)
         		->having('jobs.status', '=', 'openjob')
         		->having('job_process.num_invite_sent', '<', '3')
@@ -1804,7 +1849,10 @@ public function postCustomerActionCancelled()
 				$userInfo = DB::table('users')->having('id', '=', $user_id )->first();
 				//var_dump($userInfo); die;
 				//GET JOB INFO
-				$jobInfo = DB::table('jobs')->having('id', '=', $job_id )->first();
+				$jobInfo = DB::table('jobs')
+					->join('category','category.id','=','jobs.category_id')
+					->having('jobs.id', '=', $job_id )
+					->first();
 				//var_dump($jobInfo); die;
 				$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
 				//var_dump($dateInvite); die;
@@ -1953,6 +2001,7 @@ public function postCustomerActionCancelled()
 			
 			$OngoingJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'ongoing')
 		    	 ->get();
@@ -2094,6 +2143,7 @@ public function postCustomerActionCancelled()
 			
 			$LostJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'miss')
 		    	 ->get();
@@ -2111,6 +2161,7 @@ public function postCustomerActionCancelled()
 			
 			$WonJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'ongoing')
 		    	 ->get();
@@ -2128,6 +2179,7 @@ public function postCustomerActionCancelled()
 			
 			$conpletedJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'completed')
 		    	 ->get();
@@ -2145,6 +2197,7 @@ public function postCustomerActionCancelled()
 			
 			$cancelledJobs = DB::table('jobs')
 		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('category', 'category.id', '=', 'jobs.category_id')
 		    	 ->where('job_process.builder_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'cancelled')
 		    	 ->get();
@@ -2190,6 +2243,7 @@ public function postCustomerActionCancelled()
 				$builder = DB::table('users')
 			    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
 			    	 ->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
+			    	 ->join('category', 'category.id', '=', 'extend_builders_category.category_id')
 			    	 ->where('users.id','=',$builders[$i]->builder_id)
 			    	 ->get();
 			    	 
@@ -2211,6 +2265,7 @@ public function postCustomerActionCancelled()
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')
 				
         		->where('users.id', '=', $builder_id)
         		
@@ -2357,6 +2412,7 @@ public function postCustomerActionCancelled()
 	        		->get();
 	        		
 	        	$jobs = DB::table('jobs')
+	        		->join('category','category.id','=','jobs.category_id')
 	        		->where('jobs.user_id', '=', $user_id)
 	        		->get();
 	        	//var_dump($jobs); die;	
@@ -2466,6 +2522,7 @@ public function postCustomerActionCancelled()
 	{   $date = date('Y-m-d');
 		$jobs = "";
 			$jobs = DB::table('jobs')
+				->join('category','category.id','=','jobs.category_id')
 				->where('created_at','=', $date)
         		->get();
         		
@@ -2506,6 +2563,7 @@ public function postCustomerActionCancelled()
 					$builder = DB::table('users')
 				    	 ->join('extend_builders', 'extend_builders.builder_id', '=', 'users.id')
 				    	 ->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
+				    	 ->join('category', 'category.id', '=', 'extend_builders_category.category_id')
 				    	 ->where('users.id','=',$builders[$i]->builder_id)
 				    	 ->get();
 				    	 
@@ -2724,6 +2782,154 @@ public function postCustomerActionCancelled()
 	    	var_dump(Input::get('email_id'));die;
        	}
 		return Redirect::to('admin-non-reply-email');			
+	
+	}
+	
+	public function getAdminMangeFAQ()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				 
+				 $FAQsBuilder = "";
+				 $FAQsBuilder = DB::table('faq')
+				 	->where("type","=","1")
+			    	->get();
+			    	
+			    $FAQsUser = "";
+				 $FAQsUser = DB::table('faq')
+				 	->where("type","=","0")
+			    	->get(); 
+				return View::make('admin_dashboard.FAQManage')
+					->with(array('FAQsBuilder'=> $FAQsBuilder, 'FAQsUser' => $FAQsUser));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postAdminChangeContentFAQ()
+	{
+		if (Input::get('type-FAQ') == "question"){
+		DB::table('faq')
+				->where('id', '=', Input::get('id'))
+				->update(array(
+				'question' => Input::get('content-FAQ'),
+			));
+		}
+
+		if (Input::get('type-FAQ') == "answer"){
+			DB::table('faq')
+					->where('id', '=', Input::get('id'))
+					->update(array(
+					'answer' => Input::get('content-FAQ'),
+				));
+		}   
+		
+
+		return Redirect::to('admin-manage-faq');	
+	
+	}
+public function getAdminPlusFAQ($type)
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				return View::make('admin_dashboard.plusFAQManage')->with('type',$type );	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	public function postAdminPlusFAQ()
+	{    
+		DB::table('faq')->insert(array(
+			'question' => Input::get('question'), 
+			'answer' => Input::get('answer'),
+			'type' => Input::get('type')));
+
+		return Redirect::to('admin-manage-faq');	
+	
+	}
+	
+	public function postAdminDeleteFAQ()
+	{
+		DB::table('faq')
+			->where('id', '=', Input::get('id'))
+			->delete();
+
+		return Redirect::to('admin-manage-faq');	
+	
+	}
+	
+	public function getAdminManageCategorys()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				 
+				 $Categorys = "";
+				 $Categorys = DB::table('category')
+			    	->get();
+			    	 
+				return View::make('admin_dashboard.CategorysManage')
+					->with(array('Categorys' => $Categorys));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postAdminDeleteCategory()
+	{	
+		DB::table('category')
+			->where('id', '=', Input::get('id'))
+			->delete();
+
+		return Redirect::to('admin-manage-category');	
+	
+	}
+	
+	public function postAdminPlusCategory()
+	{  if (Input::get('content-category') != null) {
+		DB::table('category')->insert(array(
+			'content' => Input::get('content-category')));
+		}
+		return Redirect::to('admin-manage-category');	
+	
+	}
+	
+	
+	public function getFAQUser()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '0') {
+				 
+				 $FAQs = "";
+				 $FAQs = DB::table('faq')
+			    	->where('type','=','0')
+				 	->get();
+			    	 
+				return View::make('pages.FAQ')
+					->with(array('FAQs' => $FAQs,'type'=>'0'));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function getFAQBuilder()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '1') {
+				 
+				 $FAQs = "";
+				 $FAQs = DB::table('faq')
+				 	->where('type','=','1')
+			    	->get();
+			    	 
+				return View::make('pages.FAQ')
+					->with(array('FAQs' => $FAQs,'type'=>'1'));	
+			}
+		}
+		return Redirect::to('login');			
 	
 	}
 				

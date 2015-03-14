@@ -71,8 +71,13 @@
 								Category:
 								</div>
 								<div class = "col-lg-8">
-									<select name = "category" class="form-control">
-										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
+									<select name = "category_id" class="form-control">
+										@if ($categorys != null)
+											@foreach ($categorys as $category)
+												<option name="category_id" value = "{{$category->id}}">{{$category->content}} </option>
+											@endforeach
+										@endif
+										<!--<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
 										<option name="category" value = "Bricklayers">Bricklayers </option>
 										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
 										<option name="category" value = "Carpet fitters">Carpet fitters</option>
@@ -103,7 +108,7 @@
 										<option name="category" value = "Security System Installers">Security System Installers</option>
 										<option name="category" value = "CTilers">CTilers</option>
 										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
-										<option name="category" value = "Window Fitters">Window Fitters</option>
+										<option name="category" value = "Window Fitters">Window Fitters</option>-->
 									</select>
 								</div>
 								</div>			

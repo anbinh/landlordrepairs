@@ -172,7 +172,7 @@
 			 	<tr>
 			    	<td>{{$WonJob->tittle}}</td>
 			    	<td>{{$WonJob->property}}</td>
-			   		<td>{{$WonJob->category}}</td>
+			   		<td>{{$WonJob->content}}</td>
 			    	<td>{{$WonJob->price}}</td>
 			 		<td>{{$WonJob->timeoption}}</td>
 			 		<td>{{$WonJob->local}}</td>

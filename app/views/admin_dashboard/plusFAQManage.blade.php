@@ -23,7 +23,9 @@
 				</div>
 
 			</div>
+			
 			<div class="col-md-10">
+				<h3>User</h3>
 				<div class="row">
 				<div class="col-lg-12" style="margin-top:30px">
         <script>
@@ -154,83 +156,39 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      	<th><em>Name of Users</em> <span>&nbsp;</span></th>
-			
-			
-			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Email confirm</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Mobile confirm</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			      	<th><em>Question</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Answer</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Actions</em> <span>&nbsp;</span></th>
+			      	
 			    </tr>
 			  </thead>
 			  <tbody>
-			
-			  @if($users != null)
-				 @foreach($users as $user)
-				 		<tr>
-				    		<td>{{$user->username}}</td>
-				 
-				      		<td>{{$user->email}}</td>
-				 
-				      		<td>
-				      			@if($user->email_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				   			<td>{{$user->phone_number}}</td>
-				 
-				      		<td>
-				      			@if($user->phone_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				      		<td class="date-sort"><em><a href="view-detail-info-user/{{$user->id}}">View</></em> <span>&nbsp;</span></td>
-				      		<td>
-				      			<form method = "post" action = "admin-action-delete-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Delete</button>
-						 		</form>
-						 		
-						 		<form method = "post" action = "admin-action-edit-user" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Edit</button>
-						 		</form>
-						 		@if ($user->ban == "")
-						 		<form method = "post" action = "admin-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-danger">Ban</button>
-						 		</form>
-						 		@else
-						 		<form method = "post" action = "admin-un-ban" >
-							 		<input name = "user_id" value = "{{$user->id}}" hidden>
-							 		<button class="btn btn-success">Un Ban</button>
-						 		</form>
-						 		@endif
-						 		
-				      		</td>
-				 		</tr>	
-				@endforeach
-              @endif
-			  
-			    
-			   
-			</table>
-			
-			 
-			
-			
-    </div>
+			<form method = "post" action = "{{URL::route('admin-plus-faq')}}">
+			  <td> 
+	      			<textarea rows = "4" name = "question" value = "question" placeholder = "Type Question">
+	      					
+	      			</textarea>
+	      		</td>
+	      		<td> 
+	      			<textarea rows = "4" name = "answer" value = "answer" placeholder = "Type Answer">
+	      					
+	      			</textarea>
+	      		</td>
+	      		<td>
+		      		
+	 					<input name = "type" value = "{{$type}}">
+			 			<button type = "submit" class="btn btn-success">Plus</button>
+		 			
+	      		</td>
+	      		</form>	
+			</table></div>
     
 
     <!-- end change phone number -->
 </div>
 			</div>
+			
+
 		</div>
 		
 	

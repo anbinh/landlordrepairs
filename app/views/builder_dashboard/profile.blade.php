@@ -241,67 +241,79 @@
 		                                {{ Form::text('site_link', $builder[0]->site_link, array('placeholder' => 'Type your site link','class' => 'form-control')) }}
 		                            </div>
 		                             <div class="form-group">
-		                                <label>Social Link</label>
-		                                {{ Form::text('social_link', $builder[0]->social_link, array('placeholder' => 'Type your site link','class' => 'form-control')) }}
+		                                <label>Facebook Link</label>
+		                                {{ Form::text('social_link', $builder[0]->social_link, array('placeholder' => 'Type your Facebook link','class' => 'form-control')) }}
 		                            </div>
-		                            
+		                             <div class="form-group">
+		                                <label>Twitter Link</label>
+		                                {{ Form::text('social_link_twitter', $builder[0]->social_link_twitter, array('placeholder' => 'Type your Twitter link','class' => 'form-control')) }}
+		                            </div>
+		                             <div class="form-group">
+		                                <label>Qualification</label>
+		                                {{ Form::text('qualification', $builder[0]->qualification, array('placeholder' => 'Qualification','class' => 'form-control')) }}
+		                            </div>
+		                             <div class="form-group">
+		                                <label>How many team?</label>
+		                                {{ Form::text('howmanyteam', $builder[0]->howmanyteam, array('placeholder' => 'How many team?','class' => 'form-control')) }}
+		                            </div>
+		                             <div class="form-group">
+		                                <label>About</label>
+		                                {{ Form::text('about', $builder[0]->about, array('placeholder' => 'Type about you','class' => 'form-control')) }}
+		                            </div>
+									
 		                             <div class="form-group">
 		                                <label>Started At</label>
 		                                {{ Form::text('created_at', $builder[0]->created_at, array('placeholder' => 'Type your date','class' => 'form-control')) }}
 		                            </div>
 		                 <div class="pad-top">
 								<div class="form-control-wrapper" >
-								
+								Category
 								<div class = "col-lg-12">
-								Category:
 								</div>
-								
-								
-								
-								
-								<div class = "col-lg-6">
-								<div class="checkbox">
-								 
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Bathroom Fitters" 
-								      @foreach($builder as $buildere)
-										@if ($buildere->category == 'Bathroom Fitters') checked @endif
-										@endforeach 
-										> Bathroom Fitters
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Bricklayers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Bricklayers') checked @endif
-										@endforeach 
-										> Bricklayers
-								    </label>
-								    
+								@if ($categorys != null)
+									@if (count($categorys) < 5)
+									<div class = "col-lg-12">
+									<div class="checkbox">
 						
-								</div>
+										@for ($i = 0; $i < count($categorys); $i++)
+											<label>
+											<input type="checkbox" name = "check_builders[]" value = "{{$categorys[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->category_id == $categorys[$i]->id) checked @endif @endforeach > {{$categorys[$i]->content}}
+										    </label>
+										@endfor
+										
+									</div>
+										
+									</div>
+									@else
 									
-								</div>
-								</div>
-								<div class = "col-lg-6">
+										<div class = "col-lg-12">
+										<div class="checkbox">
+											@for ($i = 0; $i < 2; $i++)
+												<label>
+										        <input type="checkbox" name = "check_builders[]" value = "{{$categorys[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->category_id == $categorys[$i]->id) checked @endif @endforeach> {{$categorys[$i]->content}}
+											    </label>
+											@endfor
+										</div>
+											
+										</div>
+
+										<div class = "col-lg-12 listCategorys" hidden>
+											<div class="checkbox">
+											    
+											    @for ($i = 2; $i < count($categorys); $i++)
+													<label>
+													<input type="checkbox" name = "check_builders[]" value = "{{$categorys[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->category_id == $categorys[$i]->id) checked @endif @endforeach> {{$categorys[$i]->content}}
+												    </label>
+												@endfor
+											    				
+											</div>			
+										</div>
+
+									@endif
+								@endif 
 								
-								<div class="checkbox">
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Handymen" 
-								      @foreach($builder as $buildere)
-										@if ($buildere->category == 'Handymen') checked @endif
-										@endforeach 
-										> Handymen
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Heating Engineers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Heating Engineers') checked @endif
-										@endforeach 
-										> Heating Engineers
-								    </label>
-								    
-								</div>
-									
+								
+								
 								</div>
 								
 								<script>
@@ -316,217 +328,9 @@
 								}
 								</script>
 								
-								
-								<div class = "col-lg-6 listCategorys" hidden>
-								<div class="checkbox">
-								   
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Carpenters & Joiners"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Carpenters & Joiners') checked @endif
-										@endforeach 
-										> Carpenters & Joiners
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Carpet fitters"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Carpet fitters') checked @endif
-										@endforeach 
-										> Carpet fitters
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Chimney & Fireplace Specialists"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Chimney & Fireplace Specialists') checked @endif
-										@endforeach 
-										> Chimney & Fireplace Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Conservatory Installers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Conservatory Installers') checked @endif
-										@endforeach 
-										> Conservatory Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Conversion Specialists"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Conversion Specialists') checked @endif
-										@endforeach 
-										> Conversion Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Damp Proofing Specialists"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Damp Proofing Specialists') checked @endif
-										@endforeach 
-										> Damp Proofing Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Driveway Pavers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Driveway Pavers') checked @endif
-										@endforeach 
-										> Driveway Pavers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Electricians"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Electricians') checked @endif
-										@endforeach 
-										> Electricians
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Extension Builders"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Extension Builders') checked @endif
-										@endforeach 
-										> Extension Builders
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Fencers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Fencers') checked @endif
-										@endforeach 
-										> Fencers
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Flooring Fitters"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Flooring Fitters') checked @endif
-										@endforeach 
-										> Flooring Fitters
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Garage & Shed Builders"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Garage & Shed Builders') checked @endif
-										@endforeach 
-										> Garage & Shed Builders
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Gas Engineers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Gas Engineers') checked @endif
-										@endforeach 
-										> Gas Engineers
-								    </label>
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Groundworkers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Groundworkers') checked @endif
-										@endforeach 
-										> Groundworkers
-								    </label>
 						
-								</div>
-									
-								</div>
 								
-								<div class = "col-lg-6 listCategorys" hidden>
-								<div class="checkbox">
-								    		    
-								     <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Insulation Installers"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Insulation Installers') checked @endif
-										@endforeach 
-										> Insulation Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Kitchen Fitters"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Kitchen Fitters') checked @endif
-										@endforeach 
-										> Kitchen Fitters
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Landscape Gardeners"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'HandymLandscape Gardenersen') checked @endif
-										@endforeach 
-										> Landscape Gardeners
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Loft Conversion Specialists"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Loft Conversion Specialists') checked @endif
-										@endforeach 
-										> Loft Conversion Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "New Home Builders"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'New Home Builders') checked @endif
-										@endforeach 
-										> New Home Builders
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Painters & Decorators"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Painters & Decorators') checked @endif
-										@endforeach 
-										> Painters & Decorators
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Plasterers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Plasterers') checked @endif
-										@endforeach 
-										> Plasterers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Plumbers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Plumbers') checked @endif
-										@endforeach 
-										> Plumbers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Restoration & Refurb Specialists"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Restoration & Refurb Specialists') checked @endif
-										@endforeach 
-										> Restoration & Refurb Specialists
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Roofers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Roofers') checked @endif
-										@endforeach 
-										> Roofers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Security System Installers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Security System Installers') checked @endif
-										@endforeach 
-										> Security System Installers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "CTilers"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'CTilers') checked @endif
-										@endforeach 
-										> CTilers
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Tree Surgeons"
-								        @foreach($builder as $buildere)
-										@if ($buildere->category == 'Tree Surgeons') checked @endif
-										@endforeach 
-										> Tree Surgeons
-								    </label>
-								    <label>
-								        <input type="checkbox" name = "check_builders[]" value = "Window Fitters"
-										@foreach($builder as $buildere)
-										@if ($buildere->category == 'Window Fitters') checked @endif
-										@endforeach 
-										> Window Fitters
-								    </label>
-								</div>
 								
-								</div>
 							   
 								<div class = "col-lg-12" style = "margin-bottom: 100px;">
 								<input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
@@ -681,7 +485,7 @@
 		                            
 		                            <div class="form-group">
 		                                <label>Jobs category</label>
-		                                {{$buildere->category}}
+		                                {{$buildere->content}}
 		                                
 		                            </div>		                            
 		                           

@@ -170,7 +170,7 @@
 			 	<tr>
 			    	<td>{{$job->tittle}}</td>
 			    	<td>{{$job->property}}</td>
-			    	<td>{{$job->category}}</td>
+			    	<td>{{$job->content}}</td>
 			    	<td>{{$job->price}}</td>
 			 		<td>{{$job->timeoption}}</td>
 			 		<td>{{$job->local}}</td>

@@ -172,7 +172,7 @@
 			 	<tr>
 			    	<td>{{$OngoingJob->tittle}}</td>
 			    	<td>{{$OngoingJob->property}}</td>
-			   		<td>{{$OngoingJob->category}}</td>
+			   		<td>{{$OngoingJob->content}}</td>
 			    	
 			 		<td>{{$OngoingJob->timeoption}}</td>
 			 		<td>{{$OngoingJob->local}}</td>

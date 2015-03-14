@@ -18,6 +18,8 @@
 					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
 					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
 					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
+					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
+					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>f="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
 				</div>
 
 			</div>
@@ -172,7 +174,7 @@
 					  		<td>{{$job->tittle}}</td>
 					  		<td>{{$job->description}}</td>
 					  		<td>{{$job->property}}</td>
-					  		<td>{{$job->category}}</td>
+					  		<td>{{$job->content}}</td>
 					  		<td>{{$job->timeoption}}</td>
 					  		<td>{{$job->local}}</td>
 					  		<td>{{$job->local_code}}</td>

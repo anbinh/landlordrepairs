@@ -417,8 +417,25 @@ Route::get('admin-non-reply-email', array('as'=>'admin-non-reply-email','uses' =
 
 Route::post('admin-change-content-email','BaseController@postAdminChangeContentEmail');
 
+Route::get('admin-manage-faq', array('as'=>'admin-manage-faq','uses' => 'BaseController@getAdminMangeFAQ' ));
 
+Route::post('admin-change-content-faq','BaseController@postAdminChangeContentFAQ');
 
+Route::get('admin-plus-faq/{type}','BaseController@getAdminPlusFAQ');
+
+Route::post('admin-plus-faq', array('as'=>'admin-plus-faq','uses' => 'BaseController@postAdminPlusFAQ' ));
+
+Route::post('admin-delete-faq','BaseController@postAdminDeleteFAQ');
+
+Route::get('admin-manage-category', array('as'=>'admin-manage-category','uses' => 'BaseController@getAdminManageCategorys' ));
+
+Route::post('admin-delete-category', array('as'=>'admin-delete-category','uses' => 'BaseController@postAdminDeleteCategory' ));
+
+Route::post('admin-plus-category', array('as'=>'admin-plus-category','uses' => 'BaseController@postAdminPlusCategory' ));
+
+Route::get('FAQ-User', array('as'=>'FAQ-User','uses' => 'BaseController@getFAQUser' ));
+
+Route::get('FAQ-Builder', array('as'=>'FAQ-Builder','uses' => 'BaseController@getFAQBuilder' ));
 
 
 

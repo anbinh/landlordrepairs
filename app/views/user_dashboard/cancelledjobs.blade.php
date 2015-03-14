@@ -170,7 +170,7 @@
 			 	<tr>
 			    	<td>{{$cancelledJob->tittle}}</td>
 			    	<td>{{$cancelledJob->property}}</td>
-			   		<td>{{$cancelledJob->category}}</td>
+			   		<td>{{$cancelledJob->content}}</td>
 			    	
 			 		<td>{{$cancelledJob->timeoption}}</td>
 			 		<td>{{$cancelledJob->local}}</td>

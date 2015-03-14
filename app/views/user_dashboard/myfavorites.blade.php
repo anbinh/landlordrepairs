@@ -153,45 +153,13 @@
 			 {{ Form::open(array('url' => 'customer-find-favorite-builders')) }}
 	               <div class="form-group">
 	                     <label>Category</label>
-	                     <select name = "category" class="form-control">
-	                        
-		                                
-								<option value = "Bathroom Fitters">Bathroom Fitters</option>
-								<option value = "Bricklayers">Bricklayers</option>
-								<option value = " Handymen"> Handymen</option>
-								<option value = "Heating Engineers">Heating Engineers</option>
-								<option value = "Carpenters & Joiners">Carpenters & Joiners</option>
-								<option value = "Carpet fitters">Carpet fitters</option>
-								<option value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
-								<option value = "Conservatory Installers">Conservatory Installers</option>
-								<option value = " Conversion Specialists"> Conversion Specialists</option>
-								<option value = " Damp Proofing Specialists"> Damp Proofing Specialists</option>
-								<option value = " Driveway Pavers"> Driveway Pavers</option>
-								<option value = " Electricians"> Electricians</option>
-								<option value = " Extension Builders"> Extension Builders</option>
-								<option value = " Flooring Fitters"> Flooring Fitters</option>
-								<option value = " Garage & Shed Builders"> Garage & Shed Builders</option>
-								<option value = " Gas Engineers"> Gas Engineers</option>
-								<option value = " Groundworkers"> Groundworkers</option>
-								<option value = " Insulation Installers"> Insulation Installers</option>
-								<option value = " Kitchen Fitters"> Kitchen Fitters</option>
-								<option value = " Landscape Gardeners"> Landscape Gardeners</option>
-								<option value = " Loft Conversion Specialists"> Loft Conversion Specialists</option>
-								<option value = " New Home Builders"> New Home Builders</option>
-								<option value = " Painters & Decorators"> Painters & Decorators</option>
-								<option value = " Plasterers"> Plasterers</option>
-								<option value = " Plumbers"> Plumbers</option>
-								<option value = " Restoration & Refurb Specialists"> Restoration & Refurb Specialists</option>
-								<option value = " Roofers"> Roofers</option>
-								<option value = " Security System Installers"> Security System Installers</option>
-								<option value = " CTilers"> CTilers</option>
-								<option value = " Tree Surgeons"> Tree Surgeons</option>
-								<option value = " Window Fitters"> Window Fitters</option>
-						
-								
-								
-						
-								
+	                     <select name = "category_id" class="form-control">
+	                        	@if ($categorys != null)
+	                        		@foreach ($categorys as $category)
+	                        			<option value = "{{$category->id}}">{{$category->content}}</option>
+	                        		@endforeach
+	                        	@endif
+
 	              		</select>
 	                </div>
 	                           
@@ -222,71 +190,11 @@
 				    <td><ol>
 				  @foreach($builder[$i] as $buildere)
 			    			
+			    			<li>{{$buildere->content}}</li>
 	    					
-							@if ($buildere->category == 'Bathroom Fitters')  <li>Bathroom Fitters</li> @endif
+							
 
-							@if ($buildere->category == 'Bricklayers') <li>Bricklayers</li> @endif
-						
-							@if ($buildere->category == 'Handymen') <li>Handymen</li> @endif						
 							
-							@if ($buildere->category == 'Heating Engineers') <li>Heating Engineers</li> @endif
-													
-							@if ($buildere->category == 'Carpenters & Joiners') <li>Carpenters & Joiners</li> @endif
-						
-							@if ($buildere->category == 'Carpet fitters') <li>Carpet fitters</li> @endif
-							
-							@if ($buildere->category == 'Chimney & Fireplace Specialists') <li>Chimney & Fireplace Specialists</li> @endif
-							
-							@if ($buildere->category == 'Conservatory Installers') <li>Conservatory Installers</li> @endif
-							
-							@if ($buildere->category == 'Conversion Specialists') <li>Conversion Specialists</li> @endif
-							
-							@if ($buildere->category == 'Damp Proofing Specialists') <li>Damp Proofing Specialists</li> @endif
-							
-							@if ($buildere->category == 'Driveway Pavers') <li>Driveway Pavers</li> @endif
-							
-							@if ($buildere->category == 'Electricians') <li>Electricians</li> @endif
-							
-							@if ($buildere->category == 'Extension Builders') <li>Extension Builders</li> @endif
-							
-							@if ($buildere->category == 'Fencers') <li>Fencers</li> @endif
-							
-							@if ($buildere->category == 'Flooring Fitters') <li>Flooring Fitters</li> @endif
-							
-							@if ($buildere->category == 'Garage & Shed Builders') <li>Garage & Shed Builders</li> @endif
-							
-							@if ($buildere->category == 'Gas Engineers') <li>Gas Engineers</li> @endif
-							
-							@if ($buildere->category == 'Groundworkers') <li>Groundworkers</li> @endif
-							
-							@if ($buildere->category == 'Insulation Installers') <li>Insulation Installers</li> @endif
-							
-							@if ($buildere->category == 'Kitchen Fitters') <li>Kitchen Fitters</li> @endif
-							
-							@if ($buildere->category == 'HandymLandscape Gardenersen') <li>HandymLandscape Gardenersen</li> @endif
-							
-							@if ($buildere->category == 'Loft Conversion Specialists') <li>Loft Conversion Specialists</li> @endif
-							
-							@if ($buildere->category == 'New Home Builders') <li>New Home Builders</li> @endif
-							
-							@if ($buildere->category == 'Painters & Decorators') <li>Painters & Decorators</li> @endif
-							
-							@if ($buildere->category == 'Plasterers') <li>Plasterers</li> @endif
-							
-							@if ($buildere->category == 'Plumbers') <li>Plumbers</li> @endif
-							
-							@if ($buildere->category == 'Restoration & Refurb Specialists') <li>Restoration & Refurb Specialists</li> @endif
-							
-							@if ($buildere->category == 'Roofers') <li>Roofers</li> @endif
-							
-							
-							@if ($buildere->category == 'Security System Installers') <li>Security System Installers</li> @endif
-							
-							@if ($buildere->category == 'CTilers') <li>CTilers</li> @endif
-							
-							@if ($buildere->category == 'Tree Surgeons') <li>Tree Surgeons</li> @endif
-							
-							@if ($buildere->category == 'Window Fitters') <li>Window Fitters</li> @endif
 							
 			    	
 					@endforeach

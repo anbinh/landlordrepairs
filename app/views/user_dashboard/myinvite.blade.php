@@ -175,7 +175,7 @@
 			 	<tr>
 			    	<td>{{$jobtittles[$invite->id]->tittle}}</td>
 			    	<td>{{$builders[$invite->builder_id][0]->username}}</td>
-			    	<td class="date-sort" ><em>{{$categorys[$invite->builder_id][0]->category}}</em> <span>&nbsp;</span></th>
+			    	<td class="date-sort" ><em>{{$categorys[$invite->builder_id][0]->content}}</em> <span>&nbsp;</span></th>
 			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
 			      	
 			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->local}}</em> <span>&nbsp;</span></td>

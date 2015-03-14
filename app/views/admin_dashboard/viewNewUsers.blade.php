@@ -10,7 +10,7 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
+					 <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
 					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
 					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
 					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
@@ -18,6 +18,8 @@
 					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
 					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
 					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
+					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
+					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
 				</div>
 
 			</div>

@@ -182,7 +182,7 @@
 			    	<td>{{$job_resuilt->description}}</td>
 			    	<td>{{$job_resuilt->price}}</td>
 			    	<td>{{$job_resuilt->property}}</td>
-			    	<td>{{$job_resuilt->category}}</td>
+			    	<td>{{$job_resuilt->content}}</td>
 			    	<td>{{$job_resuilt->timeoption}}</td>
 			    	<td>{{$job_resuilt->date}}</td>
 			    	<td>{{$job_resuilt->local}}</td>

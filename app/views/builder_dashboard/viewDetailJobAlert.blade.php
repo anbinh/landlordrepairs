@@ -60,7 +60,7 @@
 		                            
 		                             <div class="form-group">
 		                                <label>Category</label>
-		                                <p>{{$jobInfo->category}}</p>
+		                                <p>{{$jobInfo->content}}</p>
 		                            	
 		                            </div>
 		                            <div class="form-group">

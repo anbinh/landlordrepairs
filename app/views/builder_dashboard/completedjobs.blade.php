@@ -171,7 +171,7 @@
 			 	<tr>
 			    	<td>{{$conpletedJob->tittle}}</td>
 			    	<td>{{$conpletedJob->property}}</td>
-			   		<td>{{$conpletedJob->category}}</td>
+			   		<td>{{$conpletedJob->content}}</td>
 			    	<td>{{$conpletedJob->price}}</td>
 			 		<td>{{$conpletedJob->timeoption}}</td>
 			 		<td>{{$conpletedJob->local}}</td>
