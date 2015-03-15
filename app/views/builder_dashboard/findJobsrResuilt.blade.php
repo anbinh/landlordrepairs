@@ -26,6 +26,13 @@
 				</div>
 
 			</div>
+				@if($alertLowCredit == true )
+					<div class="alert alert-danger alert-dismissable">
+		                 Your Credit account is low, please upgrade to enable Find jobs feature.
+		                 
+		         	</div>
+		
+				@endif
 			<div class="col-md-10">
 				<div class="row">
 				<div class="col-lg-12" style="margin-top:30px">

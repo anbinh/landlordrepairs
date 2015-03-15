@@ -129,7 +129,7 @@ $(document).ready(function(){
   <thead>
     <tr class="country-table-head">
       <th><em>Name of Builder</em> <span>&nbsp;</span></th>
-      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
+      
       <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
       <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
       <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
@@ -146,7 +146,7 @@ $(document).ready(function(){
   @foreach($builders as $builder)
  	<tr>
     	<td>{{$builder->username}}</td>
-    	<td>{{$builder->category}}</td>
+    	
     	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{$array_radius[$builder->id]}}</td>
     	<td>{{$builder->local}}</td>
  		<td>{{$builder->local_code}}</td>
@@ -158,7 +158,7 @@ $(document).ready(function(){
     
    
 </table>
- <input hidden name = "category" value = "{{$category}}"/> 
+ <input hidden name = "category_id" value = "{{$category_id}}"/> 
  <input hidden name = "job_id" value = "{{$job_id}}"/>
   {{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
 {{ Form::close() }}

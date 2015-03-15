@@ -71,39 +71,14 @@
 								Category:
 								</div>
 								<div class = "col-lg-8">
-									<select name = "category" class="form-control">
-										<option name="category" value = "Bathroom Fitters">Bathroom Fitters</option>
-										<option name="category" value = "Bricklayers">Bricklayers </option>
-										<option name="category" value = "Carpenters & Joiners">Carpenters & Joiners </option>
-										<option name="category" value = "Carpet fitters">Carpet fitters</option>
-										<option name="category" value = "Chimney & Fireplace Specialists">Chimney & Fireplace Specialists</option>
-										<option name="category" value = "Conservatory Installers">Conservatory Installers</option>
-										<option name="category" value = "Conversion Specialists">Conversion Specialists</option>
-										<option name="category" value = "Damp Proofing Specialists">Damp Proofing Specialists</option>
-										<option name="category" value = "Driveway Pavers">Driveway Pavers</option>
-										<option name="category" value = "Electricians">Electricians</option>
-										<option name="category" value = "Extension Builders">Extension Builders</option>
-										<option name="category" value = "Fencers">Fencers</option>
-										<option name="category" value = "Flooring Fitters">Flooring Fitters</option>
-										<option name="category" value = "Garage & Shed Builders">Garage & Shed Builders</option>
-										<option name="category" value = "Gas Engineers">Gas Engineers</option>
-										<option name="category" value = "Groundworkers">Groundworkers</option>
-										<option name="category" value = "Handymen">Handymen</option>
-										<option name="category" value = "Heating Engineers">Heating Engineers</option>
-										<option name="category" value = "Insulation Installers">Insulation Installers</option>
-										<option name="category" value = "Kitchen Fitters">Kitchen Fitters</option>
-										<option name="category" value = "Landscape Gardeners">Landscape Gardeners</option>
-										<option name="category" value = "Loft Conversion Specialists">Loft Conversion Specialists</option>
-										<option name="category" value = "New Home Builders">New Home Builders</option>
-										<option name="category" value = "Painters & Decorators">Painters & Decorators</option>
-										<option name="category" value = "Plasterers">Plasterers</option>
-										<option name="category" value = "Plumbers">Plumbers</option>
-										<option name="category" value = "Restoration & Refurb Specialists">Restoration & Refurb Specialists</option>
-										<option name="category" value = "Roofers">Roofers</option>
-										<option name="category" value = "Security System Installers">Security System Installers</option>
-										<option name="category" value = "CTilers">CTilers</option>
-										<option name="category" value = "Tree Surgeons">Tree Surgeons</option>
-										<option name="category" value = "Window Fitters">Window Fitters</option>
+									<select name = "category_id" class="form-control">
+										@if ($categorys != null)
+											@foreach ($categorys as $category)
+												<option name="category_id" value = "{{$category->id}}">{{$category->content}}</option>
+											@endforeach
+										@endif
+										
+										
 									</select>
 								</div>
 								</div>			

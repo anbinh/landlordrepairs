@@ -10,7 +10,7 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
+					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
 					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
 					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
 					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
@@ -20,7 +20,7 @@
 					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
 					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
 					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
-					   <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
+					  <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
 				</div>
 
 			</div>
@@ -155,69 +155,38 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      	<th><em>Name of Builders</em> <span>&nbsp;</span></th>
-			     	<th><em>Association</em> <span>&nbsp;</span></th>
-			     	<th><em>Category</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Email confirm</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Mobile cofirm</em> <span>&nbsp;</span></th>
+			      	<th><em>ID</em> <span>&nbsp;</span></th>
+			
+			
+			      	<th class="date-sort"><em>Type</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Value</em> <span>&nbsp;</span></th>
 			      	
-			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($builderArr != null)
-			  	@for($i = 0; $i< $count; $i++)
-	              	
+			  @if($charges != null)
+				 @foreach($charges as $charge)
 				 		<tr>
-				    		<td>{{$builderArr[$i][0]->username}}</td>
-				    		<td>{{$builderArr[$i][0]->association}}</td>
-				      		<td><ol>
-				      			@foreach($builderArr[$i] as $builder)
-									  <li>{{$builder->content}}</li>
-				      			@endforeach
-				      			</ol>
-				      		</td>
-				      		<td>{{$builderArr[$i][0]->email}}</td>
-				      		<td>
-				      			@if($builderArr[$i][0]->email_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				      		<td>{{$builderArr[$i][0]->phone_number}}</td>
+				    		<td>{{$charge->id}}</td>
+				    		
+				    		<td>{{$charge->charge_description}}</td>
 				 
+				      		<td>{{$charge->charge_value_newest}}</td>
+
 				      		<td>
-				      			@if($builderArr[$i][0]->phone_confirm == "")
-				      				Yes
-				      			@else
-				      				No
-				      			@endif
-				      		</td>
-				      		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builderArr[$i][0]->builder_id}}">View</></em> <span>&nbsp;</span></td>
-				      		<td>
-				      			<form method = "post" action = "admin-action-delete" >
-							 		<input name = "builder_id" value = "{{$builderArr[$i][0]->builder_id}}" hidden>
-							 		<button class="btn btn-danger">Delete</button>
+				      			<form method = "post" action = "admin-manage-charges" >
+				      				<input name = "value" placeholder = "Type new Value">
+							 		<input name = "id" value = "{{$charge->id}}" hidden>
+							 		<button class="btn btn-danger">Change</button>
 						 		</form>
-						 		
-						 		<form method = "post" action = "admin-action-edit-builder" >
-							 		<input name = "builder_id" value = "{{$builderArr[$i][0]->builder_id}}" hidden>
-							 		<button class="btn btn-success">Edit</button>
-						 		</form>
-						 		
+						
 				      		</td>
 				 		</tr>	
-					
-				@endfor
+				@endforeach
               @endif
-			  
-			    
-			   
+
 			</table>
 			
 			 

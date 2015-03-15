@@ -381,6 +381,8 @@ Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseC
 
 Route::post('vote-job', 'BaseController@postVoteJob');
 
+Route::post('upgrade-credit', 'BaseController@postUpgradeCredit');
+
 /*
  * ADMIN
  */
@@ -437,8 +439,72 @@ Route::get('FAQ-User', array('as'=>'FAQ-User','uses' => 'BaseController@getFAQUs
 
 Route::get('FAQ-Builder', array('as'=>'FAQ-Builder','uses' => 'BaseController@getFAQBuilder' ));
 
+Route::get('admin-manage-charges', array('as'=>'admin-manage-charges','uses' => 'BaseController@getAdminManageCharges' ));
 
+Route::post('admin-manage-charges', array('as'=>'admin-manage-charges','uses' => 'BaseController@postAdminManageCharges' ));
 
+//------
+Route::get('chargePackage',function(){
+//$input = Input::all(); 
+//		$amount = Input::get('amount');
+//		
+//		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+//
+//		// Get the credit card details submitted by the form
+//		$token = $_POST['stripeToken'];
+//		
+//		// Create the charge on Stripe's servers - this will charge the user's card
+//		try {
+//		$charge = Stripe_Charge::create(array(
+//		  "amount" => $amount, // amount in cents, again
+//		  "currency" => "usd",
+//		  "card" => $token,
+//		  "description" => "payinguser@example.com")
+//		);
+//		//----do something after charge success---//
+//		echo '<pre>'; 
+//		var_dump($charge); die;
+//		echo '</pre>'; 
+//		return Redirect::to('login')->with("emailfirst", "1");
+//		} catch(Stripe_CardError $e) {
+//		  // The card has been declined
+//		}
 
+	Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+	$plan = Stripe_Plan::create(array(
+	  "amount" => 2000,
+	  "interval" => "month",
+	  "name" => "Amazing Gold Plan",
+	  "currency" => "usd",
+	  "id" => "gold")
+	);
+	var_dump($plan); die;
+});
+
+Route::get('testpay', function(){
+	return View::make('pages.testpay');
+});
+
+Route::get('createCustomer',function(){
+
+	Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+	$customer = Stripe_Customer::create(array(
+	  "description" => "Customer for test@example.com",
+	  "source" => "tok_15gWEMLkohIy35CBdq5tVi3c"
+	));
+	var_dump($customer); die;
+});
+
+Route::get('addCustomerToPlan',function(){
+
+	Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+	$cu = Stripe_Customer::retrieve("cus_5sGmBaCmGVKzoa");
+	$cu->subscriptions->create(array("plan" => "1"));
+	
+	var_dump($cu); die;
+});
 
 

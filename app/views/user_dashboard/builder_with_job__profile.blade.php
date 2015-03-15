@@ -273,7 +273,7 @@
 								
 								<div class = "col-lg-12">
 								@foreach($builder as $buildere)
-									{{$buildere->category}}
+									{{$buildere->content}}
 								
 								@endforeach 
 								

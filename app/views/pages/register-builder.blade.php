@@ -450,15 +450,15 @@
 								<div class="form-control-wrapper" >
 									<div class="radio">
 										  <label onclick = "DetailPak1()">
-										    <input type="radio" name="package_builder" value="2000" id = "detail1" checked >
+										    <input type="radio" name="package_builder" value="1" id = "detail1" checked >
 										    Package 1 (20£)
 										  </label>
 										   <label onclick = "DetailPak2()">
-										    <input type="radio" name="package_builder" value="5000">
+										    <input type="radio" name="package_builder" value="2">
 										    Package 2 (50£)
 										  </label>
 										  <label onclick = "DetailPak3()">
-										    <input type="radio" name="package_builder" value="10000">
+										    <input type="radio" name="package_builder" value="3">
 										    
 										    Package 3 (100£)
 										  </label>

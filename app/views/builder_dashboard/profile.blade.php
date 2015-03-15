@@ -460,7 +460,123 @@
             </div>
         </div>
     </div>
-<div class="col-lg-6">
+    <div class="col-lg-6">
+				        <div class="panel panel-default">
+				            <div class="panel-heading">
+				                Upgrade Credit
+				            </div>
+			            <div class="panel-body">
+			            
+			                <div class="row">
+			                    <div class="col-lg-12">
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div class="radio">
+										  <label onclick = "DetailPak1()">
+										    <input type="radio" name="package_builder" value="1" id = "detail1" checked >
+										    Package 1 (20£)
+										  </label>
+										   <label onclick = "DetailPak2()">
+										    <input type="radio" name="package_builder" value="2">
+										    Package 2 (50£)
+										  </label>
+										  <label onclick = "DetailPak3()">
+										    <input type="radio" name="package_builder" value="3">
+										    
+										    Package 3 (100£)
+										  </label>
+									</div>
+											
+								</div>		
+							</div>
+
+
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div id = "detail_pack_1" >
+									
+										<div id = "content_pay">
+										    <form action="upgrade-credit" method="POST">
+										  <script
+										    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+										    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
+										    data-amount="{{$package[0]->charge_value_newest*100}}"
+										    data-name="Demo Site"
+										    data-description=""
+										    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+										  </script>
+										  <input type = "hidden" name = "amount" value = "{{$package[0]->charge_value_newest}}"/>
+										  
+										</form>
+										</div>
+									</div>
+									<div id = "detail_pack_2" hidden>
+									
+										<div id = "content_pay">
+										    <form action="upgrade-credit" method="POST">
+										  <script
+										    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+										    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
+										    data-amount="{{$package[1]->charge_value_newest*100}}"
+										    data-name="Demo Site"
+										    data-description=""
+										    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+										  </script>
+										 <input type = "hidden" name = "amount" value = "{{$package[1]->charge_value_newest}}"/>
+										 
+										  
+										</form>
+										</div>
+									</div>
+									<div id = "detail_pack_3" hidden>
+										
+										<div id = "content_pay">
+										    <form action="upgrade-credit" method="POST">
+										  <script
+										    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+										    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
+										    data-amount="{{$package[2]->charge_value_newest*100}}"
+										    data-name="Demo Site"
+										    data-description=""
+										    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+										  </script>
+										  <input type = "hidden" name = "amount" value = "{{$package[2]->charge_value_newest}}"/>
+										  
+										  
+										</form>
+										</div>
+									</div>
+											
+								</div>		
+							</div>
+							<script>
+							function DetailPak1() {
+								$("#detail_pack_1").show();
+								$("#detail_pack_2").hide();
+								$("#detail_pack_3").hide();
+							}
+							function DetailPak2() {
+								$("#detail_pack_1").hide();
+								$("#detail_pack_2").show();
+								$("#detail_pack_3").hide();
+							}
+							function DetailPak3() {
+								$("#detail_pack_1").hide();
+								$("#detail_pack_2").hide();
+								$("#detail_pack_3").show();
+							}
+							</script>
+
+		                          
+		                            
+			                    </div>	
+			                </div>
+			                <hr>
+			             
+			            </div>
+			        </div>
+			    </div>
+				<div class="col-lg-6">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
 				                Portfolio

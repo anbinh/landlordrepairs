@@ -380,9 +380,12 @@ class BaseController extends Controller {
 	
 	public function getPostjob()
 	{
-		if(Auth::check()) { 
+		if(Auth::check()) {
+			$categorys = DB::table('category')
+				->get(); 
 		if (Auth::user()->ban == ""){
-			return View::make('pages.postjob');
+			
+			return View::make('pages.postjob')->with('categorys',$categorys);
 		} else {// Baned
 			$date = new DateTime('today');
 		    $date =  $date->modify('+5 day')->format('Y-m-d');
@@ -394,7 +397,7 @@ class BaseController extends Controller {
 					->update(array(
 					'ban' => '',
 					));
-				return View::make('pages.postjob');	
+					return View::make('pages.postjob')->with('categorys',$categorys);
 			}	
 		}
 			
@@ -429,7 +432,7 @@ class BaseController extends Controller {
 			$job->user_id = $userpostjob->id;
 			$job->status = 'openjob';
 			$job->property = $input['property'];
-			$job->category = $input['category'];
+			$job->category_id = $input['category_id'];
 			
 			$job->save();
 			
@@ -438,14 +441,55 @@ class BaseController extends Controller {
 		
 			//------select list builders from DB:: where matching the condition with Input::----//
 			
-	
+		$builders_beforecheck = "";
 
-        $builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-        ->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-        ->where('extend_builders_category.category', '=', $input['category'])->get();
-        
+        $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->get();
+        $price_invite = DB::table('charges')
+        	->where('id','=','4')
+        	->first();
         
 		//var_dump($builders); die;
+		//---make list Builders enought credit----//
+		$builders = "";
+		if ($builders_beforecheck != null) {
+			for ($i = 0; $i < count($builders_beforecheck); $i++) {
+				$transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
+					->get();
+					$credits = "0";
+				foreach($transactions as $transaction) {
+					$credits += ($transaction->charge_type)*($transaction->charge_value); 
+				} //var_dump($price_invite); die;
+				 if($credits >= $price_invite->charge_value_newest) { 
+				 	$builders[$i] = $builders_beforecheck[$i];
+				 } else {
+				 	//sent email alert low credit
+				 	try {
+						Mail::send('emails.alertLowCredit', function($message)
+						{
+							$message->to(Input::get('email'))->subject('Alert Low Credit');
+						});
+			
+					}
+					catch (Exception $e){
+						$to      = Input::get('email');
+						$subject = 'Alert Low Credit';
+						$message = View::make('emails.alertLowCredit')->render();
+						$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+								'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+								'X-Mailer: PHP/' . phpversion() . "\r\n" .
+								'MIME-Version: 1.0' . "\r\n" .
+								'Content-Type: text/html; charset=ISO-8859-1\r\n';
+			
+						mail($to, $subject, $message, $headers);
+							
+					}
+				 }	
+			}
+		
 			//calculate the radius:
 			function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
 			    $theta = $longitude1 - $longitude2;
@@ -462,10 +506,11 @@ class BaseController extends Controller {
 		    foreach( $builders as $builder ) {
 		  			
 			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
-		    } 
+		    }
+		} 
 			//echo $job->id; die;
 			//------------------------------//
-			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category' =>$input['category'],'job_id'=> $job->id)) ;
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $job->id)) ;
 			//--------------------------------//
 			return Redirect::to('postjob')->with("success", "1");
 		} else {
@@ -554,10 +599,55 @@ class BaseController extends Controller {
 		$radius = Input::get('radius');
 		//var_dump($check_builders); die;
 		//$builders = DategB::table('builders')->having('category', '=',$input['category'] )->get();
-		$builders = DB::table('users')
-			->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-			->where('extend_builders_category.category', '=', $input['category'])
-			->get();
+		$builders_beforecheck = "";
+
+        $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->get();
+        $price_invite = DB::table('charges')
+        	->where('id','=','4')
+        	->first();
+        
+		//var_dump($builders); die;
+		//---make list Builders enought credit----//
+		$builders = "";
+		if ($builders_beforecheck != null) {
+			for ($i = 0; $i < count($builders_beforecheck); $i++) {
+				$transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
+					->get();
+					$credits = "0";
+				foreach($transactions as $transaction) {
+					$credits += ($transaction->charge_type)*($transaction->charge_value); 
+				} //var_dump($price_invite); die;
+				 if($credits >= $price_invite->charge_value_newest) { 
+				 	$builders[$i] = $builders_beforecheck[$i];
+				 } else {
+				 	//sent email alert low credit
+				 	try {
+						Mail::send('emails.alertLowCredit', function($message)
+						{
+							$message->to(Input::get('email'))->subject('Alert Low Credit');
+						});
+			
+					}
+					catch (Exception $e){
+						$to      = Input::get('email');
+						$subject = 'Alert Low Credit';
+						$message = View::make('emails.alertLowCredit')->render();
+						$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+								'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+								'X-Mailer: PHP/' . phpversion() . "\r\n" .
+								'MIME-Version: 1.0' . "\r\n" .
+								'Content-Type: text/html; charset=ISO-8859-1\r\n';
+			
+						mail($to, $subject, $message, $headers);
+							
+					}
+				 }	
+			}
+		
 		$num_of_checked_builders = count($check_builders);	
 			//var_dump ($builders); die;
 		//select builders matching condition from submit post_jobs.
@@ -601,6 +691,18 @@ class BaseController extends Controller {
 				$job_process->radius = $radius[$i];
 				$job_process->save();
 				$i++;
+				//--Insert new row in transactions table
+				$charge_value = DB::table('charges')
+					->where('id','=','4')//receive invite
+					->first();
+				$date = date('Y-m-d');
+				DB::table('transactions')
+					->insert(array(
+						'builder_id' => $builder->builder_id, 
+						'charge_type' => '-1',
+						'charge_value' => $charge_value->charge_value_newest,
+						'created_at' => $date, 
+					));
 				
 			}
 
@@ -643,7 +745,10 @@ class BaseController extends Controller {
 				    
 				    for ($x = 0; $x <= 2; $x++) {
 				    	//$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
-				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_builder_id[$array_id_sent_invite[$x]])->get();
+				    	$builders = DB::table('users')
+				    		->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				    		->where('extend_builders.builder_id', '=', $array_builder_id[$array_id_sent_invite[$x]])
+				    		->get();
 					//echo $builders[0]->email; die;
 					//echo $builders[0]->email; die;
 					$job_process = new JobProcess();
@@ -673,8 +778,20 @@ class BaseController extends Controller {
 				
 							mail($to, $subject, $message, $headers);
 				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
 						} 
-					} 
 			        break;
 			        
 			        
@@ -720,7 +837,19 @@ class BaseController extends Controller {
 				
 							mail($to, $subject, $message, $headers);
 				
-						} 
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
 					} 
 						
 					
@@ -768,7 +897,19 @@ class BaseController extends Controller {
 				
 							mail($to, $subject, $message, $headers);
 				
-						} 
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
 						
 					} 
 						
@@ -808,7 +949,19 @@ class BaseController extends Controller {
 				
 							mail($to, $subject, $message, $headers);
 				
-						} 
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
 					} 
 		        	 break;
 			    default:
@@ -820,6 +973,7 @@ class BaseController extends Controller {
 			
 			return Redirect::to('myinvites');
 	    }
+	}
 		return Redirect::to('myinvites');
 	}
 			
@@ -1320,6 +1474,7 @@ public function postCustomerActionCancelled()
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
         		->where('users.id', '=', $builder_id)->get();
         		//var_dump($builder[0]); 
         	
@@ -1584,12 +1739,12 @@ public function postCustomerActionCancelled()
 
 	public function postPayPackageBuilder()
 	{
-		//print_r(Input::all());
-		
-	
+
 		$input = Input::all(); 
-		$amount = Input::get('amount');
-		
+		$charge_id = Input::get('amount');
+		$charge_value = DB::table('charges')
+			->where('id','=',$charge_id)
+			->first();
 		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
 
 		// Get the credit card details submitted by the form
@@ -1598,20 +1753,67 @@ public function postCustomerActionCancelled()
 		// Create the charge on Stripe's servers - this will charge the user's card
 		try {
 		$charge = Stripe_Charge::create(array(
-		  "amount" => $amount, // amount in cents, again
+		  "amount" => ($charge_value->charge_value_newest)*1000, // amount in cents, again
 		  "currency" => "usd",
 		  "card" => $token,
 		  "description" => "payinguser@example.com")
 		);
 		//----do something after charge success---//
-		
+		$date = date('Y-m-d');
 		$user = User::where('email', '=',Input::get('email') )->first();
-		//var_dump($user); die;
-		$user->package_builder_confirm = '1';
-		$user->save();
+		if ($charge['status'] == "paid") {
+		DB::table('transactions')->insert(array(
+			'builder_id' => $user->id, 
+			'charge_type' => '1', //+1
+			'charge_value' => $charge_value->charge_value_newest,
+			'created_at' => $date,
+			));
+		} else {
+			try {
+					Mail::send('emails.alertLowCredit', function($message)
+					{
+						$message->to(Input::get('email'))->subject('Alert Low Credit');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = Input::get('email');
+					$subject = 'Alert Low Credit';
+					$message = View::make('emails.alertLowCredit')->render();
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
+		}
+		//--------------------
 		return Redirect::to('login')->with("emailfirst", "1");
 		} catch(Stripe_CardError $e) {
 		  // The card has been declined
+		try {
+					Mail::send('emails.alertLowCredit', function($message)
+					{
+						$message->to(Input::get('email'))->subject('Alert Low Credit');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = Input::get('email');
+					$subject = 'Alert Low Credit';
+					$message = View::make('emails.alertLowCredit')->render();
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
 		}
 		
 	}
@@ -1642,8 +1844,10 @@ public function postCustomerActionCancelled()
         		->get();
         	$categorys = DB::table('category')
         		->get();	
-        		//var_dump($builder_jobs); die;	
-			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys));
+        		//var_dump($builder_jobs); die;
+        	$package = DB::table('charges')
+        		->get();		
+			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys,'package'=>$package));
 		}
 		return Redirect::to('login');
 
@@ -1785,7 +1989,29 @@ public function postCustomerActionCancelled()
 	}
 	
 	public function postBuilderFindJobs()
-	{
+	{   
+		$price_invite = DB::table('charges')
+			->where('id','=','6')
+			->first();
+		$transactions = DB::table('transactions')
+			->where('transactions.builder_id','=', Auth::user()->id)
+			->get();
+		$credits = "0";
+		
+		foreach($transactions as $transaction) {
+			$credits += ($transaction->charge_type)*($transaction->charge_value); 
+		}
+		 if($credits >= $price_invite->charge_value_newest) {
+		 	//---add new row in transations
+		 	$date = date('Y-m-d');
+			
+			DB::table('transactions')->insert(array(
+				'builder_id' => Auth::user()->id, 
+				'charge_type' => '-1', //+1
+				'charge_value' => $price_invite->charge_value_newest,
+				'created_at' => $date,
+				));
+				
 		$input = Input::all(); $hello = 1;
 		
 		$isHasNum = true;
@@ -1835,9 +2061,36 @@ public function postCustomerActionCancelled()
         	$jobs_resuilt = $jobs;		
         }*/
         
-        
 		
-		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs));;
+		$alertLowCredit = false;
+		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs, 'alertLowCredit' => $alertLowCredit));;
+		} else {
+		try {
+				Mail::send('emails.alertLowCredit', function($message)
+				{
+					$message->to(Input::get('email'))->subject('Alert Low Credit');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = Input::get('email');
+				$subject = 'Alert Low Credit';
+				$message = View::make('emails.alertLowCredit')->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+					
+			}
+			$jobs_resuilt = "";
+			$isHasNum = "";
+			$myjobs = "";
+			$alertLowCredit = true;
+			return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs,'alertLowCredit'=>$alertLowCredit));;
+		}
 	
 	}	
 	
@@ -1871,8 +2124,21 @@ public function postCustomerActionCancelled()
 	public function postVoteJob()
 	{  
 		$input = Input::all();
+		//check credit is enought to payment
+		$price_invite = DB::table('charges')
+			->where('id','=','5')
+			->first();
+		$transactions = DB::table('transactions')
+			->where('transactions.builder_id','=', Auth::user()->id)
+			->get();
+		$credits = "0";
 		
-	    if (Input::get('isAddToJobProcess') == 'true') {
+		foreach($transactions as $transaction) {
+			$credits += ($transaction->charge_type)*($transaction->charge_value); 
+		}
+		 if($credits >= $price_invite->charge_value_newest) { 
+		 	
+		 	  if (Input::get('isAddToJobProcess') == 'true') {
 	    	/*
 	    	 * Update database: Create a row of Table "Job_process"
 	    	 */ 
@@ -1912,15 +2178,15 @@ public function postCustomerActionCancelled()
         			
         	
 			$radius = get_distance_between_points($job_customer->lat, $job_customer->lng, $extend_builder->lat, $extend_builder->lng);
-		    //var_dump($radius);	die;
-	    
+		   
+	    		
 	    		$job_process = new JobProcess();
 				
 	    		$job_process->job_id = Input::get('job_id');
 				$job_process->user_id = Input::get('user_id');
 				$job_process->builder_id = Auth::user()->id;
 				$job_process->num_invite_sent = $num_invite_sent_count;
-				$job_process->vote = Input::get('votePrice');
+				$job_process->vote = Input::get('quotePrice');
 				$job_process->status_process = 'inviting';
 				$job_process->radius = $radius;
 				
@@ -1934,7 +2200,7 @@ public function postCustomerActionCancelled()
 			->where('job_id', '=', Input::get('job_id'))
 			->where('builder_id', '=', Auth::user()->id)
         	->update(array(
-			'vote' => Input::get('votePrice'),
+			'vote' => Input::get('quotePrice'),
 			));
 
 		$customer = DB::table('users')
@@ -1979,6 +2245,49 @@ public function postCustomerActionCancelled()
 					$customer->phone_number, // the phone number the text will be sent to
 					$message // the body of the text message
 			);
+			
+			//---add new row in transations
+		 	$date = date('Y-m-d');
+			
+			DB::table('transactions')->insert(array(
+				'builder_id' => Auth::user()->id, 
+				'charge_type' => '-1', //+1
+				'charge_value' => $price_invite->charge_value_newest,
+				'created_at' => $date,
+				));
+		 	
+		 	
+		 	
+		 } else { 
+		 	//sent email alert low credit
+		 	try {
+				Mail::send('emails.alertLowCredit', function($message)
+				{
+					$message->to(Input::get('email'))->subject('Alert Low Credit');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = Input::get('email');
+				$subject = 'Alert Low Credit';
+				$message = View::make('emails.alertLowCredit')->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+					
+			}
+		 }	
+
+				 
+				 
+				 
+				 
+				 
+	    
 			//----------------//
 			
 			//--End send email and phone to Customer----//
@@ -2725,7 +3034,7 @@ public function postCustomerActionCancelled()
 				 $email_changepass_root = $base_root.'changepass.blade.php';
 				 $email_changepass_request_root = $base_root.'changepassrequest.blade.php';
 				 $email_newpass_root = $base_root.'newpass.blade.php';
-				 
+				 $email_alert_low_credit_root = $base_root.'alertLowCredit.blade.php';
 				 
 				 
 				 $email_register_content = file_get_contents($email_register_root);
@@ -2735,6 +3044,7 @@ public function postCustomerActionCancelled()
 				 $email_changepass_content = file_get_contents($email_changepass_root);
 				 $email_changepass_request_content = file_get_contents($email_changepass_request_root);
 				 $email_newpass_content = file_get_contents($email_newpass_root);
+				 $email_alert_low_credit_content = file_get_contents($email_alert_low_credit_root);
 				 
 		   		return View::make('admin_dashboard.nonReplyEmails')
 		   			->with(array(
@@ -2745,6 +3055,7 @@ public function postCustomerActionCancelled()
 			   			'email_changepass_content'=> $email_changepass_content,
 			   			'email_changepass_request_content'=> $email_changepass_request_content,
 			   			'email_newpass_content'=> $email_newpass_content,
+		   				'email_alert_low_credit_content'=>$email_alert_low_credit_content,
 			   
 		   			));
 			}
@@ -2932,6 +3243,117 @@ public function getAdminPlusFAQ($type)
 		return Redirect::to('login');			
 	
 	}
+	
+	public function postUpgradeCredit()
+	{	
+		 
+		$charge_value = Input::get('amount');
+		
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+		// Get the credit card details submitted by the form
+		$token = $_POST['stripeToken'];
+		
+		// Create the charge on Stripe's servers - this will charge the user's card
+		try {
+		$charge = Stripe_Charge::create(array(
+		  "amount" => $charge_value *100, // amount in cents, again
+		  "currency" => "usd",
+		  "card" => $token,
+		  "description" => "payinguser@example.com")
+		);
+		//----do something after charge success---//
+		$date = date('Y-m-d');
+		$user = User::where('email', '=',Input::get('email') )->first();
+		if ($charge['status'] == "paid") {
+		DB::table('transactions')->insert(array(
+			'builder_id' => Auth::user()->id, 
+			'charge_type' => '1', //+1
+			'charge_value' => $charge_value,
+			'created_at' => $date,
+			));
+		} else {
+			try {
+					Mail::send('emails.alertLowCredit', function($message)
+					{
+						$message->to(Input::get('email'))->subject('Alert Low Credit');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = Input::get('email');
+					$subject = 'Alert Low Credit';
+					$message = View::make('emails.alertLowCredit')->render();
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
+		}
+		//--------------------
+	
+		} catch(Stripe_CardError $e) {
+		  // The card has been declined
+		try {
+					Mail::send('emails.alertLowCredit', function($message)
+					{
+						$message->to(Input::get('email'))->subject('Alert Low Credit');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = Input::get('email');
+					$subject = 'Alert Low Credit';
+					$message = View::make('emails.alertLowCredit')->render();
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
+		}
+			return Redirect::to('builder-profile');	
+	
+	}
+	
+	public function getAdminManageCharges()	
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				 
+				 $charges = "";
+				 $charges = DB::table('charges')
+			    	->get();
+			    	 
+				return View::make('admin_dashboard.ManageCharges')
+					->with(array('charges' => $charges));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postAdminManageCharges()	
+	{   
+				 
+		 DB::table('charges')
+			->where('id', '=', Input::get('id'))
+			->update(array(
+			'charge_value_newest' => Input::get('value'),
+			));	 
+		
+		return Redirect::to('admin-manage-charges');			
+	
+	}
+	
+	
 				
 }
 

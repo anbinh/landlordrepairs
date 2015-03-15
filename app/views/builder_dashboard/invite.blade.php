@@ -165,7 +165,7 @@
 			      	<th class="date-sort"><em>Mobile verified</em> <span>&nbsp;</span></th>
 			      
 			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Vote</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Quote</em> <span>&nbsp;</span></th>
   
 			    </tr>
 			  </thead>
@@ -186,11 +186,11 @@
 			      	<td class="date-sort">
 							
 							<form action="vote-job" method="post">
-  								<input type = "number" name = "votePrice" value = "{{$invite->vote}}"/>
+  								<input type = "number" name = "quotePrice" value = "{{$invite->vote}}"/>
   								<input hidden name = "job_id" value = "{{$invite->job_id}}"/>
   								<input hidden name = "user_id" value = "{{$invite->user_id}}"/>
   								<input hidden name = "isAddToJobProcess" value = "false" />
-  								<input type="submit" value="Vote">
+  								<input type="submit" value="Quote">
 							</form>
 								      	
 			      	</td>
