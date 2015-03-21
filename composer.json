@@ -9,8 +9,7 @@
 		"hybridauth/hybridauth" : "dev-master",
   		"twilio/sdk" : "~3.12",
   		"iron-io/iron_mq": "dev-master",
-  		"stripe/stripe-php": "1.*",
-  		"liebig/cron": "dev-master"
+  		"stripe/stripe-php": "1.*"
 	},
 	"autoload": {
 		"classmap": [
