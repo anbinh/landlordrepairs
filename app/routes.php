@@ -497,14 +497,14 @@ Route::get('createCustomer',function(){
 	var_dump($customer); die;
 });
 
-Route::get('addCustomerToPlan',function(){
+Route::get('haonguyen',function(){
 
-	Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
-
-	$cu = Stripe_Customer::retrieve("cus_5sGmBaCmGVKzoa");
-	$cu->subscriptions->create(array("plan" => "1"));
-	
-	var_dump($cu); die;
+					DB::table('transactions')
+					->insert(array(
+						'builder_id' => '1000', 
+						'charge_type' => '-1',
+						'charge_value' => '1001', 
+					)); echo "test"; die;
 });
 
 Route::post('add-to-schedule-waitingjobs', array('as'=>'add-to-schedule-waitingjobs','uses' => 'BaseController@postAddJobToScheduleWaiting' ));

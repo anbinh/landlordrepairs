@@ -52,27 +52,27 @@ return array(
 			'prefix'   => '',
 		),
 
-		'mysql' => array(
-			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'landlord1_data',
-			'username'  => 'root',
-			'password'  => '',
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
-		),
-		
 //		'mysql' => array(
 //			'driver'    => 'mysql',
-//			'host'      => '10.168.1.83',
+//			'host'      => 'localhost',
 //			'database'  => 'landlord1_data',
-//			'username'  => 'landlord1_data',
-//			'password'  => 'myrepairs008',
+//			'username'  => 'root',
+//			'password'  => '',
 //			'charset'   => 'utf8',
 //			'collation' => 'utf8_unicode_ci',
 //			'prefix'    => '',
 //		),
+		
+		'mysql' => array(
+			'driver'    => 'mysql',
+			'host'      => '10.168.1.83',
+			'database'  => 'landlord1_data',
+			'username'  => 'landlord1_data',
+			'password'  => 'myrepairs008',
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+		),
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
