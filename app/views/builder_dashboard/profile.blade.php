@@ -460,7 +460,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6"><!--
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
 				                Upgrade Credit
@@ -575,7 +575,7 @@
 			             
 			            </div>
 			        </div>
-			    </div>
+			    --></div>
 				<div class="col-lg-6">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">

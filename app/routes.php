@@ -381,7 +381,7 @@ Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseC
 
 Route::post('vote-job', 'BaseController@postVoteJob');
 
-Route::post('upgrade-credit', 'BaseController@postUpgradeCredit');
+
 
 /*
  * ADMIN
@@ -507,4 +507,17 @@ Route::get('addCustomerToPlan',function(){
 	var_dump($cu); die;
 });
 
+Route::post('add-to-schedule-waitingjobs', array('as'=>'add-to-schedule-waitingjobs','uses' => 'BaseController@postAddJobToScheduleWaiting' ));
 
+Route::get('waiting-openjobs', array('as'=>'waiting-openjobs','uses' => 'BaseController@getWaitingOpenJobs' ));
+
+Route::post('waitingjob-find-builders', array('as'=>'waitingjob-find-builders','uses' => 'BaseController@postWaitingJobFindBuilder'));
+
+Route::post('user-delete-job', array('as'=>'user-delete-job','uses' => 'BaseController@postDeleteWaitingJob'));
+
+Route::get('credit', array('as'=>'credit','uses' => 'BaseController@getCredit' ));
+
+Route::post('upgrade-credit-custom', array('as'=>'upgrade-credit-custom','uses' => 'BaseController@postUpgradeCreditCustom'));
+Route::post('upgrade-credit-auto', array('as'=>'upgrade-credit-auto','uses' => 'BaseController@postUpgradeCreditAuto'));
+
+Route::get('testweb', array('as'=>'testweb','uses' => 'BaseController@getTetsWeb' ));

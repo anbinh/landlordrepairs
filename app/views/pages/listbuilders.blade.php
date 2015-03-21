@@ -162,6 +162,10 @@ $(document).ready(function(){
  <input hidden name = "job_id" value = "{{$job_id}}"/>
   {{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
 {{ Form::close() }}
+<form action = "add-to-schedule-waitingjobs" method = "post">
+	<input name = "job_id" value = "{{$job_id}}" hidden>
+	<button type = "submit" class = "btn btn-warning">Not now</button>
+</form>
 <script>
 $(document).ready(function () {
 

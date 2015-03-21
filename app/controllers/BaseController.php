@@ -163,7 +163,7 @@ class BaseController extends Controller {
 			$job->lat = $input['lat'];
 			$job->lng = $input['lng'];
 			$job->user_id = $userpostjob->id;
-			$job->status = 'openjob';
+			$job->status = 'waitingOpen';
 			$job->property = $input['property'];
 			$job->category_id = $input['category_id'];
 			$job->save();
@@ -408,7 +408,7 @@ class BaseController extends Controller {
 		
 	}
 	public function postPostjob()
-	{
+	{	
 		$input = Input::all(); 
 		$rules = array('price'  => 'numeric');
 	
@@ -597,8 +597,7 @@ class BaseController extends Controller {
 		$input = Input::all();
 		$check_builders = Input::get('check_builders');
 		$radius = Input::get('radius');
-		//var_dump($check_builders); die;
-		//$builders = DategB::table('builders')->having('category', '=',$input['category'] )->get();
+		
 		$builders_beforecheck = "";
 
         $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
@@ -649,7 +648,7 @@ class BaseController extends Controller {
 			}
 		
 		$num_of_checked_builders = count($check_builders);	
-			//var_dump ($builders); die;
+			
 		//select builders matching condition from submit post_jobs.
 		//check number of checked builder
 		
@@ -969,7 +968,12 @@ class BaseController extends Controller {
 			        return Redirect::to('myinvites');
 			}
 			
-			//---Save to DB::job_process-------//
+			DB::table('jobs')
+				->where('id','=', Input::get('job_id'))
+				->update(
+					array(
+						'status' => 'openjob'
+					));
 			
 			return Redirect::to('myinvites');
 	    }
@@ -1651,7 +1655,8 @@ public function postCustomerActionCancelled()
 			} else {
 			$password = $input['password'];
 			$password = Hash::make($password);
-	
+			$date = date('Y-m-d');
+			
 			$user = new User();
 			$user->username = $input['username'];
 			$user->email = $input['email'];
@@ -1662,6 +1667,7 @@ public function postCustomerActionCancelled()
 			$user->package_builder = $input['package_builder'];
 			$user->package_builder_confirm = '0';
 			$user->role = '1';
+			$user->active_until = $date;
 			$user->save();
 			
 			$extend_builder = new ExtendBuilder();
@@ -1678,23 +1684,18 @@ public function postCustomerActionCancelled()
 			$extend_builder->howmanyteam = $howmanyteam;
 			
 			
-				$extend_builder->association = $input['association'];	
 			
-			
+			$extend_builder->association = $input['association'];	
 			$extend_builder->save();
-			
-			
+					
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
 				$extend_builder_category = new ExtendBuilderCategory();	
 				$extend_builder_category->builder_id = $user->id;
 				$extend_builder_category->category_id = $categorys[$i];
-				$extend_builder_category->save();
-			
+				$extend_builder_category->save();	
 			}
 		}
-			
-			
-			
+	
 			//Send confirmation email
 			$data = array(
 					'email'     => $input['email'],
@@ -1749,17 +1750,20 @@ public function postCustomerActionCancelled()
 
 		// Get the credit card details submitted by the form
 		$token = $_POST['stripeToken'];
+		$charge_mount = $charge_value->charge_value_newest + 18.99 ;
 		
 		// Create the charge on Stripe's servers - this will charge the user's card
 		try {
 		$charge = Stripe_Charge::create(array(
-		  "amount" => ($charge_value->charge_value_newest)*1000, // amount in cents, again
-		  "currency" => "usd",
+		  "amount" => $charge_mount*100, // amount in cents, again
+		  "currency" => "gbp",
 		  "card" => $token,
 		  "description" => "payinguser@example.com")
 		);
 		//----do something after charge success---//
-		$date = date('Y-m-d');
+		
+		$date = new DateTime('today');
+		$date->modify('+90 day')->format('Y-m-d');
 		$user = User::where('email', '=',Input::get('email') )->first();
 		if ($charge['status'] == "paid") {
 		DB::table('transactions')->insert(array(
@@ -1767,6 +1771,11 @@ public function postCustomerActionCancelled()
 			'charge_type' => '1', //+1
 			'charge_value' => $charge_value->charge_value_newest,
 			'created_at' => $date,
+			));
+			DB::table('users')
+			->where('id', '=', $user->id)
+			->update(array(
+			'active_until' => $date,//active in 3 months
 			));
 		} else {
 			try {
@@ -2048,7 +2057,7 @@ public function postCustomerActionCancelled()
         		
         	}
         	$isPlusJob = true;
-        }
+        }	
         /*
          * When no Job no have any invited to Builders in Job_process
          * 
@@ -2060,7 +2069,23 @@ public function postCustomerActionCancelled()
         	$isHasNum = false;
         	$jobs_resuilt = $jobs;		
         }*/
-        
+        $waitngjobs = ""; 
+        $waitngjobs = DB::table('category')
+        	->join ('jobs','category.id','=','jobs.category_id')
+        	->where('jobs.status','=','waitingOpen')
+        	->where('jobs.category_id','=',$category_id)
+        	->get();
+        	
+        if ($waitngjobs != null) {
+        	$i = count($jobs_resuilt);
+        	foreach ($waitngjobs as $waitingjob) {
+        		$jobs_resuilt[$i] = $waitingjob;
+        		$jobs_resuilt[$i]->num_invite_sent = "0";
+        		$jobs_resuilt[$i]->job_id = $waitingjob->id;
+        		$i++;
+        	}
+        	 
+        }
 		
 		$alertLowCredit = false;
 		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs, 'alertLowCredit' => $alertLowCredit));;
@@ -2192,6 +2217,11 @@ public function postCustomerActionCancelled()
 				
 				$job_process->save();
 				
+				DB::table('jobs')
+					->where('id','=',Input::get('job_id'))
+					->update(array(
+						'status' => 'openjob',
+						));
 	
 			}
 			
@@ -3244,9 +3274,8 @@ public function getAdminPlusFAQ($type)
 	
 	}
 	
-	public function postUpgradeCredit()
-	{	
-		 
+/*	public function postUpgradeCredit()
+	{		 
 		$charge_value = Input::get('amount');
 		
 		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
@@ -3256,72 +3285,36 @@ public function getAdminPlusFAQ($type)
 		
 		// Create the charge on Stripe's servers - this will charge the user's card
 		try {
-		$charge = Stripe_Charge::create(array(
-		  "amount" => $charge_value *100, // amount in cents, again
-		  "currency" => "usd",
-		  "card" => $token,
-		  "description" => "payinguser@example.com")
-		);
-		//----do something after charge success---//
-		$date = date('Y-m-d');
-		$user = User::where('email', '=',Input::get('email') )->first();
-		if ($charge['status'] == "paid") {
-		DB::table('transactions')->insert(array(
-			'builder_id' => Auth::user()->id, 
-			'charge_type' => '1', //+1
-			'charge_value' => $charge_value,
-			'created_at' => $date,
-			));
-		} else {
-			try {
-					Mail::send('emails.alertLowCredit', function($message)
-					{
-						$message->to(Input::get('email'))->subject('Alert Low Credit');
-					});
-		
-				}
-				catch (Exception $e){
-					$to      = Input::get('email');
-					$subject = 'Alert Low Credit';
-					$message = View::make('emails.alertLowCredit')->render();
-					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-							'X-Mailer: PHP/' . phpversion() . "\r\n" .
-							'MIME-Version: 1.0' . "\r\n" .
-							'Content-Type: text/html; charset=ISO-8859-1\r\n';
-		
-					mail($to, $subject, $message, $headers);
-		
-				}
-		}
-		//--------------------
+			$charge = Stripe_Charge::create(array(
+			  "amount" => $charge_value *100, // amount in cents, again
+			  "currency" => "gbp",
+			  "card" => $token,
+			  "description" => Auth::user()->email)
+			);
+			//----do something after charge success---//
+			$date = date('Y-m-d');
+			
+			if ($charge['status'] == "paid") {
+			DB::table('transactions')->insert(array(
+				'builder_id' => Auth::user()->id, 
+				'charge_type' => '1', //+1
+				'charge_value' => $charge_value,
+				'created_at' => $date,
+				));
+			} else {
+				
+				return Redirect::to('credit')->with('error', '1');
+			}
 	
 		} catch(Stripe_CardError $e) {
 		  // The card has been declined
-		try {
-					Mail::send('emails.alertLowCredit', function($message)
-					{
-						$message->to(Input::get('email'))->subject('Alert Low Credit');
-					});
-		
-				}
-				catch (Exception $e){
-					$to      = Input::get('email');
-					$subject = 'Alert Low Credit';
-					$message = View::make('emails.alertLowCredit')->render();
-					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-							'X-Mailer: PHP/' . phpversion() . "\r\n" .
-							'MIME-Version: 1.0' . "\r\n" .
-							'Content-Type: text/html; charset=ISO-8859-1\r\n';
-		
-					mail($to, $subject, $message, $headers);
-		
-				}
+			
+			return Redirect::to('credit')->with('error', '1');
 		}
-			return Redirect::to('builder-profile');	
+		
+		return Redirect::to('credit')->with('error', '0');		
 	
-	}
+	}*/
 	
 	public function getAdminManageCharges()	
 	{   
@@ -3350,6 +3343,230 @@ public function getAdminPlusFAQ($type)
 			));	 
 		
 		return Redirect::to('admin-manage-charges');			
+	
+	}
+	
+	public function postAddJobToScheduleWaiting()	
+	{   
+						 
+				 DB::table('jobs')
+				 	->where('id','=',Input::get('job_id'))
+				 	->update(array(
+				 	'status' => 'waitingOpen'
+				 	));
+		
+		return Redirect::to('waiting-openjobs');			
+	
+	}
+	
+	public function getWaitingOpenJobs()	
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '0') {
+				 
+				$waitingOpenJobs = DB::table('category')
+					->join('jobs','category.id','=','jobs.category_id')
+					->where('user_id','=', Auth::user()->id)
+					->where('status','=','waitingOpen')
+			    	->get(); 
+				return View::make('user_dashboard.waitingJobs')
+					->with(array('waitingOpenJobs' => $waitingOpenJobs));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postDeleteWaitingJob()	
+	{   				 
+				 echo "dsds";die;	
+		
+		return Redirect::to('login');			
+	
+	}
+	
+	public function postWaitingJobFindBuilder()	
+	{   				 
+		 
+			
+//			$job = new Job();
+//			$job->tittle = $input['tittle'];
+//			$job->description = $input['description'];
+//			$job->price = $input['price'];
+//			$job->timeoption = $input['timeoption'];
+//			
+//			$job->date = $input['date'];
+//			$job->local = $input['local'];
+//			$job->local_code = $input['local_code'];
+//			$job->lat = $input['lat'];
+//			$job->lng = $input['lng'];
+//			
+//			$job->user_id = $userpostjob->id;
+//			$job->status = 'openjob';
+//			$job->property = $input['property'];
+//			$job->category_id = $input['category_id'];
+//			
+//			$job->save();
+			
+			//make return the list of builder
+			
+		
+			//------select list builders from DB:: where matching the condition with Input::----//
+		$input = Input::all();
+		$builders_beforecheck = "";
+
+        $builders_beforecheck = DB::table('users')
+        	->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->get();
+        $price_invite = DB::table('charges')
+        	->where('id','=','4')
+        	->first();
+        
+		//var_dump($builders); die;
+		//---make list Builders enought credit----//
+		$builders = "";
+		$array_radius = "";
+		if ($builders_beforecheck != null) {
+			for ($i = 0; $i < count($builders_beforecheck); $i++) {
+				$transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
+					->get();
+					$credits = "0";
+				foreach($transactions as $transaction) {
+					$credits += ($transaction->charge_type)*($transaction->charge_value); 
+				} //var_dump($price_invite); die;
+				 if($credits >= $price_invite->charge_value_newest) { 
+				 	$builders[$i] = $builders_beforecheck[$i];
+				 } else {
+				 	//sent email alert low credit
+				 	try {
+						Mail::send('emails.alertLowCredit', function($message)
+						{
+							$message->to(Input::get('email'))->subject('Alert Low Credit');
+						});
+			
+					}
+					catch (Exception $e){
+						$to      = Input::get('email');
+						$subject = 'Alert Low Credit';
+						$message = View::make('emails.alertLowCredit')->render();
+						$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+								'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+								'X-Mailer: PHP/' . phpversion() . "\r\n" .
+								'MIME-Version: 1.0' . "\r\n" .
+								'Content-Type: text/html; charset=ISO-8859-1\r\n';
+			
+						mail($to, $subject, $message, $headers);
+							
+					}
+				 }	
+			}
+		
+			//calculate the radius:
+			function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
+			    $theta = $longitude1 - $longitude2;
+			    $miles = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta)));
+			    $miles = acos($miles);
+			    $miles = rad2deg($miles);
+			    $miles = $miles * 60 * 1.1515;
+			    
+			    return $miles;
+			}
+			
+			
+			
+		    foreach( $builders as $builder ) {
+		  			
+			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
+		    }
+		} 
+			//echo $job->id; die;
+			//------------------------------//
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $input['job_id'])) ;
+			
+					
+	
+	}
+	
+	
+	public function getCredit()	
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '1') {
+				$builder = DB::table('users')
+		        	->where ('id','=', Auth::user()->id)	
+		        	->first();
+		        $transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',Auth::user()->id)
+					->get();
+				$credit = "0";
+				foreach($transactions as $transaction) {
+					$credit += ($transaction->charge_type)*($transaction->charge_value); 
+				}	
+				return View::make('builder_dashboard.credit')->with(array('credit'=>$credit));
+						
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	public function postUpgradeCreditCustom()	
+	{   				 
+		$amount = Input::get('amount');
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+		// Get the credit card details submitted by the form
+		$token = $_POST['stripeToken'];
+		
+		// Create the charge on Stripe's servers - this will charge the user's card
+		try {
+		$charge = Stripe_Charge::create(array(
+		  	"amount" => $amount*100, // amount in cents, again
+		  	"currency" => "gbp",
+		  	"card" => $token,
+		  	"description" => "payinguser@example.com")
+		);
+		//----do something after charge success---//
+		$date = date('Y-m-d');
+		
+		
+		if ($charge['status'] == "paid") {
+		DB::table('transactions')->insert(array(
+			'builder_id' => Auth::user()->id, 
+			'charge_type' => '1', //+1
+			'charge_value' => $amount,
+			'created_at' => $date,
+			));
+		} else {
+			return Redirect::to('credit')->with('error', '1');
+		}
+		//--------------------
+		
+		} catch(Stripe_CardError $e) {
+			return Redirect::to('credit')->with('error', '1');
+		}		 	
+		
+		return Redirect::to('credit')->with('error', '0');		
+	
+	}
+	
+	public function postUpgradeCreditAuto()	
+	{   
+		/* Create a Customer*/
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+		
+		$token = $_POST['stripeToken'];
+		$customer = Stripe_Customer::create(array(
+		  "description" => "Customer for ".Auth::user()->email,
+			 "source" => $token
+		));
+
+		/*Ad Customer to a Plan*/
+		$cu = Stripe_Customer::retrieve($customer->id);
+		$cu->subscriptions->create(array("plan" => "test"));		
+		return Redirect::to('credit')->with('error', '0');		
 	
 	}
 	

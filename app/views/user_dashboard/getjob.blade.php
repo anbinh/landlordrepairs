@@ -22,6 +22,7 @@
 					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
+					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Waiting jobs</a>
 				</div>
 
 			</div>

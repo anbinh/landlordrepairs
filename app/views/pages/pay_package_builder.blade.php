@@ -14,7 +14,7 @@
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
     data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
-    data-amount="{{$package_builder}}*1000"
+    data-amount="({{$package_builder}}+18.99)*100"
     data-name="Demo Site"
     data-description=""
     data-image="https://stripe.com/img/documentation/checkout/marketplace.png">

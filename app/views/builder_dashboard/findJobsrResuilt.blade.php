@@ -197,7 +197,7 @@
 			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
 			    	<td>
 			    	<form action="vote-job" method="post">
-	  					<input type = "number" name = "votePrice" value = "{{$job_resuilt->vote}}"/>
+	  					<input type = "number" name = "quotePrice" value = ""/>
 	  					<input hidden name = "job_id" value = "{{$job_resuilt->job_id}}"/>
 	  					<input hidden name = "user_id" value = "{{$job_resuilt->user_id}}"/>
 	  					<input hidden name = "isAddToJobProcess" value = "true" />

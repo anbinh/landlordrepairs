@@ -10,18 +10,16 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
-					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
-					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
-					  
+					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
+					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Waiting jobs</a>
 				</div>
 
 			</div>
@@ -156,56 +154,49 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      	<th><em>Name of Customer</em> <span>&nbsp;</span></th>
-			     	<th><em>Category</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
-			      
-			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Mobile verified</em> <span>&nbsp;</span></th>
-			      
-			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Quote</em> <span>&nbsp;</span></th>
-  
+			      <th><em>Tittle</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($invites != null)
-			  @if($customers != null)
-              @foreach($invites as $invite)
+			
+			  @foreach($waitingOpenJobs as $waitingOpenJob)
 			 	<tr>
-			    	<td>{{$customers[$invite->user_id][0]->username}}</td>
-			    	<td>{{$categorys[$invite->user_id][0]->content}}</td>
-			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
-			      	
-			      	
-			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->email}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em>Yes</em> <span>&nbsp;</span></td>
-			      	<td class="date-sort"><em><a href="view-detail-job-alert/{{$invite->job_id}},{{$invite->user_id}}">View</></em> <span>&nbsp;</span></td>
-			      	<td class="date-sort">
-							
-							<form action="vote-job" method="post">
-  								<input type = "number" name = "quotePrice" value = "{{$invite->vote}}"/>
-  								<input hidden name = "job_id" value = "{{$invite->job_id}}"/>
-  								<input hidden name = "user_id" value = "{{$invite->user_id}}"/>
-  								<input hidden name = "isAddToJobProcess" value = "false" />
-  								<input type="submit" value="Quote">
-							</form>
-								      	
-			      	</td>
+			    	<td>{{$waitingOpenJob->tittle}}</td>
+			    	<td>{{$waitingOpenJob->property}}</td>
+			    	<td>{{$waitingOpenJob->content}}</td>
+			    	<td>{{$waitingOpenJob->price}}</td>
+			 		<td>{{$waitingOpenJob->timeoption}}</td>
+			 		<td>{{$waitingOpenJob->local}}</td>
+			 		<td>{{$waitingOpenJob->description}}</td>
+			 		<td>{{$waitingOpenJob->status}}</td>
+			 		<td>
+			 			<form action = "waitingjob-find-builders" method = "post">
+			 				<input name = "category_id" value = "{{$waitingOpenJob->category_id}}">
+			 				<input name = "lat" value = "{{$waitingOpenJob->lat}}">
+			 				<input name = "lng" value = "{{$waitingOpenJob->lng}}">
+			 				<input name = "job_id" value = "{{$waitingOpenJob->id}}">
+							<button type = "submit" class = "btn btn-success"> Find Builders </button>
+			 			</form>
+			 		</td>
+			 		
+			 		
 			 	</tr>	
 				@endforeach
-				  @endif
-            @endif
-			  
 			    
 			   
 			</table>
 			
 			 
-			
+	
 			
     </div>
     
@@ -215,7 +206,8 @@
 			</div>
 		</div>
 		
-	
+		
+
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
 		<!-- Bootstrap JavaScript -->

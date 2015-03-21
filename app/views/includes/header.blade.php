@@ -31,7 +31,7 @@
                         			dashboard
                         		</a>
                         	@else
-                        		@if (Auth::user()->username == 1)
+                        		@if (Auth::user()->role == 1)
                         		<a href="customer-invited">
                         			dashboard
                         		</a>

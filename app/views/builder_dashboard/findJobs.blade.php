@@ -45,7 +45,7 @@
 				                        {{ Form::open(array('url' => 'builder-find-jobs')) }}
 				                            <div class="form-group">
 				                                <label>Category</label>
-				                                <select name = "category" class="form-control">
+				                                <select name = "category_id" class="form-control">
 				                                 @if($builders != null)
               										@foreach($builders as $builder)
 				                                
