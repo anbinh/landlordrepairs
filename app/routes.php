@@ -490,11 +490,13 @@ Route::get('createCustomer',function(){
 
 	Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
 
-	$customer = Stripe_Customer::create(array(
-	  "description" => "Customer for test@example.com",
-	  "source" => "tok_15gWEMLkohIy35CBdq5tVi3c"
-	));
-	var_dump($customer); die;
+	$charge = Stripe_Charge::create(array(
+		  "amount" => 1000, // amount in cents, again
+		  "currency" => "gbp",
+		  "customer" => 'cus_5vl3OTFaHTTvP3',
+		  "description" => "payinguser@example.com")
+		);
+	var_dump($charge); die;
 });
 
 Route::get('haonguyen',function(){
@@ -520,4 +522,10 @@ Route::get('credit', array('as'=>'credit','uses' => 'BaseController@getCredit' )
 Route::post('upgrade-credit-custom', array('as'=>'upgrade-credit-custom','uses' => 'BaseController@postUpgradeCreditCustom'));
 Route::post('upgrade-credit-auto', array('as'=>'upgrade-credit-auto','uses' => 'BaseController@postUpgradeCreditAuto'));
 
-Route::get('testweb', array('as'=>'testweb','uses' => 'BaseController@getTetsWeb' ));
+Route::get('testBuilderActive', array('as'=>'testBuilderActive','uses' => 'BaseController@getTestBuilderActive' ));
+
+Route::post('change-package-pay-type', array('as'=>'change-package-pay-type','uses' => 'BaseController@postChangePackagePayType'));
+
+Route::post('topup-credit-manual', array('as'=>'topup-credit-manual','uses' => 'BaseController@postTopupCreditManual'));
+
+Route::post('change-credit-info', array('as'=>'change-credit-info','uses' => 'BaseController@postChangeCreditInfo'));

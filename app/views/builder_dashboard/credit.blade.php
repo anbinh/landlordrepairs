@@ -20,7 +20,7 @@
 					  <a href="#" class="list-group-item">Pending reviews</a>
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="#" class="list-group-item">Credit</a>
+					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
 					  
 					  
 				</div>
@@ -33,20 +33,20 @@
 				            <div class="panel-heading">
 				                Remain Money in Account
 				            </div>
-			            <div class="panel-body">
-			                <div class="row">
-			                    <div class="col-lg-12">
-			                       Total: {{$credit}} £
-		                    </div>	
-		                </div>
-		            </div>
-        </div>
-    </div>
+					            <div class="panel-body">
+					                <div class="row">
+					                    <div class="col-lg-12">
+					                       Active until: {{$builder->active_until}}
+				                    </div>	
+				                </div>
+				            </div>
+				        </div>
+				    </div>
    
     <div class="col-lg-6">
 				        <div class="panel panel-default">
 				            <div class="panel-heading">
-				                Upgrade Credit
+				                Option Renewals
 				            </div>
 			            <div class="panel-body">
 			            	@if(Session::get("error") == '1')
@@ -63,80 +63,64 @@
 	                        @endif
 			                <div class="row">
 			                    <div class="col-lg-12">
-							<div class="pad-top">
-								<div class="form-control-wrapper" >
-									<div class="radio">
-										  <label onclick = "DetailPak1()">
-										    <input type="radio" name="package_builder" value="1" id = "detail1" checked >
-										    Auto
-										  </label>
-										   <label onclick = "DetailPak2()">
-										    <input type="radio" name="package_builder" value="2">
-										    Custom
-										  </label>
-										 
-									</div>
-											
-								</div>		
-							</div>
-							<div id = "detail_pack_1">
-									
-								<div id = "content_pay">
-								    
-									<form action="upgrade-credit-auto" method="POST">
-										  <script							
-										    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-										    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
-										    data-amount= ""
-										    data-name="Demo Site"
-										    data-description=""
-										    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
-										  </script>
-										 <input type = "hidden" name = "amount" value = ""/>
-									</form>
-									
+			                
+			                <form action = "change-package-pay-type" method = "POST">
+								<div class="pad-top">
+									<div class="form-control-wrapper" >
+										<div class="radio">
+											  <label>
+											    <input type="radio" name="package_pay_type" value="1" id = "detail1" @if( $builder->package_pay_type == "1") checked @endif >
+											    Auto
+											  </label>
+											   <label>
+											    <input type="radio" name="package_pay_type" value="0" @if( $builder->package_pay_type == "0") checked @endif>
+											    Manual
+											  </label>
+											 
+										</div>
+									<button class = "btn btn-sucesss">Change</button>			
+									</div>		
 								</div>
-																
-							</div>
-							<div id = "detail_pack_2" hidden>		
-								<div id = "content_pay">
-									<input id = "mount" placeholder = "£" type = "number" min="0" max="80">
-								    <form action="upgrade-credit-custom" method="POST">
-										  <script							
-										    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-										    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
-										    data-amount= ""
-										    data-name="Demo Site"
-										    data-description=""
-										    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
-										  </script>
-										 <input type = "hidden" name = "amount" value = "100"/> 
-									</form>
+							</form>
 
-								</div>
-							</div>
-							<script>
-							function DetailPak1() {
-								$("#detail_pack_1").show();
-								$("#detail_pack_2").hide();
-				
-							}
-							function DetailPak2() {
-								$("#detail_pack_1").hide();
-								$("#detail_pack_2").show();
-								
-							}
-							
-							</script>
-
-
-							
-		                          
 		                            
 			                    </div>	
 			                </div>
 			                <hr>
 			             
+			            </div>
+			        </div>
+			    </div>
+			    <div class="col-lg-6">
+			        <div class="panel panel-default">
+			            <div class="panel-heading">
+			                Topup Credit
+			            </div>
+				        <div class="panel-body">
+				          	<form action="topup-credit-manual" method="POST">
+				          		  
+								  <button class = "btn btn-success"> Pay </button>
+							</form> 
+			            </div>
+			        </div>
+			    </div>
+			    <div class="col-lg-6">
+			        <div class="panel panel-default">
+			            <div class="panel-heading">
+			                Change Credit Info
+			            </div>
+				        <div class="panel-body">
+				          	<form action="change-credit-info" method="POST">
+								  <script							
+								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+								    data-key="pk_test_4ujZrZIZnpNkS2vh2isDqLQ7"
+								    data-amount= ""
+								    data-name="Demo Site"
+								    data-description=""
+								    data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+								  </script>
+								 
+							</form> 
 			            </div>
 			        </div>
 			    </div>

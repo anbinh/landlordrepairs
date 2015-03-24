@@ -180,10 +180,10 @@
 			 		<td>{{$waitingOpenJob->status}}</td>
 			 		<td>
 			 			<form action = "waitingjob-find-builders" method = "post">
-			 				<input name = "category_id" value = "{{$waitingOpenJob->category_id}}">
-			 				<input name = "lat" value = "{{$waitingOpenJob->lat}}">
-			 				<input name = "lng" value = "{{$waitingOpenJob->lng}}">
-			 				<input name = "job_id" value = "{{$waitingOpenJob->id}}">
+			 				<input name = "category_id" value = "{{$waitingOpenJob->category_id}}" hidden>
+			 				<input name = "lat" value = "{{$waitingOpenJob->lat}}" hidden>
+			 				<input name = "lng" value = "{{$waitingOpenJob->lng}}" hidden>
+			 				<input name = "job_id" value = "{{$waitingOpenJob->id}}" hidden>
 							<button type = "submit" class = "btn btn-success"> Find Builders </button>
 			 			</form>
 			 		</td>

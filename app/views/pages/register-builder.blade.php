@@ -499,11 +499,26 @@
 								$("#detail_pack_3").show();
 							}
 							</script>
-						
+						 
 						
 							<div class="form-fields-wrapper" id = "submit-div">
 							<div class="form-steps-bottom"></div>
-							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div class="radio">
+										  <label>
+										    <input type="radio" name="package_pay_type" value="1" checked >
+										    Auto pay
+										  </label>
+										  <label>
+										    <input type="radio" name="package_pay_type" value="0">
+										    Manual
+										  </label>
+										  
+									</div>
+											
+								</div>		
+							</div>
 							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Register" id = "btn-submit" id = "btn-submit">
 						</div>
 					</div>

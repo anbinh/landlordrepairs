@@ -1665,6 +1665,7 @@ public function postCustomerActionCancelled()
 			$user->email_confirm = $newcode;
 			$user->phone_confirm = $newcode_phone;
 			$user->package_builder = $input['package_builder'];
+			
 			$user->package_builder_confirm = '0';
 			$user->role = '1';
 			$user->active_until = $date;
@@ -1682,6 +1683,7 @@ public function postCustomerActionCancelled()
 			$extend_builder->about = $about;
 			$extend_builder->qualification = $qualification;
 			$extend_builder->howmanyteam = $howmanyteam;
+			$extend_builder->package_pay_type = $input['package_pay_type'];
 			
 			
 			
@@ -1754,13 +1756,22 @@ public function postCustomerActionCancelled()
 		
 		// Create the charge on Stripe's servers - this will charge the user's card
 		try {
+		
+		//----do something after charge success---//
+		
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+
+		$customer = Stripe_Customer::create(array(
+		  "description" => "Customer Id For Auto Pay",
+		  "source" => $token
+		));
+		
 		$charge = Stripe_Charge::create(array(
 		  "amount" => $charge_mount*100, // amount in cents, again
 		  "currency" => "gbp",
-		  "card" => $token,
+		  "customer" => $customer->id,
 		  "description" => "payinguser@example.com")
 		);
-		//----do something after charge success---//
 		
 		$date = new DateTime('today');
 		$date->modify('+90 day')->format('Y-m-d');
@@ -1776,6 +1787,7 @@ public function postCustomerActionCancelled()
 			->where('id', '=', $user->id)
 			->update(array(
 			'active_until' => $date,//active in 3 months
+			'cus_id' => $customer->id
 			));
 		} else {
 			try {
@@ -2010,16 +2022,20 @@ public function postCustomerActionCancelled()
 		foreach($transactions as $transaction) {
 			$credits += ($transaction->charge_type)*($transaction->charge_value); 
 		}
-		 if($credits >= $price_invite->charge_value_newest) {
+		
+		$date = new DateTime('today');
+		$date =  $date->format('Y-m-d');
+			
+			if (Auth::user()->active_until >= $date ) { 
 		 	//---add new row in transations
 		 	$date = date('Y-m-d');
 			
-			DB::table('transactions')->insert(array(
+			/*DB::table('transactions')->insert(array(
 				'builder_id' => Auth::user()->id, 
 				'charge_type' => '-1', //+1
 				'charge_value' => $price_invite->charge_value_newest,
 				'created_at' => $date,
-				));
+				));*/
 				
 		$input = Input::all(); $hello = 1;
 		
@@ -2161,7 +2177,12 @@ public function postCustomerActionCancelled()
 		foreach($transactions as $transaction) {
 			$credits += ($transaction->charge_type)*($transaction->charge_value); 
 		}
-		 if($credits >= $price_invite->charge_value_newest) { 
+		
+		//hao
+		 	$date = new DateTime('today');
+			$date =  $date->format('Y-m-d');
+			
+			if (Auth::user()->active_until >= $date ) { 
 		 	
 		 	  if (Input::get('isAddToJobProcess') == 'true') {
 	    	/*
@@ -3430,14 +3451,11 @@ public function getAdminPlusFAQ($type)
 		$array_radius = "";
 		if ($builders_beforecheck != null) {
 			for ($i = 0; $i < count($builders_beforecheck); $i++) {
-				$transactions = DB::table('transactions')
-					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
-					->get();
-					$credits = "0";
-				foreach($transactions as $transaction) {
-					$credits += ($transaction->charge_type)*($transaction->charge_value); 
-				} //var_dump($price_invite); die;
-				 if($credits >= $price_invite->charge_value_newest) { 
+				
+				$date = new DateTime('today');
+				$date =  $date->format('Y-m-d');
+			
+				if ($builders_beforecheck[$i]->active_until >= $date ) { 
 				 	$builders[$i] = $builders_beforecheck[$i];
 				 } else {
 				 	//sent email alert low credit
@@ -3496,16 +3514,17 @@ public function getAdminPlusFAQ($type)
 		if(Auth::check()) { 
 			if ( Auth::user()->role == '1') {
 				$builder = DB::table('users')
-		        	->where ('id','=', Auth::user()->id)	
+					->join('extend_builders','extend_builders.builder_id','=','users.id')
+		        	->where ('users.id','=', Auth::user()->id)	
 		        	->first();
 		        $transactions = DB::table('transactions')
 					->where('transactions.builder_id','=',Auth::user()->id)
 					->get();
-				$credit = "0";
-				foreach($transactions as $transaction) {
-					$credit += ($transaction->charge_type)*($transaction->charge_value); 
-				}	
-				return View::make('builder_dashboard.credit')->with(array('credit'=>$credit));
+//				$credit = "0";
+//				foreach($transactions as $transaction) {
+//					$credit += ($transaction->charge_type)*($transaction->charge_value); 
+//				}	
+				return View::make('builder_dashboard.credit')->with(array('builder'=>$builder));
 						
 			}
 		}
@@ -3567,6 +3586,172 @@ public function getAdminPlusFAQ($type)
 		$cu = Stripe_Customer::retrieve($customer->id);
 		$cu->subscriptions->create(array("plan" => "test"));		
 		return Redirect::to('credit')->with('error', '0');		
+	
+	}
+	
+	
+	public function getTestBuilderActive()	
+	{   
+		$builders = DB::table('users')
+			->join ('extend_builders','extend_builders.builder_id','=','users.id')
+			->get();
+		
+		$date = new DateTime('today');
+		$date =  $date->format('Y-m-d');
+			
+		foreach ($builders as $builder) { 
+			if ($builder->active_until <= $date ) { 
+				if ($builder->package_pay_type == "1"){ //auto Pay
+					
+					$dateActiveOld = new DateTime($builder->active_until); 
+					$dateActive =  $dateActiveOld->modify('+90 day')->format('Y-m-d');
+					
+					$charge_value = DB::table('charges')
+						->where('id' , '=' , $builder->package_builder)//receive invite
+						->first();
+						
+					Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+					
+					$charge = Stripe_Charge::create(array(
+					  "amount" => $charge_value->charge_value_newest*100, // amount in cents, again
+					  "currency" => "gbp",
+					  "customer" => $builder->cus_id,
+					  "description" => "payinguser@example.com")
+					);
+					
+					if ($charge['status'] == "paid") {
+						DB::table('transactions')->insert(array(
+							'builder_id' => $builder->builder_id, 
+							'charge_type' => '1', //+1
+							'charge_value' => $charge_value->charge_value_newest,
+							'created_at' => $date,
+						));
+						
+						DB::table('users')
+							->where('id', '=', $builder->builder_id)
+							->update(array(
+							'active_until' => $dateActive,//active in 3 months
+						));
+					} else { // Pay Failt
+							try {
+								Mail::send('emails.alertLowCredit', function($message)
+								{
+									$message->to($builder->email)->subject('Alert Low Credit');
+								});
+					
+							}
+							catch (Exception $e){
+								$to      = $builder->email;
+								$subject = 'Alert Low Credit';
+								$message = View::make('emails.alertLowCredit')->render();
+								$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+										'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+										'X-Mailer: PHP/' . phpversion() . "\r\n" .
+										'MIME-Version: 1.0' . "\r\n" .
+										'Content-Type: text/html; charset=ISO-8859-1\r\n';
+					
+								mail($to, $subject, $message, $headers);
+									
+							}
+					}
+				} else { //manual Pay
+					try {
+						Mail::send('emails.alertActiveAccount', function($message)
+							{
+								$message->to($builder->email)->subject('Alert Low Credit');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builder->email;
+							$subject = 'Alert Low Credit';
+							$message = View::make('emails.alertLowCredit')->render();
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);						
+						}
+					
+				}
+				
+			}
+		} 
+		return "success";					
+	
+	}
+	
+	public function postChangePackagePayType()	
+	{   				
+				 DB::table('extend_builders')
+				 	->where('builder_id','=',Auth::user()->id)
+				 	->update(array(
+				 	'package_pay_type' => Input::get("package_pay_type")
+				 	));
+		
+		return Redirect::to('credit');			
+	
+	}
+	
+	public function postTopupCreditManual()	
+	{   		
+		$builder = DB::table('users')
+			->join ('extend_builders','extend_builders.builder_id','=','users.id')
+			->where ('users.id','=',Auth::user()->id)
+			->first();
+		$date = date('Y-m-d');
+		$dateActiveOld = new DateTime($builder->active_until); 
+		$dateActive =  $dateActiveOld->modify('+90 day')->format('Y-m-d');
+		
+		$charge_value = DB::table('charges')
+			->where('id' , '=' , $builder->package_builder)//receive invite
+			->first();
+			
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+		
+		$charge = Stripe_Charge::create(array(
+		  "amount" => $charge_value->charge_value_newest*100, // amount in cents, again
+		  "currency" => "gbp",
+		  "customer" => $builder->cus_id,
+		  "description" => "payinguser@example.com")
+		);
+		
+		if ($charge['status'] == "paid") {
+			DB::table('transactions')->insert(array(
+				'builder_id' => $builder->builder_id, 
+				'charge_type' => '1', //+1
+				'charge_value' => $charge_value->charge_value_newest,
+				'created_at' => $date,
+			));
+			
+			DB::table('users')
+				->where('id', '=', $builder->builder_id)
+				->update(array(
+				'active_until' => $dateActive,//active in 3 months
+			));
+
+		}
+	return Redirect::to('credit');
+	}
+	
+	public function postChangeCreditInfo()	
+	{   				
+		Stripe::setApiKey("sk_test_gdKc5TYgUWYr7ey4rpeUbE9b");
+		$token = $_POST['stripeToken'];
+		
+		$customer = Stripe_Customer::create(array(
+		  "description" => "Customer Id For Auto Pay",
+		  "source" => $token
+		));
+		
+		DB::table('users')
+			->where('id', '=', Auth::user()->id)
+			->update(array(
+			'cus_id' => $customer->id,
+		));
+		return Redirect::to('credit');			
 	
 	}
 	
