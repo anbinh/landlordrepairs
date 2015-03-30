@@ -80,10 +80,10 @@
                     <li class="page-scroll">
                     	@if(Auth::check())
                     		@if(Auth::user()->role == '0')
-                        	<a href="postjob">PostJob</a>
+                        	<a href="{{URL::route('postjob-page')}}">PostJob</a>
                         	@endif	
                         @else
-                        	<a href="login"> PostJob </a>
+                        	<a href="{{URL::route('login')}}"> PostJob </a>
                         @endif
                         
                     </li>

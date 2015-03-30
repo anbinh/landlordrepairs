@@ -231,7 +231,7 @@ Route::get('/',array('as'=>'landing-page', function()
 Route::get('register', 'BaseController@getRegister');
 Route::post('register', 'BaseController@postRegister');
 Route::get( 'confirm/{id_code}', array( 'uses' => 'BaseController@confirm' ));
-Route::get('login', 'BaseController@getLogin');
+Route::get('login', array('as'=>'login','uses' => 'BaseController@getLogin' ));
 Route::post('login','BaseController@postLogin');
 
 Route::get('phoneconfirm', 'BaseController@getPhoneconfirm');
@@ -529,3 +529,5 @@ Route::post('change-package-pay-type', array('as'=>'change-package-pay-type','us
 Route::post('topup-credit-manual', array('as'=>'topup-credit-manual','uses' => 'BaseController@postTopupCreditManual'));
 
 Route::post('change-credit-info', array('as'=>'change-credit-info','uses' => 'BaseController@postChangeCreditInfo'));
+
+Route::post('leave-feedback', array('as'=>'leave-feedback','uses' => 'BaseController@postLeaveFeedback'));

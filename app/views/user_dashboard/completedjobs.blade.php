@@ -10,16 +10,15 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
 					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
 					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
 					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
-					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
 					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
 					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
-					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Waiting jobs</a>
+					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Pending reviews</a>
 				</div>
 
 			</div>
@@ -150,7 +149,7 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
+			 
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
@@ -162,6 +161,7 @@
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -177,6 +177,15 @@
 			 		<td>{{$job->local}}</td>
 			 		<td>{{$job->description}}</td>
 			 		<td>{{$job->status}}</td>
+			 		<td>
+				 		<form method = "post" action = "leave-feedback">
+					 		<input name = "job_id" value = "{{$job->job_id}}" hidden>
+					 		<input name = "builder_id" value = "{{$job->builder_id}}" hidden>
+					 		<input type="date" name = "feedback_created_at" value="<?php echo date('Y-m-d'); ?>" hidden/>
+					 		<textarea cols = "20" rows = "3" placeholder = "Type feedback" name = "feedback_content" ></textarea>
+					 		<button class="btn btn-danger">Leave Feedback</button>
+				 		</form>
+			 		</td>
 			 		
 			 	</tr>	
 				@endforeach
@@ -185,7 +194,7 @@
 			</table>
 			
 			 
-			{{ Form::close() }}
+		
 			
     </div>
     

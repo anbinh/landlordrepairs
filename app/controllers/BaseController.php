@@ -1143,8 +1143,8 @@ class BaseController extends Controller {
 			
 			$jobs = DB::table('jobs')
 				->join('category','jobs.category_id','=','category.id')
-				->having('user_id', '=',Auth::user()->id)
-				->having('status','=','openjob')
+				->having('jobs.user_id', '=',Auth::user()->id)
+				->having('jobs.status','=','openjob')
 				->get();
 			
 			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
@@ -1285,8 +1285,9 @@ public function postCustomerActionCancelled()
 			
 			$jobs = DB::table('jobs')
 				->join('category', 'category.id', '=', 'jobs.category_id')
-				->having('user_id', '=',Auth::user()->id)
-				->having('status','=','completed')
+				->join('job_process', 'job_process.job_id', '=', 'jobs.id')
+				->having('jobs.user_id', '=',Auth::user()->id)
+				->having('jobs.status','=','completed')
 				->get();
 			
 			return View::make('user_dashboard.completedjobs')->with('jobs', $jobs);
@@ -1396,10 +1397,32 @@ public function postCustomerActionCancelled()
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		->get();
-        	
+        		
+        	$feedbacks_content = "";
+        	$feedbacks_created_at = "";
+        
+        	foreach ($builder_jobs as $builder_job) {
+        		if($builder_job->status_process == "completed") {
+	        		$i = 0;
+	        		$feedbacks_user = DB::table('feedback')	
+		        		->where('user_id', '=', $builder_job->user_id)
+		        		->get();
+		        		
+		        	foreach ($feedbacks_user as $feedback) {
+		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_content;
+		        		$feedbacks_created_at[$builder_job->job_id][$i] = $feedback->feedback_created_at;
+		        		$feedbacks_by_user[$builder_job->job_id][$i] = DB::table('users')
+		        			->where('id','=',$builder_job->user_id)
+		        			->first();
+	        			$i++;	
+		        	}
+		        	
+        		}
+        		
+        	}
         		
         		
-        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs));
+        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user));
 		}
 		return Redirect::to('login');
 
@@ -3754,6 +3777,22 @@ public function getAdminPlusFAQ($type)
 		return Redirect::to('credit');			
 	
 	}
+	
+	public function postLeaveFeedback()	
+	{   				
+		DB::table('feedback')->insert(array(
+				'builder_id' => Input::get('builder_id'), 
+				'job_id' => Input::get('job_id'),
+				'user_id' => Auth::user()->id,
+				'builder_id' => Input::get('builder_id'),
+				'feedback_created_at' => Input::get('feedback_created_at'),
+				'feedback_content' => Input::get('feedback_content')
+			));
+		
+		return Redirect::to('completedjobs');			
+	
+	}
+	
 	
 	
 				

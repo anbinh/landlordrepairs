@@ -14,12 +14,11 @@
 					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
 					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
 					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
-					  <a href="{{URL::route('pendingreview')}}" class="list-group-item">Pending reviews</a>
 					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
 					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
-					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Waiting jobs</a>
+					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Pending reviews</a>
 				</div>
 
 			</div>
@@ -164,7 +163,7 @@
 			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>View Details Builder</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Vote</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Quote</em> <span>&nbsp;</span></th>
 			      
 			      
 			    </tr>
@@ -187,7 +186,7 @@
 			      	<td class="date-sort"><em>
 						
 						@if ( $invite->vote == "0")
-			      			Waiting vote
+			      			Waiting quote
 			      		@else
 			         		{{$invite->vote}}£
 			      	 		<a class = "btn btn-primary" style = "background-color: green; color: white;" href = "accept-vote/{{$invite->builder_id}},{{$invite->job_id}}">Accept</a>

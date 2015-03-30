@@ -135,6 +135,7 @@ $(document).ready(function(){
       <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
       <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
       <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
+      <th class="date-sort"><em>View details</em> <span>&nbsp;</span></th>
       <th class="">Choose</th>
     </tr>
   </thead>
@@ -152,6 +153,7 @@ $(document).ready(function(){
  		<td>{{$builder->local_code}}</td>
  		<td>{{$builder->email}}</td>
  		<td>{{$builder->phone_number}}</td>
+ 		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builder->builder_id}}" tag target="_blank">View</></em> <span>&nbsp;</span></td>
  		<td><input type="checkbox" name="check_builders[]" value="{{$builder->builder_id}}" /> Choose <br/></td>
  	</tr>	
 	@endforeach
