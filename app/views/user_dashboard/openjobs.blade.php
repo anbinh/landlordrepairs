@@ -18,7 +18,7 @@
 					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
-					  <a href="{{URL::route('waiting-openjobs')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
 				</div>
 
 			</div>
@@ -160,7 +160,7 @@
 			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+			      
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -175,7 +175,7 @@
 			 		<td>{{$job->timeoption}}</td>
 			 		<td>{{$job->local}}</td>
 			 		<td>{{$job->description}}</td>
-			 		<td>{{$job->status}}</td>
+			 		
 			 		
 			 	</tr>	
 				@endforeach

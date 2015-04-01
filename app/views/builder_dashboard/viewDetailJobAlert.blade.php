@@ -261,7 +261,15 @@
 							
     						<div id="map-canvas"></div>
 							<!-- END GOOGLE MAP -->
-
+							<div class="form-group">
+                                <label>Time to contact</label>
+                                @if ($jobInfo->contact_time != 1)
+                                	<p>Any Time</p>
+                                @else
+                                	<p>From: {{$jobInfo->contact_from}} to {{$jobInfo->contact_to}}</p>
+                                @endif
+                                
+                            </div>
 		                    </div>
 		                </div>
 		            </div>
@@ -269,37 +277,58 @@
     </div>
     <!-- end col-md-6-->
     <div class="col-lg-6">
-				        <div class="panel panel-default">
-				            <div class="panel-heading">
-				                Customer Info
-				            </div>
-			            <div class="panel-body">
-			                <div class="row">
-			                    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Customer Info
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
 
-			                     
-		                            <div class="form-group">
-		                                <label>Name</label>
-		                                <p>{{$userInfo->username}}</p>
-		                            </div>
-		                           
-		                            <div class="form-group">
-		                                <label>Email</label>
-		                                <p>{{$userInfo->email}}</p>
-		                            </div>
-		                            
-		                            <div class="form-group">
-		                                <label>Phone number</label>
-		                                <p>{{$userInfo->phone_number}}</p>
-		                            </div>
-		                            
-		                           <a class = "btn btn-primary" href = "{{URL::route('customer-invited')}}">Back</a>
-		                           
-
-		                           
-		                    </div>
-		                </div>
-		            </div>
+                     
+                            <div class="form-group">
+                                <label>Name</label>
+                                <p>{{$userInfo->username}}</p>
+                            </div>
+                           
+                            <div class="form-group">
+                                <label>Email</label>
+                                <p>{{$userInfo->email}}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Phone number</label>
+                                <p>{{$userInfo->phone_number}}</p>
+                            </div>
+                            
+                           <a class = "btn btn-primary" href = "{{URL::route('customer-invited')}}">Back</a>
+ 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Image about Job
+            </div>
+            <div class="panel-body">
+            	@if ($jobInfo->attachment_src_1 != "")
+                <a href = "{{$jobInfo->attachment_src_1}}" target ="_blank"><img src = "{{$jobInfo->attachment_src_1}}" style = "width: 200px; height: 200px"/></a>
+                @endif
+                @if ($jobInfo->attachment_src_2 != "")
+                <a href = "{{$jobInfo->attachment_src_2}}" target ="_blank"><img src = "{{$jobInfo->attachment_src_2}}" style = "width: 200px; height: 200px"/></a>
+                @endif
+                @if ($jobInfo->attachment_src_3 != "")
+                <a href = "{{$jobInfo->attachment_src_3}}" target ="_blank"><img src = "{{$jobInfo->attachment_src_3}}" style = "width: 200px; height: 200px"/></a>
+                @endif
+                @if ($jobInfo->attachment_src_4 != "")
+                <a href = "{{$jobInfo->attachment_src_4}}" target ="_blank"><img src = "{{$jobInfo->attachment_src_4}}" style = "width: 200px; height: 200px"/></a>
+                @endif
+                @if ($jobInfo->attachment_src_5 != "")
+                <a href = "{{$jobInfo->attachment_src_5}}" target ="_blank"><img src = "{{$jobInfo->attachment_src_5}}" style = "width: 200px; height: 200px"/></a>
+                @endif
+                
+            </div>
         </div>
     </div>
 </div>

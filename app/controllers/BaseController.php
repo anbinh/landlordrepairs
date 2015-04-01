@@ -96,7 +96,7 @@ class BaseController extends Controller {
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
 			//$number = Input::get('phoneNumber');
 			$newcode_phone = strtoupper($newcode_phone);
-			$message = $newcode_phone ;//Input::get('message');
+			$message = "Hello". $input['username'].". This is LandlordRepairs. Please see your code below:".$newcode_phone ;//Input::get('message');
 			//$to_phone_number = Input::get('phone_number');
 			//$to_phone_number = '+84937163522';
 			$to_phone_number = $input['phone_number'];
@@ -137,6 +137,91 @@ class BaseController extends Controller {
 		
 		if($v->passes())
 		{	
+			$filename = "";
+		    $extension = "";
+			$base_root = asset(str_replace(public_path(), '' , 'uploads'));
+		    if (Input::hasFile('photo_1')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_1 = Input::file('photo_1');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_1->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_1')->move($destinationPath, $filename.'.'.$extension);
+		        }
+			} 
+			
+			$des_root_1 = $base_root."/".$filename.'.'.$extension;
+
+			if (Input::hasFile('photo_2')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_2 = Input::file('photo_2');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_2->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_2')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_2 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_3')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_3 = Input::file('photo_3');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_3->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_3')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_3 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_4')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_4 = Input::file('photo_4');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_4->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_4')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_4 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_5')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_5 = Input::file('photo_5');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_5->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_5')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_5 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
 			$password = $input['password'];
 			$password = Hash::make($password);
 	
@@ -166,6 +251,25 @@ class BaseController extends Controller {
 			$job->status = 'waitingOpen';
 			$job->property = $input['property'];
 			$job->category_id = $input['category_id'];
+			if (Input::hasFile('photo_1')) {
+				$job->attachment_src_1 = $des_root_1;
+			}
+			if (Input::hasFile('photo_2')) {
+				$job->attachment_src_2 = $des_root_2;
+			}
+			if (Input::hasFile('photo_3')) {
+				$job->attachment_src_3 = $des_root_3;
+			}
+			if (Input::hasFile('photo_4')) {
+				$job->attachment_src_4 = $des_root_4;
+			}
+			if (Input::hasFile('photo_5')) {
+				$job->attachment_src_5 = $des_root_5;
+			}
+			
+			$job->contact_time = Input::get('contact-time');
+			$job->contact_from = Input::get('contact-from');
+			$job->contact_to = Input::get('contact-to');
 			$job->save();
 			//Session::put('job_id', $job->id);Session::get('job_id');
 			//Send confirmation email
@@ -402,6 +506,7 @@ class BaseController extends Controller {
 		}
 			
 		} else {
+			
 			return Redirect::to('login');
 		}
 		
@@ -415,7 +520,94 @@ class BaseController extends Controller {
 		$v = Validator::make($input, $rules);
 		if($v->passes())
 		{
-	
+			$filename = "";
+		    $extension = "";
+			$base_root = asset(str_replace(public_path(), '' , 'uploads'));
+		    if (Input::hasFile('photo_1')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_1 = Input::file('photo_1');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_1->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_1')->move($destinationPath, $filename.'.'.$extension);
+		        }
+			} 
+			
+			$des_root_1 = $base_root."/".$filename.'.'.$extension;
+
+			if (Input::hasFile('photo_2')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_2 = Input::file('photo_2');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_2->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_2')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_2 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_3')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_3 = Input::file('photo_3');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_3->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_3')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_3 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_4')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_4 = Input::file('photo_4');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_4->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_4')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_4 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_5')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_5 = Input::file('photo_5');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_5->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_5')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_5 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			
 			$userpostjob = User::where('id', '=', Auth::user()->id)->first();
 			$job = new Job();
 			$job->tittle = $input['tittle'];
@@ -433,7 +625,26 @@ class BaseController extends Controller {
 			$job->status = 'openjob';
 			$job->property = $input['property'];
 			$job->category_id = $input['category_id'];
+			if (Input::hasFile('photo_1')) {
+				$job->attachment_src_1 = $des_root_1;
+			}
+			if (Input::hasFile('photo_2')) {
+				$job->attachment_src_2 = $des_root_2;
+			}
+			if (Input::hasFile('photo_3')) {
+				$job->attachment_src_3 = $des_root_3;
+			}
+			if (Input::hasFile('photo_4')) {
+				$job->attachment_src_4 = $des_root_4;
+			}
+			if (Input::hasFile('photo_5')) {
+				$job->attachment_src_5 = $des_root_5;
+			}
 			
+			$job->contact_time = Input::get('contact-time');
+			$job->contact_from = Input::get('contact-from');
+			$job->contact_to = Input::get('contact-to');
+
 			$job->save();
 			
 			//make return the list of builder
@@ -451,9 +662,10 @@ class BaseController extends Controller {
         	->where('id','=','4')
         	->first();
         
-		//var_dump($builders); die;
+		
 		//---make list Builders enought credit----//
 		$builders = "";
+		$array_radius = "";
 		if ($builders_beforecheck != null) {
 			for ($i = 0; $i < count($builders_beforecheck); $i++) {
 				$transactions = DB::table('transactions')
@@ -462,7 +674,7 @@ class BaseController extends Controller {
 					$credits = "0";
 				foreach($transactions as $transaction) {
 					$credits += ($transaction->charge_type)*($transaction->charge_value); 
-				} //var_dump($price_invite); die;
+				} 
 				 if($credits >= $price_invite->charge_value_newest) { 
 				 	$builders[$i] = $builders_beforecheck[$i];
 				 } else {
@@ -502,13 +714,14 @@ class BaseController extends Controller {
 			}
 			
 			
-			$array_radius = array();
+			
 		    foreach( $builders as $builder ) {
 		  			
 			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
 		    }
+		    
 		} 
-			//echo $job->id; die;
+		
 			//------------------------------//
 			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $job->id)) ;
 			//--------------------------------//
@@ -993,7 +1206,6 @@ class BaseController extends Controller {
 			return View::make('user_dashboard.dashboard')->with('user', $user);
 		}
 		return Redirect::to('login');
-
 	}
 	
 	
@@ -1144,8 +1356,11 @@ class BaseController extends Controller {
 			$jobs = DB::table('jobs')
 				->join('category','jobs.category_id','=','category.id')
 				->having('jobs.user_id', '=',Auth::user()->id)
-				->having('jobs.status','=','openjob')
+				->having('jobs.status','<>','completed')
+				
+				//->having('jobs.status','<>','closed')
 				->get();
+				
 			
 			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
 		}
@@ -1163,7 +1378,7 @@ class BaseController extends Controller {
 		    	 ->where('job_process.user_id', '=', Auth::user()->id)
 		    	 ->where('job_process.status_process', '=', 'ongoing')
 		    	 ->get();
-		    	 //var_dump($jobs); die;
+
 			return View::make('user_dashboard.ongoingjobs')->with('jobs', $jobs);
 		}
 		return Redirect::to('login');
@@ -3431,30 +3646,6 @@ public function getAdminPlusFAQ($type)
 	
 	public function postWaitingJobFindBuilder()	
 	{   				 
-		 
-			
-//			$job = new Job();
-//			$job->tittle = $input['tittle'];
-//			$job->description = $input['description'];
-//			$job->price = $input['price'];
-//			$job->timeoption = $input['timeoption'];
-//			
-//			$job->date = $input['date'];
-//			$job->local = $input['local'];
-//			$job->local_code = $input['local_code'];
-//			$job->lat = $input['lat'];
-//			$job->lng = $input['lng'];
-//			
-//			$job->user_id = $userpostjob->id;
-//			$job->status = 'openjob';
-//			$job->property = $input['property'];
-//			$job->category_id = $input['category_id'];
-//			
-//			$job->save();
-			
-			//make return the list of builder
-			
-		
 			//------select list builders from DB:: where matching the condition with Input::----//
 		$input = Input::all();
 		$builders_beforecheck = "";
@@ -3468,7 +3659,7 @@ public function getAdminPlusFAQ($type)
         	->where('id','=','4')
         	->first();
         
-		//var_dump($builders); die;
+		
 		//---make list Builders enought credit----//
 		$builders = "";
 		$array_radius = "";
@@ -3523,7 +3714,6 @@ public function getAdminPlusFAQ($type)
 			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
 		    }
 		} 
-			//echo $job->id; die;
 			//------------------------------//
 			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $input['job_id'])) ;
 			

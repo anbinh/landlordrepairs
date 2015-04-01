@@ -32,11 +32,10 @@
                 <h3 class="panel-title">Post Job</h3>
             </div>
             <div class="panel-body">
-				<form accept-charset="UTF-8" action="{{URL::to('postjob')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
+            {{ Form::open(array('url'=>'postjob','files'=>true)) }}
+<!--				<form accept-charset="UTF-8" action="{{URL::to('postjob')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post" >-->
 					<div class="login-block" >
-							
-							
-							
+	
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
 									<input name = "tittle" type="text" class="form-control" required placeholder = 'Tittle'>
@@ -322,27 +321,75 @@
 								}
 								</script>
 								<script>
+									$(document).ready(function(){
+										$("#calendar").hide();
+										$("#calroot").hide();
+										$("#submit-div").css("margin-top", '0px');
+									    $(".hide-date").click(function(){
+									      $("#calendar").hide();
+									      $("#calroot").hide();
+									      $("#submit-div").css("margin-top", '0px');
+									    });
+									    $(".show-date").click(function(){
+									        $("#calendar").show();
+									        $("#calroot").show();
+									        $("#submit-div").css("margin-top", '350px');
+									    });
+									    
+									});
+								</script>
+									
+								</div>			
+							</div>
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div class="radio">
+										  <label>
+										    <input type="radio" name="contact-time"  value="0" checked id = "hide_contact-time">
+										    Any time
+										  </label>
+										   <label style = "radio">
+										    <input type="radio" name="contact-time"  value=" 1" id = "show_contact-time">
+										     From too
+										  </label>
+									</div>
+									<div id="contact-time-detail" hidden>
+									   From: <input type="number" name="contact-from" value="0"/></br>
+									   To:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="contact-to" value="24" />
+									</div>
+									<script>
 										$(document).ready(function(){
-											$("#calendar").hide();
-											$("#calroot").hide();
-											$("#submit-div").css("margin-top", '0px');
-										    $(".hide-date").click(function(){
-										      $("#calendar").hide();
-										      $("#calroot").hide();
-										      $("#submit-div").css("margin-top", '0px');
+											$("#contact-time-detail").hide();
+											
+										    $("#show_contact-time").click(function(){
+										    	$("#contact-time-detail").show();
+										      
 										    });
-										    $(".show-date").click(function(){
-										        $("#calendar").show();
-										        $("#calroot").show();
-										        $("#submit-div").css("margin-top", '350px');
+										    $("#hide_contact-time").click(function(){
+										    	$("#contact-time-detail").hide();
+										      
 										    });
 										    
 										});
 									</script>
-									
 								</div>			
 							</div>
-						
+							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									Image about Job				
+							  		<input type = "file" name = "photo_1">
+							  						
+							  		<input type = "file" name = "photo_2">
+							  						
+							  		<input type = "file" name = "photo_3">
+							  					
+							  		<input type = "file" name = "photo_4">
+							  						
+							  		<input type = "file" name = "photo_5">	
+								</div>			
+							</div>
+						 
 						</div>
 						
 						<div class="form-fields-wrapper" id = "submit-div">
@@ -350,7 +397,7 @@
 							
 							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Post" id = "btn-submit" id = "btn-submit">
 						</div>
-				</form>
+				{{ Form::close() }}
 					</div>
 				
 			</div>

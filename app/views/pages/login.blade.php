@@ -10,6 +10,13 @@
             <div class="panel-body">
 
                 {{ Form::open(array('url' => 'login')) }}
+                @if(Session::get("message") == "0")
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    Pleale login or register a account before post a job. Thanks
+                
+                </div>
+                @endif
                 @if(Session::get("emailfirst") == "1")
                 <div class="alert alert-success alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

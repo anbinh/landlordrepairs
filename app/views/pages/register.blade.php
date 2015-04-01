@@ -30,7 +30,8 @@
 
             </div>
             <div class="panel-body">
-				<form accept-charset="UTF-8" action="{{URL::to('register')}}" class="simple_form analytics-event" data-event-name="regular email log in attempt" id="new_user_session" method="post">
+            {{ Form::open(array('url'=>'register','files'=>true)) }}
+				
 					<div class="login-block" >
 					
 							
@@ -405,7 +406,54 @@
 									
 								</div>			
 							</div>
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									<div class="radio">
+										  <label>
+										    <input type="radio" name="contact-time"  value="0" checked id = "hide_contact-time">
+										    Any time
+										  </label>
+										   <label style = "radio">
+										    <input type="radio" name="contact-time"  value="1" id = "show_contact-time">
+										     From too
+										  </label>
+									</div>
+									<div id="contact-time-detail" hidden>
+									   From: <input type="number" name="contact-from" value="0"/></br>
+									   To:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="contact-to" value="24" />
+									</div>
+									<script>
+										$(document).ready(function(){
+											$("#contact-time-detail").hide();
+											
+										    $("#show_contact-time").click(function(){
+										    	$("#contact-time-detail").show();
+										      
+										    });
+										    $("#hide_contact-time").click(function(){
+										    	$("#contact-time-detail").hide();
+										      
+										    });
+										    
+										});
+									</script>
+								</div>			
+							</div>
 							
+							<div class="pad-top">
+								<div class="form-control-wrapper" >
+									Image about Job				
+							  		<input type = "file" name = "photo_1">
+							  						
+							  		<input type = "file" name = "photo_2">
+							  						
+							  		<input type = "file" name = "photo_3">
+							  					
+							  		<input type = "file" name = "photo_4">
+							  						
+							  		<input type = "file" name = "photo_5">	
+								</div>			
+							</div>
 							
 							
 							
@@ -437,7 +485,7 @@
 							<input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Register" id = "btn-submit" id = "btn-submit">
 						</div>
 					</div>
-				</form>
+				{{ Form::close() }}
 			</div>
         </div>
     </div>

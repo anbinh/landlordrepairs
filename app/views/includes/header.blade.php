@@ -43,7 +43,7 @@
                         	@endif
                         	
                         @else
-                        	<a href="register">
+                        	<a href="register-builder">
                         		Tradespeople Here
                         	</a>
                         @endif

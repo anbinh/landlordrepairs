@@ -143,21 +143,21 @@ $(document).ready(function(){
   <?php 
 
   ?>
-
-  @foreach($builders as $builder)
- 	<tr>
-    	<td>{{$builder->username}}</td>
-    	
-    	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{$array_radius[$builder->id]}}</td>
-    	<td>{{$builder->local}}</td>
- 		<td>{{$builder->local_code}}</td>
- 		<td>{{$builder->email}}</td>
- 		<td>{{$builder->phone_number}}</td>
- 		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builder->builder_id}}" tag target="_blank">View</></em> <span>&nbsp;</span></td>
- 		<td><input type="checkbox" name="check_builders[]" value="{{$builder->builder_id}}" /> Choose <br/></td>
- 	</tr>	
-	@endforeach
-    
+  @if ($builders != "")
+	  @foreach($builders as $builder)
+	 	<tr>
+	    	<td>{{$builder->username}}</td>
+	    	
+	    	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{$array_radius[$builder->id]}}</td>
+	    	<td>{{$builder->local}}</td>
+	 		<td>{{$builder->local_code}}</td>
+	 		<td>{{$builder->email}}</td>
+	 		<td>{{$builder->phone_number}}</td>
+	 		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builder->builder_id}}" tag target="_blank">View</></em> <span>&nbsp;</span></td>
+	 		<td><input type="checkbox" name="check_builders[]" value="{{$builder->builder_id}}" /> Choose <br/></td>
+	 	</tr>	
+		@endforeach
+    @endif
    
 </table>
  <input hidden name = "category_id" value = "{{$category_id}}"/> 
