@@ -52,7 +52,7 @@ class BaseController extends Controller {
 				}
 				else {
 					if (Auth::user()->role == '1') {
-						return Redirect::to('customer-invited');
+						return Redirect::to('builder-profile');
 					} else {
 						return Redirect::route('postjob-page');
 					}

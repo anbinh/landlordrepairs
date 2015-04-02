@@ -116,7 +116,8 @@
                         {{ Form::open(array('url' => 'change_phonenumber')) }}
                             <div class="form-group">
                                 <label>New Phonenumber</label>
-                                {{ Form::text('phonenumber','', array('placeholder' => 'Type your new Phonenumber', 'class' => 'form-control')) }}
+                                
+                                <input name = "phonenumber" class = "form-control" placeholdet = "Type your new Phonenumber" value = "{{Auth::user()->phone_number}}"/>
                             </div>
                            
                             {{ Form::submit('Change Phonenumber', array('class' => 'btn btn-primary')) }}

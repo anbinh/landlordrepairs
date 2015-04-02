@@ -58,11 +58,11 @@
                            {{ Form::text('company', $builder[0]->tittle, array('placeholder' => 'Type your company','class' => 'form-control')) }}
                         </div>
                         <div class="form-group">
-                           <label>Local</label>
+                           <label>City or County</label>
                            {{ Form::text('local', $builder[0]->local, array('placeholder' => 'Type your code','class' => 'form-control')) }}
                         </div>
                         <div class="form-group">
-                           <label>Local code</label>
+                           <label>Post code</label>
                            <input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'style = "z-index:2; margin-left: -42px;" value = "{{$builder[0]->local_code}}">
                         </div>
                         <div class="pad-top">
@@ -414,7 +414,8 @@
                         {{ Form::open(array('url' => 'change_phonenumber')) }}
                         <div class="form-group">
                            <label>New Phonenumber</label>
-                           {{ Form::text('phonenumber','', array('placeholder' => 'Type your new Phonenumber', 'class' => 'form-control')) }}
+                           
+                           <input name = "phonenumber" class = "form-control" placeholdet = "Type your new Phonenumber" value = "{{Auth::user()->phone_number}}"/>
                         </div>
                         {{ Form::submit('Change Phonenumber', array('class' => 'btn btn-primary')) }}
                         {{ Form::close() }}
