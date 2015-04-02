@@ -93,7 +93,9 @@
 		                                <label>Association</label>
 		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$builder[0]->association_src}}"/>
 		                                {{$builder[0]->association_name}}
-				                                
+				                        @if ($builder[0]->association_name === "Gas")
+				                        	Gas number: {{$builder[0]->gas_number}}
+				                        @endif        
 				                    </div>
 			                    </div>	
 			                </div>

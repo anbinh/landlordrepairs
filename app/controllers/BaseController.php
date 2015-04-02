@@ -54,7 +54,7 @@ class BaseController extends Controller {
 					if (Auth::user()->role == '1') {
 						return Redirect::to('customer-invited');
 					} else {
-						return Redirect::route('landing-page');
+						return Redirect::route('postjob-page');
 					}
 				}
 	
@@ -1615,7 +1615,7 @@ public function postCustomerActionCancelled()
         		
         	$feedbacks_content = "";
         	$feedbacks_created_at = "";
-        
+        	$feedbacks_by_user = "";
         	foreach ($builder_jobs as $builder_job) {
         		if($builder_job->status_process == "completed") {
 	        		$i = 0;
@@ -1880,7 +1880,7 @@ public function postCustomerActionCancelled()
 			);
 			
 			
-		//GENERATE $newcode - RANDOM STRING TO VERIFY SIGNUP
+		
 		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
 		 
 		
@@ -1922,9 +1922,10 @@ public function postCustomerActionCancelled()
 			$extend_builder->qualification = $qualification;
 			$extend_builder->howmanyteam = $howmanyteam;
 			$extend_builder->package_pay_type = $input['package_pay_type'];
-			
-			
-			
+	
+			if($input['gasNumber'] != "") {
+				$extend_builder->gas_number = $input['gasNumber'];	
+			}		
 			$extend_builder->association = $input['association'];	
 			$extend_builder->save();
 					
@@ -2134,6 +2135,11 @@ public function postCustomerActionCancelled()
 			'email' => $input['email'],
 			));
 
+			if ($input['gasNumber'] != "") {
+				$gasNum = $input['gasNumber']; 
+			} else {
+				$gasNum = 0;
+			}
 			
 			DB::table('extend_builders')
 			->where('extend_builders.builder_id', '=', Auth::user()->id)
@@ -2148,6 +2154,8 @@ public function postCustomerActionCancelled()
 			'social_link_twitter' => $input['social_link_twitter'],
 			'qualification' => $input['qualification'],
 			'howmanyteam' => $input['howmanyteam'],
+			'association' => $input['association'],
+			'gas_number' => $gasNum,
 			'about' => $input['about'],
 			'created_at' => $input['created_at'],
 			));
