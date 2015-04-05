@@ -55,6 +55,22 @@
 		                                <label>Email</label>
 		                                {{ Form::text('email', $user->email, array('placeholder' => 'Type your email','class' => 'form-control')) }}
 		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>City</label>
+		                                {{ Form::text('user_city',$user->user_city, array('placeholder' => 'Type your City','class' => 'form-control')) }}
+		                            </div>
+		                            
+		                            <div class="form-group">
+		                                <label>Post code</label>
+		                                {{ Form::text('user_post_code', $user->user_post_code, array('placeholder' => 'Type your Post code','class' => 'form-control')) }}
+		                            </div>
+		                            
+		                             <div class="form-group">
+		                                <label>Member since</label>
+		                                
+		                                <input  class = "form-control" value = "{{$user->created_at}}" readonly>
+		                            </div>
 		                           
 
 		                            {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}

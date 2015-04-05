@@ -359,6 +359,14 @@
 									<input name = "phone_number" type="text" class="form-control" required placeholder = 'Phone number- We will send a code to verify it'>		
 							</div>
 							
+							<div class="pad-top">
+									<input name = "user_city" type="text" class="form-control" required placeholder = 'City'>		
+							</div>
+							
+							<div class="pad-top">
+									<input name = "user_post_code" type="text" class="form-control" required placeholder = 'Post code'>		
+							</div>
+							
 							
 							
 						<!-- make it happen -->
@@ -441,17 +449,27 @@
 							</div>
 							
 							<div class="pad-top">
+							<script>
+								function shownextfile(next) {
+									$("#"+next).show();	
+									}
+							</script>
 								<div class="form-control-wrapper" >
-									Image about Job				
-							  		<input type = "file" name = "photo_1">
-							  						
-							  		<input type = "file" name = "photo_2">
-							  						
-							  		<input type = "file" name = "photo_3">
-							  					
-							  		<input type = "file" name = "photo_4">
-							  						
-							  		<input type = "file" name = "photo_5">	
+									Image about Job (Max 5 pictures)				
+							  		<input type = "file" name = "photo_1" onchange = "shownextfile('2')">
+							  		
+							  		<div id = "2" hidden>				
+							  			<input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden>
+							  		</div>
+							  		<div id = "3" hidden>				
+							  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden>
+							  		</div>
+							  		<div id = "4" hidden>				
+							  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden>
+							  		</div>				
+							  		<div id = "5" hidden>
+							  		<input type = "file" name = "photo_5" hidden>
+							  		</div>	
 								</div>			
 							</div>
 							

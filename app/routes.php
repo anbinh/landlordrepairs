@@ -110,6 +110,9 @@ Route::get('completedjobs',array('as'=>'completedjobs','uses' => 'BaseController
 
 Route::get('myinvites',array('as'=>'myinvites','uses' => 'BaseController@getMyInvites' ));
 
+Route::post('sent-invite',array('as'=>'sent-invite','uses' => 'BaseController@postSentInvite' ));
+
+
 Route::get('myfavorites',array('as'=>'myfavorites','uses' => 'BaseController@getMyFavorites' ));
 Route::post('customer-find-favorite-builders', 'BaseController@postCustomerFindFavoriteBuilders');
 Route::get('view-detail-info-builder/{builder_id}', array('uses' => 'BaseController@getViewDetailInfoBuilder' ));

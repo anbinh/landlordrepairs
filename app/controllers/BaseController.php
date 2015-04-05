@@ -228,10 +228,13 @@ class BaseController extends Controller {
 			$user = new User();
 			$user->username = $input['username'];
 			$user->email = $input['email'];
+			$user->user_city = $input['user_city'];
+			$user->user_post_code = $input['user_post_code'];
 			$user->password = $password;
 			$user->phone_number = $to_phone_number;
 			$user->email_confirm = $newcode;
 			$user->phone_confirm = $newcode_phone;
+	
 			$user->role = '0';
 			$user->save();
 				
@@ -1228,6 +1231,8 @@ class BaseController extends Controller {
 			->update(array(
 			'username' => $input['username'],
 			'email' => $input['email'],
+			'user_city' => $input['user_city'],
+			'user_post_code' => $input['user_post_code'],
 			));
 			return Redirect::to('profile')->with('success', '1');
 		}
@@ -1243,10 +1248,10 @@ class BaseController extends Controller {
 		
 		
 		
-		$input = Input::all();
+		$input = Input::all(); 
 		$rules = array('email' => 'required|unique:users|email');
 		//var_dump($input['email'] ); die	;	
-		$v = Validator::make($input, $rules);
+		$v = Validator::make($input, $rules); 
 		if($v->passes())
 		{
 			$user = Auth::user();
@@ -1257,6 +1262,14 @@ class BaseController extends Controller {
 				$user->email = $input['email'];
 								
 			}
+			
+				$user->user_city = $input['user_city'];
+								
+			
+			
+				$user->user_post_code = $input['user_post_code'];
+								
+			
 			$user->save();
 			return Redirect::to('profile')->with('success', '1');	
 		} else {
@@ -3988,6 +4001,25 @@ public function getAdminPlusFAQ($type)
 			));
 		
 		return Redirect::to('completedjobs');			
+	
+	}
+	
+	public function postSentInvite()	
+	{   				
+	
+		$to      = Input::get('email');
+		$subject = 'Alert Low Credit';
+		$message = Input::get('content');
+		$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+				'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+				'X-Mailer: PHP/' . phpversion() . "\r\n" .
+				'MIME-Version: 1.0' . "\r\n" .
+				'Content-Type: text/html; charset=ISO-8859-1\r\n';
+
+		mail($to, $subject, $message, $headers);						
+		
+		
+		return Redirect::to('myinvites');			
 	
 	}
 	
