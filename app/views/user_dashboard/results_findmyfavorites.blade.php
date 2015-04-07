@@ -186,10 +186,13 @@
 						</tr>
 					
 				@endforeach
-			    @endif
+			    
 			   
 			</table>
-			
+			@else
+		 	</table>
+		 	<p>Have zero jobs posted</p>
+			 @endif
 			 
 			
 			

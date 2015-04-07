@@ -217,12 +217,14 @@
 				 		</tr>	
 					
 				@endfor
-              @endif
-			  
+              
 			    
 			   
 			</table>
-			
+			@else
+			</table>
+			<p>No have Builders</p>
+			 @endif
 			 
 			
 			

@@ -166,7 +166,7 @@
 			  </thead>
 			  <tbody>
 			
-			
+			@if ($waitingOpenJobs != null)
 			  @foreach($waitingOpenJobs as $waitingOpenJob)
 			 	<tr>
 			    	<td>{{$waitingOpenJob->tittle}}</td>
@@ -190,7 +190,10 @@
 			 		
 			 	</tr>	
 				@endforeach
-			    
+		    @else
+		 	</table>
+		 	<p>Have zero jobs posted</p>
+			 @endif
 			   
 			</table>
 			

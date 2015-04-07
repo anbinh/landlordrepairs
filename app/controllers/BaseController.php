@@ -2889,9 +2889,18 @@ public function postCustomerActionCancelled()
         		->where('users.id', '=', $builder_id)
         		
         		->get();
-        		//var_dump($builder); die; 
+        		$builder_info = "";
+        		$builder_info = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
+				->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+        		->where('users.id', '=', $builder_id)
+        		
+        		->get();
+        		//var_dump($builder[0]); die; 
         	
-        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder));
+        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder,'builder_info'=>$builder_info));
 		}
 		return Redirect::to('login');
 

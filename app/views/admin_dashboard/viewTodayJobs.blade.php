@@ -183,12 +183,15 @@
 					  		
 					  	 </tr>
       				@endforeach
-              @endif
+             
 			  
 			    
 			   
 			</table>
-			
+			@else
+			</table>
+			<p>No have Jobs posted today</p>
+			 @endif
 			 
 			
 			

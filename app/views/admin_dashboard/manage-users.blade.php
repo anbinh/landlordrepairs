@@ -217,12 +217,12 @@
 				      		</td>
 				 		</tr>	
 				@endforeach
-              @endif
-			  
-			    
-			   
+              
 			</table>
-			
+			@else
+			</table>
+			<p>No have new Users</p>
+			 @endif
 			 
 			
 			

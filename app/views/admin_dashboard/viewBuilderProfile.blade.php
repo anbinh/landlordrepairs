@@ -36,31 +36,31 @@
 			                    <div class="col-lg-12">
 		                            <div class="form-group">
 		                                <label>Name</label>
-		                                {{$builder[0]->username}}
+		                                {{$builder_info[0]->username}}
 		                                
 		                            </div>
 		                           
 		                            <div class="form-group">
 		                                <label>Email</label>
-		                                {{$builder[0]->email}}
+		                                {{$builder_info[0]->email}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
 		                                <label>Company</label>
-		                                {{$builder[0]->tittle}}
+		                                {{$builder_info[0]->tittle}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
 		                                <label>Local</label>
-		                                {{$builder[0]->local}}
+		                                {{$builder_info[0]->local}}
 		                                
 		                            </div>
 		                            
 		                             <div class="form-group">
 		                                <label>Local code</label>
-		                                {{$builder[0]->local_code}}
+		                                {{$builder_info[0]->local_code}}
 		                                
 		                            	
 		                            </div>
@@ -74,25 +74,27 @@
                             
 		                            <div class="form-group">
 		                                <label>Site Link</label>
-		                                {{$builder[0]->site_link}}
+		                                {{$builder_info[0]->site_link}}
 		                                
 		                            </div>
 		                             <div class="form-group">
 		                                <label>Social Link</label>
-		                                {{$builder[0]->social_link}}
+		                                {{$builder_info[0]->social_link}}
 		                                
 		                            </div>
 		                            
 		                             <div class="form-group">
 		                                <label>Started At</label>
-		                                {{$builder[0]->created_at}}
+		                                {{$builder_info[0]->created_at}}
 		                                
 		                            </div>
 		                            <div class="form-group">
 		                                <label>Association</label>
-		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$builder[0]->association_src}}"/>
-		                                {{$builder[0]->association_name}}
-				                                
+		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$builder_info[0]->association_src}}"/>
+		                                {{$builder_info[0]->association_name}}
+				                        @if ($builder_info[0]->association_name == "Gas")
+				                        	<br>Gas number: {{$builder_info[0]->gas_number}}
+				                        @endif        
 				                    </div>
 			                    </div>	
 			                </div>
@@ -108,6 +110,7 @@
 				                History Jobs
 				            </div>
 			            <div class="panel-body">
+			            @if ($builder != null)
 			            @foreach ($builder as $buildere) 
 			                <div class="row">
 			                    <div class="col-lg-12">
@@ -160,6 +163,9 @@
 			                </div>
 			                <hr>
 			                @endforeach
+			                @else
+			                <p>No Jobs History</p>
+			                @endif
 			            </div>
 			        </div>
 			    </div>

@@ -18,7 +18,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="page-scroll">
                         @if(Auth::check())
-                        	<a href="#">
+                        	<a href="profile">
                         		Hi, {{Auth::user()->username}}
                         	</a>
                         @endif
@@ -35,6 +35,7 @@
                         		<a href="customer-invited">
                         			dashboard
                         		</a>
+                        		
                         		@else
                         		<a href="admin-manage-builders">
                         			dashboard

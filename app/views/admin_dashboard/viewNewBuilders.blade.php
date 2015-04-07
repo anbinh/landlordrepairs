@@ -214,13 +214,11 @@
 				 		</tr>	
 					
 				@endfor
-              @endif
-			  
-			    
-			   
 			</table>
-			
-			 
+			@else
+			</table>
+			<p>No have new Builders</p>
+			 @endif
 			
 			
     </div>

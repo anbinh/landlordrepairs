@@ -165,7 +165,7 @@
 			  </thead>
 			  <tbody>
 			
-			
+			@if ($cancelledJobs != null)
 			  @foreach($cancelledJobs as $cancelledJob)
 			 	<tr>
 			    	<td>{{$cancelledJob->tittle}}</td>
@@ -185,9 +185,13 @@
 	
 			 	</tr>	
 				@endforeach
-			    
+				</table>
+			 @else
+			 	</table>
+			 	<p>Have zero jobs posted</p>
+			 @endif
 			   
-			</table>
+			
 			
 			 
 			{{ Form::close() }}

@@ -14,7 +14,7 @@
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
 					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  <a href="#" class="list-group-item">Lost jobs</a>
+					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
 					  <a href="#" class="list-group-item">Pending reviews</a>

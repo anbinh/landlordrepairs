@@ -166,7 +166,7 @@
 			  </thead>
 			  <tbody>
 			
-			
+			@if ($jobs != null)
 			  @foreach($jobs as $job)
 			 	<tr>
 			    	<td>{{$job->tittle}}</td>
@@ -192,7 +192,10 @@
 			    
 			   
 			</table>
-			
+			 @else
+			 	</table>
+			 	<p>Have zero jobs posted</p>
+			 @endif
 			 
 		
 			

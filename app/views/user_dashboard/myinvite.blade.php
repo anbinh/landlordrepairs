@@ -31,13 +31,8 @@
 				            </div>
 			            <div class="panel-body">
 			                <div class="row">
-			                    <div class="col-lg-12">
-			                        @if($errors->any())
-			                        <div class="alert alert-danger alert-dismissable">
-			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			                            {{ implode('', $errors->all('<li class="error">:message</li>')) }}
-			                        </div>
-			                        @endif
+			                    <div class="col-lg-6">
+			                      
 			                        @if(Session::get("success") == '1')
 			                        <div class="alert alert-success alert-dismissable">
 			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -46,7 +41,37 @@
 			                        @endif
 			                        
 			                       {{ Form::open(array('url' => 'sent-invite')) }}
+			                       <h5>Do you know any Builder that you trust invite them to be part of the community!</h5>
 		                            <div class="form-group">
+		                                <label>Email</label>
+		                                <input name = "email" class = "form-control" placeholder = "Type Email" required>
+		                            </div>
+		                            
+		                           
+		                            <div class="form-group">
+		                                <label>Content</label>
+		                                <textarea name = "content" class = "form-control" placeholder = "Your invite" required></textarea>
+		                                
+		                            </div>
+
+		                            {{ Form::submit('Send', array('class' => 'btn btn-primary')) }}
+		                            
+		                        {{ Form::close() }}
+		                    </div>
+		                    <div class="col-lg-6">
+			                     
+			                        @if(Session::get("success") == '1')
+			                        <div class="alert alert-success alert-dismissable">
+			                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			                            Profile has been updated successfully.
+			                        </div>
+			
+			                        @endif
+			                        
+			                       {{ Form::open(array('url' => 'sent-invite')) }}
+		                            <h5>Do you know any landlords invite them to be part of the community!</h5>
+		                            <div class="form-group">
+		                            
 		                                <label>Email</label>
 		                                <input name = "email" class = "form-control" placeholder = "Type Email" required>
 		                            </div>
