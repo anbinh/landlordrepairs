@@ -83,6 +83,22 @@ ul.social-buttons li a:active {
                         </li>
                         <li><a href="#" class = "footer_tag"> Contact Us </a>
                         </li>
+                        <li>
+                        @if(Auth::check())
+                        	@if(Auth::user()->role == 0)
+                        		<a href="{{URL::route('FAQ-User')}}">
+                        			FAQ
+                        		</a>
+                        	@else
+                        		<a href="{{URL::route('FAQ-Builder')}}">
+                        			FAQ
+                        		</a>
+                        	@endif
+                        	
+                    
+                        @endif
+                        
+                    </li>
                     </ul>
                 </div>
             </div>

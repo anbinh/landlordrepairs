@@ -51,22 +51,7 @@
                         
                     </li>
                     
-                       <li class="page-scroll">
-                        @if(Auth::check())
-                        	@if(Auth::user()->role == 0)
-                        		<a href="{{URL::route('FAQ-User')}}">
-                        			FAQ
-                        		</a>
-                        	@else
-                        		<a href="{{URL::route('FAQ-Builder')}}">
-                        			FAQ
-                        		</a>
-                        	@endif
-                        	
-                    
-                        @endif
-                        
-                    </li>
+                       
                      
                     <li class="page-scroll">
                     	@if(Auth::check())

@@ -91,24 +91,34 @@
 			            </div>
 			        </div>
 			    </div>
+			    @if ($builder->cus_id != "")
+		        	<div class="col-lg-6">
+				        <div class="panel panel-default">
+				            <div class="panel-heading">
+				                Topup Credit
+				            </div>
+					        <div class="panel-body">
+					          	<form action="topup-credit-manual" method="POST">
+					          		  
+									  <button class = "btn btn-success"> Pay </button>
+								</form> 
+				            </div>
+				        </div>
+			    	</div>
+		        @endif
+			    
 			    <div class="col-lg-6">
 			        <div class="panel panel-default">
-			            <div class="panel-heading">
-			                Topup Credit
+			        @if ($builder->cus_id == "")
+			        	<div class="panel-heading">
+			                Update Credit Info
 			            </div>
-				        <div class="panel-body">
-				          	<form action="topup-credit-manual" method="POST">
-				          		  
-								  <button class = "btn btn-success"> Pay </button>
-							</form> 
-			            </div>
-			        </div>
-			    </div>
-			    <div class="col-lg-6">
-			        <div class="panel panel-default">
-			            <div class="panel-heading">
+			        @else
+			        	<div class="panel-heading">
 			                Change Credit Info
 			            </div>
+			        @endif
+			            
 				        <div class="panel-body">
 				          	<form action="change-credit-info" method="POST">
 								  <script							

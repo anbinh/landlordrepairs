@@ -174,6 +174,7 @@
 			      <th class="date-sort"><em>Local</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Local Code</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Num of Builder invited</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>View Details</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			      
 			      
@@ -195,6 +196,7 @@
 			    	<td>{{$job_resuilt->local}}</td>
 			    	<td>{{$job_resuilt->local_code}}</td>
 			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
+			    	<td class="date-sort"><em><a href="view-detail-job-alert/{{$job_resuilt->job_id}},{{$job_resuilt->user_id}}">View</></em> <span>&nbsp;</span></td>
 			    	<td>
 			    	<form action="vote-job" method="post">
 	  					<input type = "number" name = "quotePrice" value = ""/>

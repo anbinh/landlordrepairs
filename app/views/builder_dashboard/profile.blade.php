@@ -6,7 +6,7 @@
    </div>
    <div class="col-md-2">
       <div class="list-group">
-         <a href="#" class="list-group-item active">
+         <a href="{{URL::route('customer-invited')}}" class="list-group-item active">
          Dashboard
          </a>
          <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
@@ -125,11 +125,12 @@
                            // pick list containing a mix of places and predicted search terms.
                            
                            function initialize() {
-                           
+                        	 var cityCircle;
+                        	 
                              var markers = [];
                              var haightAshbury = new google.maps.LatLng({{$builder[0]->lat}},{{$builder[0]->lng}});
                              var mapOptions = {
-                               zoom: 6,
+                               zoom: 10,
                                center: haightAshbury,
                                //mapTypeId: google.maps.MapTypeId.TERRAIN
                              };
@@ -139,6 +140,17 @@
                             var marker=new google.maps.Marker({
                            		position:haightAshbury,
                              });
+                            var populationOptions = {
+                      		      strokeColor: '#FF0000',
+                      		      strokeOpacity: 0.8,
+                      		      strokeWeight: 2,
+                      		      fillColor: '#FF0000',
+                      		      fillOpacity: 0.35,
+                      		      map: map,
+                      		      center: haightAshbury,
+                      		      radius: Math.sqrt({{$builder[0]->miles_covered}}) * 100
+                      		    };
+                            cityCircle = new google.maps.Circle(populationOptions);
                            	marker.setMap(map);
                            	markers.push(marker); 	
                            	$("#lat").val(haightAshbury.lat());
@@ -215,21 +227,29 @@
                         </script>
                         <div id="map-canvas"></div>
                         <!-- END GOOGLE MAP -->
+ 						<div class="form-group">
+                           
+                           <label>Miles covered</label>
+                           {{ Form::text('miles_covered', $builder[0]->miles_covered, array('placeholder' => 'Type your miles covered','class' => 'form-control')) }}
+                        </div>
                         <div class="form-group">
+                           <span class="fa-stack fa-lg"><i class="fa fa-dribbble fa-stack-1x"></i></span>
                            <label>Site Link</label>
                            {{ Form::text('site_link', $builder[0]->site_link, array('placeholder' => 'Type your site link','class' => 'form-control')) }}
                         </div>
                         <div class="form-group">
+                           <span class="fa-stack fa-lg"><i class="fa fa-facebook fa-stack-1x"></i></span>
                            <label>Facebook Link</label>
-                           {{ Form::text('social_link', $builder[0]->social_link, array('placeholder' => 'Type your Facebook link','class' => 'form-control')) }}
+                           {{ Form::text('social_link', $builder[0]->social_link, array('placeholder' => 'Type your Facebook link','class' => 'form-control fa fa-twitter')) }}
                         </div>
                         <div class="form-group">
+                           <span class="fa-stack fa-lg"><i class="fa fa-twitter fa-stack-1x"></i></span>
                            <label>Twitter Link</label>
-                           {{ Form::text('social_link_twitter', $builder[0]->social_link_twitter, array('placeholder' => 'Type your Twitter link','class' => 'form-control')) }}
+                           {{ Form::text('social_link_twitter', $builder[0]->social_link_twitter, array('placeholder' => 'Type your Twitter link','class' => 'form-control ')) }}
                         </div>
                         <div class="form-group">
                            <label>Qualification</label>
-                           {{ Form::text('qualification', $builder[0]->qualification, array('placeholder' => 'Qualification','class' => 'form-control')) }}
+                           {{ Form::textarea('qualification', $builder[0]->qualification, array('placeholder' => 'Qualification','class' => 'form-control')) }}
                         </div>
                         <div class="form-group">
                            <label>How many team?</label>
@@ -313,9 +333,9 @@
                               <label>											  	
                               <input type="radio" onclick = "addGasNumber()" name="association" value="{{$associations[0]->association_name}}" id = "detail1"
                               @if ( $associations[0]->association_name == $builder[0]->association_name)
-                              checked
+                              	checked
                               @endif>
-                              {{$associations[0]->association_name}}
+                              	{{$associations[0]->association_name}}
                               </label>
                               @if ($associations[0]->association_name == $builder[0]->association_name)
                               	<script>
@@ -361,6 +381,23 @@
                                  }
                               </script>
                            </div>
+                           <div class="form-group">
+	                           
+	                           <label>On Holiday</label>
+	                           @if ($builder[0]->on_holiday == 1)
+	                           		On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1" checked>
+	                           @else
+	                           		On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
+	                           @endif
+	                           
+	                        </div>
+	                        <div class="form-group">
+	                           
+	                           
+						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
+						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
+	                        </div>
+                           
                         </div>
                         {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
                         {{ Form::close() }}
@@ -463,15 +500,139 @@
                            <label>Job status</label>
                            {{$buildere->status_process}}
                         </div>
+                        <script>
+	                        function shownextfile(next) {
+	                        	$("#"+next).show();
+							
+							}
+							function showinputfile(next) {
+								
+								var next_num = next+1;
+								if (next < 5) {
+									document.write('<input type = "file" name = "photo_'+next+'" onchange = "shownextfile('+next_num+')"/>');	
+								} else {
+									document.write('<input type = "file" name = "photo_5" />');
+								}
+							}
+						</script>
                         <div class="form-group">
+                        
                            <label>Jobs details</label>
-                           <form action = "builder-submit-job-details" method = "post">
-                              <input name = "builder_id" value = "{{Auth::user()->id}}" hidden>
-                              <input name = "job_id" value = "{{$buildere->job_id}}" hidden>
-                              <textarea name = "builder_note_job" rows="4" cols="50">{{$buildere->builder_note_job}}</textarea>
-                              <button class = "btn btn-primary" type = "submit">Submit</button>
-                           </form>
+ 
+                                {{ Form::open(array('url'=>'builder-submit-job-details','files'=>true)) }}
+                                	
+									<div class="form-control-wrapper" >
+										<script>
+											var next_now = 1;
+										</script>
+										<?php 
+											$next_now =1;
+										?>
+										<p>Image about Job</p>
+										@if ($buildere->picture_portfolio_1 != "")
+						                <a href = "{{$buildere->picture_portfolio_1}}" target ="_blank"><img src = "{{$buildere->picture_portfolio_1}}" style = "width: 100px; height: 100px"/></a>
+							                <script>
+							                	next_now = 2;
+							                </script>
+							                <?php 
+												$next_now =2;
+											?>
+						                @endif
+						                @if ($buildere->picture_portfolio_2 != "")
+						                <a href = "{{$buildere->picture_portfolio_2}}" target ="_blank"><img src = "{{$buildere->picture_portfolio_2}}" style = "width: 100px; height: 100px"/></a>
+						                	<script>
+						                		next_now = 3;
+						                	</script>
+						                	<?php 
+												$next_now =3;
+											?>
+						                @endif
+						                @if ($buildere->picture_portfolio_3 != "")
+						                <a href = "{{$buildere->picture_portfolio_3}}" target ="_blank"><img src = "{{$buildere->picture_portfolio_3}}" style = "width: 100px; height: 100px"/></a>
+						                	<script>
+						                		next_now = 4;
+						                	</script>
+						                	<?php 
+												$next_now =4;
+											?>
+						                @endif
+						                @if ($buildere->picture_portfolio_4 != "")
+						                <a href = "{{$buildere->picture_portfolio_4}}" target ="_blank"><img src = "{{$buildere->picture_portfolio_4}}" style = "width: 100px; height: 100px"/></a>
+						                	<script>
+						                		next_now = 5;
+						                	</script>
+						                	<?php 
+												$next_now =5;
+											?>
+						                @endif
+						                @if ($buildere->picture_portfolio_5 != "")
+						                <a href = "{{$buildere->picture_portfolio_5}}" target ="_blank"><img src = "{{$buildere->picture_portfolio_5}}" style = "width: 100px; height: 100px"/></a>
+						                @endif
+						                <script>
+						                	showinputfile(next_now);
+						                </script>
+						            	
+						            
+						            	@if($next_now < 2)
+						            		<div id = "2" hidden>				
+								  			<input type = "file" name = "photo_2" onchange = "shownextfile('3')" >
+									  		</div>
+									  		<div id = "3" hidden>				
+									  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" >
+									  		</div>
+									  		<div id = "4" hidden>				
+									  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" >
+									  		</div>				
+									  		<div id = "5" hidden>
+									  		<input type = "file" name = "photo_5" >
+									  		</div>	
+						            	@else
+						            		@if($next_now < 3)
+							            		
+										  		<div id = "3" hidden>				
+										  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" >
+										  		</div>
+										  		<div id = "4" hidden>				
+										  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" >
+										  		</div>				
+										  		<div id = "5" hidden>
+										  		<input type = "file" name = "photo_5" >
+										  		</div>	
+						            		@else
+						            			@if($next_now < 4)
+							            		
+											  		<div id = "4" hidden>				
+											  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" >
+											  		</div>				
+											  		<div id = "5" hidden>
+											  		<input type = "file" name = "photo_5" >
+											  		</div>	
+						            			@else
+						            				@if($next_now < 5)
+												  		<div id = "5" hidden>
+												  		<input type = "file" name = "photo_5" >
+												  		</div>	
+						            				@endif
+						            				
+						            			@endif
+						            			
+						            		@endif
+						            	@endif
+						            	
+								  		
+									</div>	
+	                              <input name = "builder_id" value = "{{Auth::user()->id}}" hidden>
+	                              <input name = "job_id" value = "{{$buildere->job_id}}" hidden>
+	                              <textarea name = "builder_note_job" rows="4" cols="50">{{$buildere->builder_note_job}}</textarea>
+	                              <button class = "btn btn-primary" type = "submit">Submit</button>
+	                           {{ Form::close() }}
                         </div>
+                        
+                        
+                           
+                           		
+                     
+                        
                      </div>
                   </div>
                   <hr>

@@ -253,6 +253,11 @@
                      <div id="map-canvas"></div>
                      <!-- END GOOGLE MAP -->
                      <div class="pad-top">
+                          
+                           
+                           <input name = "miles_covered" type="text" class="form-control"  placeholder = 'Miles covered'>
+                        </div>
+                     <div class="pad-top">
                         <div class="form-control-wrapper" >
                            <input name = "site_link" type="text" class="form-control"  placeholder = 'Site link'>
                         </div>
@@ -269,7 +274,7 @@
                      </div>
                      <div class="pad-top">
                         <div class="form-control-wrapper" >
-                           <input name = "qualification" type="text" class="form-control"  placeholder = 'Qualification'>
+                           <textarea name = "qualification" rows="5" class="form-control"  placeholder = 'Qualification'></textarea>
                         </div>
                      </div>
                      <div class="pad-top">
@@ -277,10 +282,10 @@
                            <input name = "howmanyteam" type="text" class="form-control"  placeholder = 'How many team?'>
                         </div>
                      </div>
-                     About
+                     
                      <div class="pad-top">
                         <div class="form-control-wrapper" >
-                           <textarea rows="4" cols="50" name = "about" required placeholder = 'Description' class="form-control"> </textarea>
+                           <textarea name = "about" rows="4"  class="form-control" placeholder = 'About'></textarea>
                         </div>
                      </div>
                   </div>
@@ -346,10 +351,11 @@
                      </div>
                   </div>
                </div>
-               Description
+               
                <div class="pad-top">
                   <div class="form-control-wrapper" >
-                     <textarea rows="4" cols="50" name = "description" required placeholder = 'Description' class="form-control"> </textarea>
+                     
+                     <textarea name = "description" rows="4"  class="form-control" placeholder = 'Description'></textarea>
                   </div>
                </div>
                <div class="pad-top">
@@ -403,6 +409,18 @@
                      </div>
                   </div>
                </div>
+                <div class="pad-top">
+                	On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
+                	
+				</div>
+               <div class="pad-top">
+					<div class="form-control-wrapper" >
+						
+						   Working from: <input type="number" name="working_from" value="0"/></br>
+						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="24" />
+						
+					</div>			
+				</div>
                <div class="pad-top">
                   <div class="form-control-wrapper" >
                      <div class="radio">

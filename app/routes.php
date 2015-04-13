@@ -112,6 +112,8 @@ Route::get('myinvites',array('as'=>'myinvites','uses' => 'BaseController@getMyIn
 
 Route::post('sent-invite',array('as'=>'sent-invite','uses' => 'BaseController@postSentInvite' ));
 
+Route::get('waiting-accept-jobs',array('as'=>'waiting-accept-jobs','uses' => 'BaseController@watingAcceptJobs' ));
+
 
 Route::get('myfavorites',array('as'=>'myfavorites','uses' => 'BaseController@getMyFavorites' ));
 Route::post('customer-find-favorite-builders', 'BaseController@postCustomerFindFavoriteBuilders');
@@ -324,3 +326,6 @@ Route::post('topup-credit-manual', array('as'=>'topup-credit-manual','uses' => '
 Route::post('change-credit-info', array('as'=>'change-credit-info','uses' => 'BaseController@postChangeCreditInfo'));
 
 Route::post('leave-feedback', array('as'=>'leave-feedback','uses' => 'BaseController@postLeaveFeedback'));
+
+
+Route::get('public-info-builder/{builder_id}', array('uses' => 'BaseController@getPublicInfoBuilder' ));

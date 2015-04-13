@@ -1527,6 +1527,27 @@ public function postCustomerActionCancelled()
 	public function getMyInvites()
 	{
 		if(Auth::check()) {
+		$cus_invites = "";
+		$builder_invites = "";
+		
+		    $cus_invites = DB::table('invited')
+		    	->having('user_id', '=',Auth::user()->id )
+		    	->having('type_user_builder', '=','0')
+		    	->get(); 
+		    $builder_invites = DB::table('invited')
+		    	->having('user_id', '=',Auth::user()->id )
+		    	->having('type_user_builder', '=','1')
+		    	->get(); 
+		    
+		    
+			return View::make('user_dashboard.myinvite')->with(array('cus_invites'=>$cus_invites, 'builder_invites'=>$builder_invites));
+		}
+		return Redirect::to('register');
+
+	}
+public function watingAcceptJobs()
+	{
+		if(Auth::check()) {
 		$invites = "";
 		$categorys = "";
 		$jobtittles = "";
@@ -1558,7 +1579,7 @@ public function postCustomerActionCancelled()
 		    	 
 		    	   
 		    } 
-			return View::make('user_dashboard.myinvite')->with(array('invites'=>$invites,'builders'=>$builders,'categorys'=>$categorys,'jobtittles'=>$jobtittles));
+			return View::make('user_dashboard.waiting_jobs')->with(array('invites'=>$invites,'builders'=>$builders,'categorys'=>$categorys,'jobtittles'=>$jobtittles));
 		}
 		return Redirect::to('register');
 
@@ -1908,6 +1929,13 @@ public function postCustomerActionCancelled()
 			$password = Hash::make($password);
 			$date = date('Y-m-d');
 			
+			
+			if (Input::get('on_holiday') === NULL) {
+				$on_holiday = 0;	
+			} else {
+				$on_holiday = Input::get('on_holiday');
+			}
+			
 			$user = new User();
 			$user->username = $input['username'];
 			$user->email = $input['email'];
@@ -1928,9 +1956,15 @@ public function postCustomerActionCancelled()
 			$extend_builder->local = $input['local'];
 			$extend_builder->local_code = $input['local_code'];
 			$extend_builder->lat = $input['lat'];
+			$extend_builder->miles_covered = $input['miles_covered'];
 			$extend_builder->site_link = $input['site_link'];
 			$extend_builder->social_link = $input['social_link'];
 			$extend_builder->social_link_twitter = $social_link_twitter;
+			$extend_builder->on_holiday = $on_holiday;
+			$extend_builder->working_from = $input['working_from'];
+			$extend_builder->working_to = $input['working_to'];
+			
+			
 			$extend_builder->about = $about;
 			$extend_builder->qualification = $qualification;
 			$extend_builder->howmanyteam = $howmanyteam;
@@ -2130,7 +2164,11 @@ public function postCustomerActionCancelled()
 	{
 		$input = Input::all();
 		$email_old = $input['email'];
-		
+		if (Input::get('on_holiday') === NULL) {
+			$on_holiday = 0;
+		} else {
+			$on_holiday = 1;
+		}
 		DB::table('users')
 			->where('id', '=', Auth::user()->id)
 			->update(array(
@@ -2162,6 +2200,10 @@ public function postCustomerActionCancelled()
 			'local_code' => $input['local_code'],
 			'lat' => $input['lat'],
 			'lng' => $input['lng'],
+			'miles_covered' => $input['miles_covered'],
+			'working_from' => $input['working_from'],
+			'working_to' => $input['working_to'],
+			'on_holiday' => $on_holiday,
 			'site_link' => $input['site_link'],
 			'social_link' => $input['social_link'],
 			'social_link_twitter' => $input['social_link_twitter'],
@@ -2357,6 +2399,7 @@ public function postCustomerActionCancelled()
         		$jobs_resuilt[$i] = $waitingjob;
         		$jobs_resuilt[$i]->num_invite_sent = "0";
         		$jobs_resuilt[$i]->job_id = $waitingjob->id;
+        		$jobs_resuilt[$i]->user_id = $waitingjob->user_id;
         		$i++;
         	}
         	 
@@ -2399,16 +2442,19 @@ public function postCustomerActionCancelled()
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
 				//GET USER INFO
+				$userInfo=  "";
 				$userInfo = DB::table('users')->having('id', '=', $user_id )->first();
 				//var_dump($userInfo); die;
 				//GET JOB INFO
+				$jobInfo = "";
 				$jobInfo = DB::table('jobs')
 					->join('category','category.id','=','jobs.category_id')
 					->having('jobs.id', '=', $job_id )
 					->first();
 				//var_dump($jobInfo); die;
+				$jobProcess = "";
 				$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
-				//var_dump($dateInvite); die;
+				
 			return View::make('builder_dashboard.viewDetailJobAlert')->with(array('userInfo'=>$userInfo,'jobInfo'=>$jobInfo,'jobProcess'=>$jobProcess));	
 			} else {
 				return Redirect::to('login');
@@ -2829,17 +2875,123 @@ public function postCustomerActionCancelled()
 	}
 	
 	public function postBuilderSubmitJobDetails()
-	{ 
+	{
 		if(Auth::check()) {
+			if ( Auth::user()->role == '1') {
+				$filename = "";
+			    $extension = "";
+			   
+			    $Images = DB::table('job_process')
+		    	 ->where('builder_id', '=', Auth::user()->id)
+		    	 ->where('job_id', '=', Input::get('job_id'))
+		    	 ->first();
+		    	
+			    $des_root_1 = $Images->picture_portfolio_1;
+			    $des_root_2 = $Images->picture_portfolio_2;
+			    $des_root_3 = $Images->picture_portfolio_3;
+			    $des_root_4 = $Images->picture_portfolio_4;
+			    $des_root_5 = $Images->picture_portfolio_5;
+				
+			    $base_root = asset(str_replace(public_path(), '' , 'uploads'));
+				if (Input::hasFile('photo_1')) 
+			    {	
+			        $allowedext = array("png","jpg","jpeg","gif");
+			        $photo_1 = Input::file('photo_1');
+			        $destinationPath = public_path().'/uploads';
+					$filename = str_random(12);
+			        $extension = $photo_1->getClientOriginalExtension();
 			
-			DB::table('job_process')
-				->where('builder_id', '=', Input::get('builder_id'))
-				->where('job_id', '=', Input::get('job_id'))
-				->update(array(
-				'builder_note_job' => Input::get('builder_note_job'),
-				));
+			        if(in_array($extension, $allowedext ))
+			        {
+			            $upload_success = Input::file('photo_1')->move($destinationPath, $filename.'.'.$extension);
+			        }
+			        $des_root_1 = $base_root."/".$filename.'.'.$extension;
+					
+			    }
+				
+				
+	
+				if (Input::hasFile('photo_2')) 
+			    {	
+			        $allowedext = array("png","jpg","jpeg","gif");
+			        $photo_2 = Input::file('photo_2');
+			        $destinationPath = public_path().'/uploads';
+					$filename = str_random(12);
+			        $extension = $photo_2->getClientOriginalExtension();
 			
-			return Redirect::to('builder-profile');
+			        if(in_array($extension, $allowedext ))
+			        {
+			            $upload_success = Input::file('photo_2')->move($destinationPath, $filename.'.'.$extension);
+			        }
+			        $des_root_2 = $base_root."/".$filename.'.'.$extension;
+				}
+				if (Input::hasFile('photo_3')) 
+			    {	
+			        $allowedext = array("png","jpg","jpeg","gif");
+			        $photo_3 = Input::file('photo_3');
+			        $destinationPath = public_path().'/uploads';
+					$filename = str_random(12);
+			        $extension = $photo_3->getClientOriginalExtension();
+			
+			        if(in_array($extension, $allowedext ))
+			        {
+			            $upload_success = Input::file('photo_3')->move($destinationPath, $filename.'.'.$extension);
+			        }
+			        $des_root_3 = $base_root."/".$filename.'.'.$extension;
+				} 
+				if (Input::hasFile('photo_4')) 
+			    {	
+			        $allowedext = array("png","jpg","jpeg","gif");
+			        $photo_4 = Input::file('photo_4');
+			        $destinationPath = public_path().'/uploads';
+					$filename = str_random(12);
+			        $extension = $photo_4->getClientOriginalExtension();
+			
+			        if(in_array($extension, $allowedext ))
+			        {
+			            $upload_success = Input::file('photo_4')->move($destinationPath, $filename.'.'.$extension);
+			        }
+			        $des_root_4 = $base_root."/".$filename.'.'.$extension;
+				} 
+				if (Input::hasFile('photo_5')) 
+			    {	
+			        $allowedext = array("png","jpg","jpeg","gif");
+			        $photo_5 = Input::file('photo_5');
+			        $destinationPath = public_path().'/uploads';
+					$filename = str_random(12);
+			        $extension = $photo_5->getClientOriginalExtension();
+			
+			        if(in_array($extension, $allowedext ))
+			        {
+			            $upload_success = Input::file('photo_5')->move($destinationPath, $filename.'.'.$extension);
+			        }
+			        $des_root_5 = $base_root."/".$filename.'.'.$extension;
+				}  
+				
+				
+				$builder_note_job = "";
+				
+				
+				
+				if (Input::get('builder_note_job') != "") {
+					$builder_note_job = Input::get('builder_note_job');	
+				}
+				
+				
+				DB::table('job_process')
+					->where('builder_id', '=', Input::get('builder_id'))
+					->where('job_id', '=', Input::get('job_id'))
+					->update(array(
+					'builder_note_job' => $builder_note_job,
+					'picture_portfolio_1' => $des_root_1,
+					'picture_portfolio_2' => $des_root_2,
+					'picture_portfolio_3' => $des_root_3,
+					'picture_portfolio_4' => $des_root_4,
+					'picture_portfolio_5' => $des_root_5,
+					));
+				
+				return Redirect::to('builder-profile');
+			}
 		}
 		return Redirect::to('login');
 	}
@@ -4027,12 +4179,66 @@ public function getAdminPlusFAQ($type)
 
 		mail($to, $subject, $message, $headers);						
 		
-		
+		DB::table('invited')->insert(array(
+				'user_id' => Auth::user()->id, 
+				'type_user_builder' => Input::get('type_user_builder'), 
+				'email_invited' => Input::get('email')	
+			));
+			
+			
 		return Redirect::to('myinvites');			
 	
 	}
 	
-	
+	public function getPublicInfoBuilder($builder_id)
+	{  
+		if(Auth::check()) {
+			
+			$builder = "";//
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+        		->where('users.id', '=', $builder_id)
+        		
+        		->get();
+        	$builder_jobs = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+        		->where('users.id', '=', $builder_id)
+        		->get();
+        		
+        	$feedbacks_content = "";
+        	$feedbacks_created_at = "";
+        	$feedbacks_by_user = "";
+        	foreach ($builder_jobs as $builder_job) {
+        		if($builder_job->status_process == "completed") {
+	        		$i = 0;
+	        		$feedbacks_user = DB::table('feedback')	
+		        		->where('user_id', '=', $builder_job->user_id)
+		        		->get();
+		        		
+		        	foreach ($feedbacks_user as $feedback) {
+		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_content;
+		        		$feedbacks_created_at[$builder_job->job_id][$i] = $feedback->feedback_created_at;
+		        		$feedbacks_by_user[$builder_job->job_id][$i] = DB::table('users')
+		        			->where('id','=',$builder_job->user_id)
+		        			->first();
+	        			$i++;	
+		        	}
+		        	
+        		}
+        		
+        	}
+        		
+        	return View::make('pages.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user));
+		}
+		return Redirect::to('login');
+
+	}
 	
 				
 }

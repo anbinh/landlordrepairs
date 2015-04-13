@@ -1,4 +1,3 @@
-
 @extends('layouts.default')
 @section('content')
 	<div class="container" style= "margin-bottom: 300px;">
@@ -20,6 +19,7 @@
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
 					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 				</div>
 
 			</div>
@@ -150,77 +150,58 @@
 			  font-size: 12px;
 			}
 			</style>
-			 
-			 {{ Form::open(array('url' => 'customer-find-favorite-builders')) }}
-	               <div class="form-group">
-	                     <label>Category</label>
-	                     <select name = "category_id" class="form-control">
-	                        	@if ($categorys != null)
-	                        		@foreach ($categorys as $category)
-	                        			<option value = "{{$category->id}}">{{$category->content}}</option>
-	                        		@endforeach
-	                        	@endif
-
-	              		</select>
-	                </div>
-	                           
-	
-	                 {{ Form::submit('Find Builders', array('class' => 'btn btn-primary')) }}
-				                           
-             {{ Form::close() }}
-				                      
+			
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Builder Name</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Company</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Local code</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>View details</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
+			    	<th><em>Job's tittle</em> <span>&nbsp;</span></th>
+			      	<th><em>Name of Builder</em> <span>&nbsp;</span></th>
+			      	<th><em>Category</em> <span>&nbsp;</span></th>
+			     
+			      	<th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>View Details Builder</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Quote</em> <span>&nbsp;</span></th>
+			      
 			      
 			    </tr>
 			  </thead>
 			  <tbody>
-			  @if($builder != "")
-			  @for ($i = 0; $i < $count; $i++)
-			  	<tr>
-			  		<td>{{$builder[$i][0]->username}}</td>
-				    <td>{{$builder[$i][0]->tittle}}</td>
-				    <td><ol>
-				  @foreach($builder[$i] as $buildere)
-			    			
-			    			<li>{{$buildere->content}}</li>
-	    					
-							
-
-							
-							
-			    	
-					@endforeach
-						</ol>
-						</td>
-						<td>{{$builder[$i][0]->local}}</td>
-				 		<td>{{$builder[$i][0]->local_code}}</td>
-				 		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builder[$i][0]->builder_id}}">View</></em> <span>&nbsp;</span></td>
-				 		<td>
-				 		<form method = "post" action = "customer-action-delete-favorite-builder">
-					 		<input name = "builder_id" value = "{{$buildere->builder_id}}" hidden/>
-					 		<button class="btn btn-danger">Delete</button>
-				 		</form>
-				 		</td>
-					</tr>
-				@endfor
-			  
+			
+			
+			  @foreach($invites as $invite)
+			 	<tr>
+			    	<td>{{$jobtittles[$invite->id]->tittle}}</td>
+			    	<td>{{$builders[$invite->builder_id][0]->username}}</td>
+			    	<td class="date-sort" ><em>{{$categorys[$invite->builder_id][0]->content}}</em> <span>&nbsp;</span></th>
+			      	<td class="date-sort" ><em>{{$invite->radius}}</em> <span>&nbsp;</span></th>
+			      	
+			      	<td class="date-sort" ><em>{{$builders[$invite->builder_id][0]->local}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->local_code}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->email}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>{{$builders[$invite->builder_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em><a href="view-detail-info-builder-with-job/{{$invite->builder_id}},{{$invite->job_id}}">View</></em> <span>&nbsp;</span></td>
+			      	<td class="date-sort"><em>
+						
+						@if ( $invite->vote == "0")
+			      			Waiting quote
+			      		@else
+			         		{{$invite->vote}}£
+			      	 		<a class = "btn btn-primary" style = "background-color: green; color: white;" href = "accept-vote/{{$invite->builder_id}},{{$invite->job_id}}">Accept</a>
+			      	 		
+			      		@endif
+			      	</em> <span>&nbsp;</span></td>
+			 	</tr>	
+				@endforeach
+			    
 			   
 			</table>
-			 @else
-			 	</table>
-			 	<p>Have zero jobs posted</p>
-			 @endif
-			 
 			
+			 
+
 			
     </div>
     

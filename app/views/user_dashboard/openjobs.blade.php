@@ -7,7 +7,7 @@
 			</div>
 			<div class="col-md-2">
 				<div class="list-group">
-					  <a href="#" class="list-group-item active">
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item active">
 					    Dashboard
 					  </a>
 					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
@@ -19,6 +19,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
+					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
 				</div>
 
 			</div>

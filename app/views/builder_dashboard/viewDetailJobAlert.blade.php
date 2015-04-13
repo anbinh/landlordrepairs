@@ -78,12 +78,13 @@
 		         	               
 		
 				                     @endif
+				                    @if ($jobProcess != "") 
 		                            <div class="form-group">
 		                                <label>Time Invited Sent</label>
 		                                <p>{{$jobProcess->created_at}}</p>
 		                            	
 		                            </div>
-		                            
+		                            @endif
 		                            <div class="form-group">
 		                                <label>Local</label>
 		                                <p>{{$jobInfo->local}}</p>
@@ -95,11 +96,13 @@
 		                                <p>{{$jobInfo->local_code}}</p>
 		                            	
 		                            </div>
+		                            @if ($jobProcess != "") 
 		                            <div class="form-group">
 		                                <label>Radius</label>
 		                                <p>{{$jobProcess->radius}} miles</p>
 		                            	
 		                            </div>
+		                            @endif
 		                            
 		                            <div class="pad-top">
 								<div class="form-control-wrapper" >
