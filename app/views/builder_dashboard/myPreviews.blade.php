@@ -14,7 +14,7 @@
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
 					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
 					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  
+					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
 					  <a href="#" class="list-group-item">Pending reviews</a>
@@ -22,6 +22,7 @@
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
 					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					  
 				</div>
 
 			</div>
@@ -156,39 +157,44 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Tittle</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
-	
+			      <th><em>Job tittle</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Preview content</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>User post</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Job Detailt</em> <span>&nbsp;</span></th>
+			      <th class="date-sort"><em>Create at</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
-		
-		@if($WonJobs != null)	
-			 @foreach($WonJobs as $WonJob)
+			
+			@if($previews != null)
+			  @foreach($previews as $preview)
 			 	<tr>
-			    	<td>{{$WonJob->tittle}}</td>
-			    	<td>{{$WonJob->property}}</td>
-			   		<td>{{$WonJob->content}}</td>
-			    	<td>{{$WonJob->price}}</td>
-			 		<td>{{$WonJob->timeoption}}</td>
-			 		<td>{{$WonJob->local}}</td>
-			 		<td>{{$WonJob->description}}</td>
-	
+			    	<td>{{$preview->tittle}}</td>
+			    	<td>{{$preview->feedback_content}}</td>
+			   		<td>
+			   		{{$preview->username}}
+			   		</td>
+			    	
+			 		
+			 		
+			 		
+			 		<td class="date-sort"><em><a href="view-detail-job-alert/{{$preview->job_id}},{{$preview->user_id}}">View</></em> <span>&nbsp;</span>
+			 		</td>
+			 		
+			 		<td>{{$preview->created_at}}</td>
+			 		
+			 		
+			 		
+			 		
 			 	</tr>	
 				@endforeach
-			    
+			   
 			   
 			</table>
 			@else
 			 	</table>
 			 	<p>Have zero jobs posted</p>
 			 @endif
-			 
 			 
 			
 			

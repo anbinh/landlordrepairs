@@ -27,7 +27,7 @@
 				</div>
 
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-6">
 				<div class="row">
 				<div class="col-lg-12" style="margin-top:30px">
         <script>
@@ -161,6 +161,7 @@
 			      	<th><em>Association name</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Logo</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Source</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Delete</em> <span>&nbsp;</span></th>
 			      	
 			      	
 			    </tr>
@@ -201,7 +202,15 @@
 							  	{{ Form::reset('Reset') }}
 								  
 							  	{{ Form::close() }}
-				      			</td>		
+				      			</td>
+				      			<td>
+						      		<form method = "post" action = "{{URL::route('admin-delete-association')}}">
+						      			<input name = "id" value = "{{$association->id}}" hidden>
+						 				<button type = "submit" class="btn btn-danger">Delete</button>
+					      			</form>	
+									
+					      		
+								</td>		
 				@endforeach
               @endif
 
@@ -211,6 +220,54 @@
 
 
     </div>
+
+    <!-- end change phone number -->
+</div>
+			</div>
+			<div class="col-md-4">
+				
+				<div class="row">
+				<div class="col-lg-12" style="margin-top:30px">
+        
+			
+			<table id="country-list" class="sortable-table">
+			  <thead>
+			    <tr class="country-table-head">
+			      	<th><em>Association name</em> <span>&nbsp;</span></th>
+			      	<th><em>Logo</em> <span>&nbsp;</span></th>
+		
+			    </tr>
+			  </thead>
+			  <tbody>
+				
+				
+				{{ Form::open(array('url'=>'admin-plus-association','files'=>true)) }}
+				<td>
+					<input name = "association_name" required>
+				</td>
+				<td>	
+					<input name = "association_id" value = "{{$association->id}}" hidden/>
+				  	
+				  	
+				  	{{ Form::file('photo','',array('id'=>'','class'=>'')) }}
+				  	  <!-- submit buttons -->
+				  	{{ Form::submit('Add') }}  
+					  <!-- reset buttons -->
+				  	{{ Form::reset('Reset') }}
+					  
+				  	
+      			</td>
+				<td>
+	      		
+	 				
+      			
+				</td>
+				{{ Form::close() }}
+					
+			
+	      		
+	      		</table></div>
+    
 
     <!-- end change phone number -->
 </div>

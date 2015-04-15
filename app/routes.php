@@ -152,7 +152,8 @@ Route::get('customer-invited', array('as'=>'customer-invited','uses' => 'BaseCon
 Route::post('customer-invited', 'BaseController@postBuilderInvited');
 
 Route::get('builder-find-jobs', array('as'=>'builder-find-jobs','uses' => 'BaseController@getBuilderFindJobs' ));
-Route::post('builder-find-jobs', 'BaseController@postBuilderFindJobs');
+Route::post('builder-find-jobs/{mode}', 'BaseController@postBuilderFindJobs');
+
 
 Route::get('builder-ongoing-jobs', array('as'=>'builder-ongoing-jobs','uses' => 'BaseController@getBuilderOngoingJobs' ));
 
@@ -163,6 +164,8 @@ Route::get('builder-won-jobs', array('as'=>'builder-won-jobs','uses' => 'BaseCon
 Route::get('builder-cancelled-jobs', array('as'=>'builder-cancelled-jobs','uses' => 'BaseController@getBuilderCancelledJobs' ));
 
 Route::get('builder-completed-jobs', array('as'=>'builder-completed-jobs','uses' => 'BaseController@getBuilderCompletedJobs' ));
+
+Route::get('my-previews', array('as'=>'my-previews','uses' => 'BaseController@getMyPreviews' ));
 
 Route::post( 'builder-action-completed', array( 'uses' => 'BaseController@getBuilderActionCompleted' ));
 
@@ -228,7 +231,12 @@ Route::get('admin-manage-category', array('as'=>'admin-manage-category','uses' =
 
 Route::post('admin-delete-category', array('as'=>'admin-delete-category','uses' => 'BaseController@postAdminDeleteCategory' ));
 
+Route::post('admin-delete-association', array('as'=>'admin-delete-association','uses' => 'BaseController@postAdminDeleteAssociation' ));
+
 Route::post('admin-plus-category', array('as'=>'admin-plus-category','uses' => 'BaseController@postAdminPlusCategory' ));
+
+Route::post('admin-plus-association', array('as'=>'admin-plus-association','uses' => 'BaseController@postAdminPlusAssociation' ));
+
 
 Route::get('FAQ-User', array('as'=>'FAQ-User','uses' => 'BaseController@getFAQUser' ));
 
@@ -237,6 +245,9 @@ Route::get('FAQ-Builder', array('as'=>'FAQ-Builder','uses' => 'BaseController@ge
 Route::get('admin-manage-charges', array('as'=>'admin-manage-charges','uses' => 'BaseController@getAdminManageCharges' ));
 
 Route::post('admin-manage-charges', array('as'=>'admin-manage-charges','uses' => 'BaseController@postAdminManageCharges' ));
+
+Route::post('admin_manage_builder_change_password','BaseController@postAdminManaBuilderChangePassword');
+Route::post('admin_manage_builder_change_phonenumber','BaseController@postAdminManaBuilderChangePhonenumber');
 
 //------
 Route::get('chargePackage',function(){

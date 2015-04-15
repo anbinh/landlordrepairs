@@ -257,13 +257,22 @@
                             </div>
                             
                             <div class="form-group">
+                            <span class="fa-stack fa-lg"><i class="fa fa-dribbble fa-stack-1x"></i></span>
+                            	
                                 <label>Site Link</label>
                                 {{$builder[0]->site_link}}
                                 
                             </div>
                              <div class="form-group">
-                                <label>Social Link</label>
+                             <span class="fa-stack fa-lg"><i class="fa fa-facebook fa-stack-1x"></i></span>
+                                <label>Facebook</label>
                                 {{$builder[0]->social_link}}
+                                
+                            </div>
+                            <div class="form-group">
+                            <span class="fa-stack fa-lg"><i class="fa fa-twitter fa-stack-1x"></i></span>
+                                <label>Twitter</label>
+                                {{$builder[0]->social_link_twitter}}
                                 
                             </div>
                             
@@ -283,9 +292,8 @@
 								
 								
 								<div class = "col-lg-12">
-								@foreach($builder as $buildere)
+								@foreach($builder_categorys as $buildere)
 									{{$buildere->content}}
-								
 								@endforeach 
 								
 									
@@ -295,13 +303,32 @@
 							   
 								
 						</div>
-							<div class = "col-lg-12">
+						<div class="pad-top">
+								<div class="form-control-wrapper" >
+								
+								<div class = "col-lg-12">
 								Association:
 								</div>
-							<div class = "col-lg-12">
-								<img style = "width: 50px; height: 50px; margin-left: 15px;" src="http://www.firebirdsql.org/file/about/firebird-logo-300.png"/> 
-								{{$builder[0]->association}}
-							</div>
+								
+								
+								
+								
+								<div class = "col-lg-12">
+								@foreach($builder as $buildere)
+									<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$buildere->association_src}}"/>
+									{{$buildere->association_name}}
+									
+								@endforeach 
+								
+									
+								</div>
+								</div>
+	
+							   
+								
+						</div>
+							
+							
 							
 							<div class="form-group">
 	                           

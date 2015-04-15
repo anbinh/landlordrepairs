@@ -1630,23 +1630,36 @@ public function watingAcceptJobs()
 	{  
 		if(Auth::check()) {
 			//echo($builder_id); die;
-			$builder = "";//
-			$builder = DB::table('users')
-				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-				
+			$builder = "";//haohao
+			/*$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')			
 				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
         		->where('users.id', '=', $builder_id)
         		
-        		->get();
+        		->get();*/
+        	$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				
+				->join('extend_builders_association', 'users.id', '=', 'extend_builders_association.builder_id')
+				->join('association_logo', 'association_logo.id', '=', 'extend_builders_association.association_id')
+        		->where('users.id', '=', $builder_id)
+        	->get();
+        	$builder_categorys = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+				
+        		->where('users.id', '=', $builder_id)
+        	->get();
+        	//var_dump($builder); die;	
         	$builder_jobs = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
-				->join('category', 'category.id', '=', 'jobs.category_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+				->join('category', 'category.id', '=', 'jobs.category_id')	
         		->where('users.id', '=', $builder_id)
         		->get();
-        		
+        	//var_dump($builder_jobs); die;	
         	$feedbacks_content = "";
         	$feedbacks_created_at = "";
         	$feedbacks_by_user = "";
@@ -1671,7 +1684,7 @@ public function watingAcceptJobs()
         	}
         		
         		
-        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user));
+        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user,'builder_categorys'=>$builder_categorys));
 		}
 		return Redirect::to('login');
 
@@ -1749,14 +1762,22 @@ public function watingAcceptJobs()
 		if(Auth::check()) {
 			$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				
+				->join('extend_builders_association', 'users.id', '=', 'extend_builders_association.builder_id')
+				->join('association_logo', 'association_logo.id', '=', 'extend_builders_association.association_id')
+        		->where('users.id', '=', $builder_id)->get();
+        		//var_dump($builder); die;
+        	$builder_categorys = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
 				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+				
         		->where('users.id', '=', $builder_id)->get();
-        		//var_dump($builder[0]); 
-        	
+        		
+        		
         	$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
 			$radius = $jobProcess->radius; 
-        	return View::make('user_dashboard.builder_with_job__profile')->with(array('builder' => $builder, 'radius' => $radius));
+        	return View::make('user_dashboard.builder_with_job__profile')->with(array('builder' => $builder, 'radius' => $radius,'builder_categorys'=>$builder_categorys));
 		}
 		return Redirect::to('login');
 
@@ -1921,8 +1942,10 @@ public function watingAcceptJobs()
 		if($v->passes())
 		{	
 			$categorys = Input::get('check_builders');
+			$associations = Input::get('check_builders_ass');
 			$num_of_checked_builders = count($categorys);
-			if ($num_of_checked_builders == 0) {
+			$num_of_checked_builders_ass = count($associations);
+			if (($num_of_checked_builders == 0) || ($num_of_checked_builders_ass == 0)) {
 				return Redirect::to('register-builder')->with("num_of_checked_builders", "0");
 			} else {
 			$password = $input['password'];
@@ -1970,10 +1993,10 @@ public function watingAcceptJobs()
 			$extend_builder->howmanyteam = $howmanyteam;
 			$extend_builder->package_pay_type = $input['package_pay_type'];
 	
-			if($input['gasNumber'] != "") {
+			/*if($input['gasNumber'] != "") {
 				$extend_builder->gas_number = $input['gasNumber'];	
-			}		
-			$extend_builder->association = $input['association'];	
+			}*/		
+			//$extend_builder->association = $input['association'];	
 			$extend_builder->save();
 					
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
@@ -1981,6 +2004,12 @@ public function watingAcceptJobs()
 				$extend_builder_category->builder_id = $user->id;
 				$extend_builder_category->category_id = $categorys[$i];
 				$extend_builder_category->save();	
+			}
+			for ($i = 0; $i < $num_of_checked_builders_ass; $i++){
+				$extend_builder_ass = new ExtendBuilderAssociation();	
+				$extend_builder_ass->builder_id = $user->id;
+				$extend_builder_ass->association_id = $associations[$i];
+				$extend_builder_ass->save();	
 			}
 		}
 	
@@ -2134,27 +2163,29 @@ public function watingAcceptJobs()
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
 				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
+				->join('extend_builders_association', 'users.id', '=', 'extend_builders_association.builder_id')
+				->join('association_logo', 'association_logo.id', '=', 'extend_builders_association.association_id')
         		->where('users.id', '=', Auth::user()->id)
         		->get();
         		//var_dump($builder[0]); die;
-        	$associations = DB::table('association_logo')
-        		->get();
+        	
         		
         	$builder_jobs = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
 				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
 				->join('category', 'category.id', '=', 'jobs.category_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+					
         		->where('users.id', '=', Auth::user()->id)
         		->get();
         	$categorys = DB::table('category')
-        		->get();	
-        		//var_dump($builder_jobs); die;
+        		->get();
+        	$associations = DB::table('association_logo')
+        		->get();		
+        		//var_dump($associations); die;
         	$package = DB::table('charges')
         		->get();		
-			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys,'package'=>$package));
+			return View::make('builder_dashboard.profile')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys, 'package'=>$package));
 		}
 		return Redirect::to('login');
 
@@ -2186,11 +2217,11 @@ public function watingAcceptJobs()
 			'email' => $input['email'],
 			));
 
-			if ($input['gasNumber'] != "") {
+			/*if ($input['gasNumber'] != "") {
 				$gasNum = $input['gasNumber']; 
 			} else {
 				$gasNum = 0;
-			}
+			}*/
 			
 			DB::table('extend_builders')
 			->where('extend_builders.builder_id', '=', Auth::user()->id)
@@ -2209,8 +2240,7 @@ public function watingAcceptJobs()
 			'social_link_twitter' => $input['social_link_twitter'],
 			'qualification' => $input['qualification'],
 			'howmanyteam' => $input['howmanyteam'],
-			'association' => $input['association'],
-			'gas_number' => $gasNum,
+			
 			'about' => $input['about'],
 			'created_at' => $input['created_at'],
 			));
@@ -2218,14 +2248,25 @@ public function watingAcceptJobs()
 			DB::table('extend_builders_category')
 				->where('builder_id', '=', Auth::user()->id)
 				->delete();
+			DB::table('extend_builders_association')
+				->where('builder_id', '=', Auth::user()->id)
+				->delete();	
 			
 			$categorys = Input::get('check_builders');
-			$num_of_checked_builders = count($categorys); 
+			$associations = Input::get('check_builders_ass');
+			$num_of_checked_builders = count($categorys);
+			$num_of_checked_builders_ass = count($associations); 
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
 				$extend_builder_category = new ExtendBuilderCategory();	
 				$extend_builder_category->builder_id = Auth::user()->id;
 				$extend_builder_category->category_id = $categorys[$i];
 				$extend_builder_category->save();	
+			}
+			for ($i = 0; $i < $num_of_checked_builders_ass; $i++){
+				$extend_builder_ass = new ExtendBuilderAssociation();	
+				$extend_builder_ass->builder_id = Auth::user()->id;
+				$extend_builder_ass->association_id = $associations[$i];
+				$extend_builder_ass->save();	
 			}
 			//----------------------//
 			
@@ -2294,12 +2335,15 @@ public function watingAcceptJobs()
 	{
 		if(Auth::check()) {
 			if (Auth::user()->role == '1' ) {
-				$builders = DB::table('users')
+				$builder_categorys = DB::table('users')
 					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
 					->join('category', 'category.id', '=', 'extend_builders_category.category_id')
         			->where('users.id', '=', Auth::user()->id)->get();
-        		//var_dump($builders); die;
-				return View::make('builder_dashboard.findJobs')->with(array('builders'=>$builders));;			
+        		
+        		$categorys = DB::table('category')
+					->get();
+					
+				return View::make('builder_dashboard.findJobs')->with(array('categorys'=>$categorys, 'builder_categorys' => $builder_categorys));;			
 			} else {
 				return Redirect::to('login');
 			}
@@ -2310,7 +2354,7 @@ public function watingAcceptJobs()
 
 	}
 	
-	public function postBuilderFindJobs()
+	public function postBuilderFindJobs($mode)
 	{   
 		$price_invite = DB::table('charges')
 			->where('id','=','6')
@@ -2406,7 +2450,7 @@ public function watingAcceptJobs()
         }
 		
 		$alertLowCredit = false;
-		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs, 'alertLowCredit' => $alertLowCredit));;
+		return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs, 'alertLowCredit' => $alertLowCredit,'mode'=>$mode));;
 		} else {
 		try {
 				Mail::send('emails.alertLowCredit', function($message)
@@ -2432,7 +2476,7 @@ public function watingAcceptJobs()
 			$isHasNum = "";
 			$myjobs = "";
 			$alertLowCredit = true;
-			return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs,'alertLowCredit'=>$alertLowCredit));;
+			return View::make('builder_dashboard.findJobsrResuilt')->with(array('jobs_resuilt'=>$jobs_resuilt,'isHasNum'=>$isHasNum,'myjobs'=>$myjobs,'alertLowCredit'=>$alertLowCredit,'mode'=>$mode));;
 		}
 	
 	}	
@@ -3029,33 +3073,64 @@ public function watingAcceptJobs()
 	public function getAdminViewDetailInfoBuilder($builder_id)
 	{  
 		if(Auth::check()) {
-			
-			$builder = "";
-			$builder = DB::table('users')
+			//echo($builder_id); die;
+			$builder = "";//haohao
+			/*$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')			
+				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
+        		->where('users.id', '=', $builder_id)
+        		
+        		->get();*/
+        	$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
-				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
-				->join('category', 'category.id', '=', 'jobs.category_id')
+				
+				->join('extend_builders_association', 'users.id', '=', 'extend_builders_association.builder_id')
+				->join('association_logo', 'association_logo.id', '=', 'extend_builders_association.association_id')
+        		->where('users.id', '=', $builder_id)
+        	->get();
+        	$builder_categorys = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
 				
         		->where('users.id', '=', $builder_id)
-        		
-        		->get();
-        		$builder_info = "";
-        		$builder_info = DB::table('users')
+        	->get();
+        	//var_dump($builder); die;	
+        	$builder_jobs = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
-				->join('extend_builders_category', 'extend_builders_category.builder_id', '=', 'users.id')
-				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')	
         		->where('users.id', '=', $builder_id)
-        		
         		->get();
-        		//var_dump($builder[0]); die; 
-        	
-        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder,'builder_info'=>$builder_info));
+        	//var_dump($builder_jobs); die;	
+        	$feedbacks_content = "";
+        	$feedbacks_created_at = "";
+        	$feedbacks_by_user = "";
+        	foreach ($builder_jobs as $builder_job) {
+        		if($builder_job->status_process == "completed") {
+	        		$i = 0;
+	        		$feedbacks_user = DB::table('feedback')	
+		        		->where('user_id', '=', $builder_job->user_id)
+		        		->get();
+		        		
+		        	foreach ($feedbacks_user as $feedback) {
+		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_content;
+		        		$feedbacks_created_at[$builder_job->job_id][$i] = $feedback->feedback_created_at;
+		        		$feedbacks_by_user[$builder_job->job_id][$i] = DB::table('users')
+		        			->where('id','=',$builder_job->user_id)
+		        			->first();
+	        			$i++;	
+		        	}
+		        	
+        		}
+        		
+        	}
+        		
+        		
+        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user,'builder_categorys'=>$builder_categorys));
 		}
 		return Redirect::to('login');
-
 	}
 	
 	public function postAdminDeleteBuilder()
@@ -3086,28 +3161,53 @@ public function watingAcceptJobs()
 	
 	public function postAdminEditBuilder()
 	{  
-		if(Auth::check()) { 
+		
+		if(Auth::check()) {
 			if ( Auth::user()->role == '2') {
-				//$builder = Auth::user();
-				$builder = DB::table('users')
-					->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-					->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
-					->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')
-	        		->where('users.id', '=', Input::get('builder_id'))
-	        		->get();
-	        	$associations = DB::table('association_logo')
-	        		->get();	
-				return View::make('admin_dashboard.viewBuilderProfileToEdit')->with(array('builder'=> $builder, 'associations'=> $associations));			
+			//$builder = Auth::user();
+			$builder = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+				->join('category', 'category.id', '=', 'extend_builders_category.category_id')
+				->join('extend_builders_association', 'users.id', '=', 'extend_builders_association.builder_id')
+				->join('association_logo', 'association_logo.id', '=', 'extend_builders_association.association_id')
+        		->where('users.id', '=', Input::get('builder_id'))
+        		->get();
+        		//var_dump($builder[0]); die;
+        	
+        		
+        	$builder_jobs = DB::table('users')
+				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				->join('job_process', 'job_process.builder_id', '=', 'extend_builders.builder_id')
+				->join('jobs', 'jobs.id', '=', 'job_process.job_id')
+				->join('category', 'category.id', '=', 'jobs.category_id')
+					
+        		->where('users.id', '=', Input::get('builder_id'))
+        		->get();
+        	$categorys = DB::table('category')
+        		->get();
+        	$associations = DB::table('association_logo')
+        		->get();		
+        			//var_dump($associations); die;
+        	$package = DB::table('charges')
+        		->get();		
+			return View::make('admin_dashboard.viewBuilderProfileToEdit')->with(array('builder'=> $builder, 'associations' => $associations,'builder_jobs'=>$builder_jobs,'categorys'=>$categorys, 'package'=>$package));
 			}
+			return Redirect::to('login');
 		}
 		return Redirect::to('login');
+		
 	}
 	
 	public function postAdminChangeBuilderProfile()
 	{ 	
 		$input = Input::all();
 		$email_old = $input['email'];
-		
+		if (Input::get('on_holiday') === NULL) {
+			$on_holiday = 0;
+		} else {
+			$on_holiday = 1;
+		}
 		DB::table('users')
 			->where('id', '=', Input::get('builder_id'))
 			->update(array(
@@ -3125,6 +3225,11 @@ public function watingAcceptJobs()
 			'email' => $input['email'],
 			));
 
+			/*if ($input['gasNumber'] != "") {
+				$gasNum = $input['gasNumber']; 
+			} else {
+				$gasNum = 0;
+			}*/
 			
 			DB::table('extend_builders')
 			->where('extend_builders.builder_id', '=', Input::get('builder_id'))
@@ -3134,21 +3239,42 @@ public function watingAcceptJobs()
 			'local_code' => $input['local_code'],
 			'lat' => $input['lat'],
 			'lng' => $input['lng'],
+			'miles_covered' => $input['miles_covered'],
+			'working_from' => $input['working_from'],
+			'working_to' => $input['working_to'],
+			'on_holiday' => $on_holiday,
 			'site_link' => $input['site_link'],
 			'social_link' => $input['social_link'],
-			'association' => $input['association'],
+			'social_link_twitter' => $input['social_link_twitter'],
+			'qualification' => $input['qualification'],
+			'howmanyteam' => $input['howmanyteam'],
+			
+			'about' => $input['about'],
 			'created_at' => $input['created_at'],
 			));
 			//---Change Category----//
-			DB::table('extend_builders_category')->where('builder_id', '=', Input::get('builder_id'))->delete();
-			//echo "dete";die;
+			DB::table('extend_builders_category')
+				->where('builder_id', '=', Input::get('builder_id'))
+				->delete();
+			DB::table('extend_builders_association')
+				->where('builder_id', '=', Input::get('builder_id'))
+				->delete();	
+			
 			$categorys = Input::get('check_builders');
+			$associations = Input::get('check_builders_ass');
 			$num_of_checked_builders = count($categorys);
+			$num_of_checked_builders_ass = count($associations); 
 			for ($i = 0; $i < $num_of_checked_builders; $i++){
 				$extend_builder_category = new ExtendBuilderCategory();	
 				$extend_builder_category->builder_id = Input::get('builder_id');
-				$extend_builder_category->category = $categorys[$i];
+				$extend_builder_category->category_id = $categorys[$i];
 				$extend_builder_category->save();	
+			}
+			for ($i = 0; $i < $num_of_checked_builders_ass; $i++){
+				$extend_builder_ass = new ExtendBuilderAssociation();	
+				$extend_builder_ass->builder_id = Input::get('builder_id');
+				$extend_builder_ass->association_id = $associations[$i];
+				$extend_builder_ass->save();	
 			}
 			//----------------------//
 			
@@ -3157,7 +3283,7 @@ public function watingAcceptJobs()
 		return Redirect::to('admin-manage-builders');
 		} else {
 			DB::table('users')
-			->where('id', '=', Input::get("builder_id"))
+			->where('id', '=', Input::get('builder_id'))
 			->update(array(
 			'email' => $email_old,
 			));
@@ -3165,6 +3291,40 @@ public function watingAcceptJobs()
 		}
 	}
 	
+	public function postAdminManaBuilderChangePassword()
+	{  
+		if (Auth::user()->role == '2') {
+			$password = Input::get('password');
+			$password_hash = Hash::make($password);
+			DB::table('users')
+			->where('id', '=', Input::get('builder_id'))
+			->update(array(
+			'password' => $password_hash,
+			));
+			
+			return Redirect::to('admin-manage-builders');
+		} else {
+			return Redirect::to('login');
+		}
+		
+	}
+	public function postAdminManaBuilderChangePhonenumber()
+	{  
+		if (Auth::user()->role == '2') {
+			$phonenumber = Input::get('phonenumber');
+			
+			DB::table('users')
+			->where('id', '=', Input::get('builder_id'))
+			->update(array(
+			'phone_number' => $phonenumber,
+			));
+			
+			return Redirect::to('admin-manage-builders');
+		} else {
+			return Redirect::to('login');
+		}
+		
+	}
 	
 	public function getAdminManageUsers()
 	{  
@@ -3415,7 +3575,7 @@ public function watingAcceptJobs()
 		return Redirect::to('admin-manage-users	');			
 	}
 	
-	public function getAdminManageAssociations()
+	/*public function getAdminManageAssociations()
 	{   
 		
 		if(Auth::check()) { 
@@ -3427,7 +3587,7 @@ public function watingAcceptJobs()
 			}
 		}
 		return Redirect::to('login');			
-	}
+	}*/
 	
 	public function postSubmitSaveAssociationLogo()
 	{   
@@ -3659,22 +3819,96 @@ public function getAdminPlusFAQ($type)
 	
 	}
 	
+	public function getAdminManageAssociations()
+	{   
+		if(Auth::check()) { 
+			if ( Auth::user()->role == '2') {
+				 
+				 $associations = "";
+				 $associations = DB::table('association_logo')
+			    	->get();
+			   
+				return View::make('admin_dashboard.associationsManage')
+					->with(array('associations' => $associations));	
+			}
+		}
+		return Redirect::to('login');			
+	
+	}
+	
+	
+	
 	public function postAdminDeleteCategory()
 	{	
 		DB::table('category')
 			->where('id', '=', Input::get('id'))
 			->delete();
-
+		
+		DB::table('extend_builders_category')
+			->where('category_id', '=', Input::get('id'))
+			->delete();
+			
 		return Redirect::to('admin-manage-category');	
 	
 	}
 	
+	public function postAdminDeleteAssociation()
+	{	
+		DB::table('association_logo')
+			->where('id', '=', Input::get('id'))
+			->delete();
+		DB::table('extend_builders_association')
+			->where('association_id', '=', Input::get('id'))
+			->delete();
+		return Redirect::to('admin-manage-associations');	
+	
+	}
+	
 	public function postAdminPlusCategory()
-	{  if (Input::get('content-category') != null) {
-		DB::table('category')->insert(array(
-			'content' => Input::get('content-category')));
+	{  
+		if (Input::get('content-category') != null) {
+			
+			DB::table('category')
+				->insert(array(
+				'content' => Input::get('content-category')));
 		}
 		return Redirect::to('admin-manage-category');	
+	
+	}
+	
+	public function postAdminPlusAssociation()
+	{  
+		$filename = "";
+	    $extension = "";
+	
+	    if (Input::hasFile('photo'))
+	    {
+	        $allowedext = array("png","jpg","jpeg","gif");
+	        $photo = Input::file('photo');
+	        $destinationPath = public_path().'/uploads';
+			$filename = str_random(12);
+	        $extension = $photo->getClientOriginalExtension();
+	
+	        if(in_array($extension, $allowedext ))
+	        {
+	            $upload_success = Input::file('photo')->move($destinationPath, $filename.'.'.$extension);
+	        }
+		} else {
+			return Redirect::to('admin-manage-associations');
+		} 
+		$base_root = asset(str_replace(public_path(), '' , 'uploads'));
+		$des_root = $base_root."/".$filename.'.'.$extension; 
+
+		DB::table('association_logo')
+			->insert(array(
+			'association_name' => Input::get('association_name'),
+			'association_src' => $des_root));
+		
+		return Redirect::to('admin-manage-associations');
+		
+		
+		
+			
 	
 	}
 	
@@ -4240,7 +4474,22 @@ public function getAdminPlusFAQ($type)
 
 	}
 	
-				
+	public function getMyPreviews()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '1') {	
+				$previews = DB::table('feedback')
+			    	 ->join('jobs', 'jobs.id', '=', 'feedback.job_id')
+			    	 ->join('users', 'users.id', '=', 'feedback.user_id')
+			    	 ->where('feedback.builder_id', '=', Auth::user()->id)
+			    	 ->get();
+			    //var_dump($previews); die;
+				return View::make('builder_dashboard.myPreviews')->with(array('previews'=> $previews));
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
 }
 
 

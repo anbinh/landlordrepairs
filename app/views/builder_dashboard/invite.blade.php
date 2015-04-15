@@ -21,7 +21,7 @@
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  
+					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
 				</div>
 
 			</div>

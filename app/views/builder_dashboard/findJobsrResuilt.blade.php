@@ -21,7 +21,7 @@
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  
+					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
 					  
 				</div>
 
@@ -198,13 +198,15 @@
 			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
 			    	<td class="date-sort"><em><a href="view-detail-job-alert/{{$job_resuilt->job_id}},{{$job_resuilt->user_id}}">View</></em> <span>&nbsp;</span></td>
 			    	<td>
+			    	@if ($mode == 1)
 			    	<form action="vote-job" method="post">
 	  					<input type = "number" name = "quotePrice" value = ""/>
 	  					<input hidden name = "job_id" value = "{{$job_resuilt->job_id}}"/>
 	  					<input hidden name = "user_id" value = "{{$job_resuilt->user_id}}"/>
 	  					<input hidden name = "isAddToJobProcess" value = "true" />
-	  					<input type="submit" value="Vote">
+	  					<input type="submit" value="Quote">
 					</form>
+					@endif
 			    	</td>
 			 	</tr>	
 				@endforeach

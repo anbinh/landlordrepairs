@@ -20,6 +20,7 @@
          <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
          <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
          <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
+         <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
       </div>
    </div>
    <div class="col-md-10">
@@ -316,72 +317,60 @@
                               <input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
                            </div>
                         </div>
-                        <div class="" >
-                           <div class = "col-lg-12">
-                              Association 
-                           </div>
-                           <div class="">
-                           	  <script>
-			                     function addGasNumber(){
-			                     	$("#gasNum").show();		
-			                     }
-			                     function hideGasNumber(){
-			                     	$("#gasNum").hide();		
-			                     }
-			                  </script>	
-                           	  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[0]->association_src}}"/>
-                              <label>											  	
-                              <input type="radio" onclick = "addGasNumber()" name="association" value="{{$associations[0]->association_name}}" id = "detail1"
-                              @if ( $associations[0]->association_name == $builder[0]->association_name)
-                              	checked
-                              @endif>
-                              	{{$associations[0]->association_name}}
-                              </label>
-                              @if ($associations[0]->association_name == $builder[0]->association_name)
-                              	<script>
-	                              $( document ).ready(function() {
-	                            	  	addGasNumber();
-	                            	});
-                        		
-                            	</script>
-                              @endif
-                              <input name = "gasNumber" id="gasNum" placeholder = "Type gas number" value = "{{$builder[0]->gas_number}}" hidden/>	
-                              @for  ($i = 1; $i < 4; $i++)
-                              <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
-                              <label>											  	
-                              <input type="radio" onclick = "hideGasNumber()" name="association" value="{{$associations[$i]->association_name}}" id = "detail1"
-                              @if ( $associations[$i]->association_name == $builder[0]->association_name)
-                              checked
-                              @endif>
-                              {{$associations[$i]->association_name}}
-                              </label>
-                              @endfor
-                              <div class = "list_associations" hidden>
-                                 @for  ($i = 4; $i < 16; $i++)
-                                 <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
-                                 <label>											  	
-                                 <input type="radio" onclick = "hideGasNumber()" name="association" value="{{$associations[$i]->association_name}}" id = "detail1"
-                                 @if ( $associations[$i]->association_name == $builder[0]->association_name)
-                                 checked
-                                 @endif>
-                                 {{$associations[$i]->association_name}}
-                                 </label>
-                                 @endfor
+                        <div class="pad-top">
+                           <div class="form-control-wrapper" >
+                              Association
+                              <div class = "col-lg-12">
                               </div>
-                              <input type = "button" onclick = "showAllAssociations()" id = "show_all_associations" value = "Show all"/>
-                              <script>
-                                 function showAllAssociations() {
-                                 	if ($("#show_all_associations").val() == "Show all"){
-                                  		$("#show_all_associations").val("Hide");
-                                  		$(".list_associations").show();
-                                 	} else {
-                                 		$("#show_all_associations").val("Show all");
-                                 		$(".list_associations").hide();
-                                 	}
-                                 }
-                              </script>
+                              @if ($associations != null)
+	                              @if (count($associations) < 5)
+	                              <div class = "col-lg-12">
+	                                 <div class="checkbox">
+	                                    @for ($i = 0; $i < count($associations); $i++)
+	                                    <label>
+	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
+	                                    </label>
+	                                    @endfor
+	                                 </div>
+	                              </div>
+	                              @else
+	                              <div class = "col-lg-12">
+	                                 <div class="checkbox">
+	                                    @for ($i = 0; $i < 2; $i++)
+	                                    <label>
+	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
+	                                    </label>
+	                                    @endfor
+	                                 </div>
+	                              </div>
+	                              <div class = "col-lg-12 listAss" hidden>
+	                                 <div class="checkbox">
+	                                    @for ($i = 2; $i < count($associations); $i++)
+	                                    <label>
+	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
+	                                    </label>
+	                                    @endfor
+	                                 </div>
+	                              </div>
+	                              @endif
+                              @endif 
                            </div>
-                           <div class="form-group">
+                           <script>
+                              function showAllAss() { //alert();
+                              	if ($("#show_all_ass").val() == "Show all"){
+                               		$("#show_all_ass").val("Hide");
+                               		$(".listAss").show();
+                              	} else {
+                              		$("#show_all_ass").val("Show all");
+                              		$(".listAss").hide();
+                              	}
+                              }
+                           </script>
+                           <div class = "col-lg-12" style = "margin-bottom: 100px;">
+                              <input type = "button" onclick = "showAllAss()" id = "show_all_ass" value = "Show all"/>
+                           </div>
+                        </div>
+                        <div class="form-group">
 	                           
 	                           <label>On Holiday</label>
 	                           @if ($builder[0]->on_holiday == 1)
@@ -397,8 +386,7 @@
 						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
 						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
 	                        </div>
-                           
-                        </div>
+                        
                         {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
                         {{ Form::close() }}
                      </div>
@@ -627,12 +615,7 @@
 	                              <button class = "btn btn-primary" type = "submit">Submit</button>
 	                           {{ Form::close() }}
                         </div>
-                        
-                        
-                           
-                           		
-                     
-                        
+         
                      </div>
                   </div>
                   <hr>

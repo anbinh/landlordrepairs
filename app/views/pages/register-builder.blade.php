@@ -358,7 +358,7 @@
                      <textarea name = "description" rows="4"  class="form-control" placeholder = 'Description'></textarea>
                   </div>
                </div>
-               <div class="pad-top">
+               <!--<div class="pad-top">
                   <div class = "col-lg-12">
                      Are you member of any association?
                   </div>
@@ -370,7 +370,7 @@
                      	$("#gasNum").hide();		
                      }
                   </script>
-                  <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[0]->association_src}}"/>
+                   <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[0]->association_src}}"/>
                   <label>											  	
                   <input type="radio" onclick = "addGasNumber()" name="association" value="{{$associations[0]->association_name}}" id = "detail1">
                   {{$associations[0]->association_name}}
@@ -409,6 +409,67 @@
                      </div>
                   </div>
                </div>
+                -->
+               <div class="pad-top">
+                     <div class="form-control-wrapper" >
+                        <div class = "col-lg-12">
+                           Are you member of any association?
+                        </div>
+                        @if ($associations != null)
+                        @if (count($associations) < 5)
+                        <div class = "col-lg-12">
+                           <div class="checkbox">
+                              @foreach ($associations as $association)
+                              <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$association->association_src}}"/>
+                              <label>
+                              
+                              <input type="checkbox" name = "check_builders_ass[]" value = "{{$association->id}}"> {{$association->association_name}}
+                              </label>
+                              @endforeach
+                           </div>
+                        </div>
+                        @else
+                        <div class = "col-lg-12">
+                           <div class="checkbox">
+                              @for ($i = 0; $i < 2; $i++)
+                             <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
+                              <label>
+                              
+                              <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}"> {{$associations[$i]->association_name}}
+                              </label>
+                              @endfor
+                           </div>
+                        </div>
+                        <div class = "col-lg-12 listAss" hidden>
+                           <div class="checkbox">
+                              @for ($i = 2; $i < count($associations); $i++)
+                              <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
+                              <label>
+                              
+                              <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}"> {{$associations[$i]->association_name}}
+                              </label>
+                              @endfor
+                           </div>
+                        </div>
+                        @endif
+                        @endif 
+                     </div>
+                     <script>
+                        function showAllAss() {
+                        	if ($("#show_all_ass").val() == "Show all"){
+                         		$("#show_all_ass").val("Hide");
+                         		$(".listAss").show();
+                        	} else {
+                        		$("#show_all_ass").val("Show all");
+                        		$(".listAss").hide();
+                        	}
+                        }
+                     </script>
+                     <div class = "col-lg-12">
+                        <input type = "button" onclick = "showAllAss()" id = "show_all_ass" value = "Show all"/>
+                     </div>
+                  </div>
+                  
                 <div class="pad-top">
                 	On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
                 	

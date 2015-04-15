@@ -21,7 +21,7 @@
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  
+					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
 				</div>
 
 			</div>
@@ -34,7 +34,7 @@
 				            </div>
 			           		<div class="panel-body">
 				                <div class="row">
-				                    <div class="col-lg-12">
+				                    <div class="col-lg-6">
 				                      
 				                        @if(Session::get("cpsuccess") == "1")
 				                        <div class="alert alert-success alert-dismissable">
@@ -42,14 +42,14 @@
 				                            User password has been changed successfully.
 				                        </div>
 				                        @endif
-				                        {{ Form::open(array('url' => 'builder-find-jobs')) }}
+				                        {{ Form::open(array('url' => 'builder-find-jobs/1')) }}
 				                            <div class="form-group">
-				                                <label>Category</label>
+				                                <label>Category signed</label>
 				                                <select name = "category_id" class="form-control">
-				                                 @if($builders != null)
-              										@foreach($builders as $builder)
+				                                 @if($builder_categorys != null)
+              										@foreach($builder_categorys as $builder_category)
 				                                
-													<option value = "{{$builder->category_id}}">{{$builder->content}}</option>
+													<option value = "{{$builder_category->category_id}}">{{$builder_category->content}}</option>
 											
 													@endforeach
               									@endif
@@ -62,6 +62,51 @@
 				                        {{ Form::close() }}
 				                        
 				                    </div>
+				                    <div class="col-lg-6">
+				                      
+				                        @if(Session::get("cpsuccess") == "1")
+				                        <div class="alert alert-success alert-dismissable">
+				                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				                            User password has been changed successfully.
+				                        </div>
+				                        @endif
+				                        {{ Form::open(array('url' => 'builder-find-jobs/0')) }}
+				                            <div class="form-group">
+				                                <label>Category not signed</label>
+				                                <select name = "category_id" class="form-control">
+				                                 @if($categorys != null)
+              										@foreach($categorys as $category)
+				                                	
+													
+													<script>var i = 0;</script>
+														@foreach($builder_categorys as $builder_category)
+														
+							                                @if ($category->id == $builder_category->category_id)
+							                        			<script>
+							                        			 	i++; console.log('=',i); 
+							                        			</script>        
+							                                @endif
+							                    
+														@endforeach
+														
+														<script>
+															console.log(i);
+															if (i == 0) {
+							                                	document.write('<option value = "{{$category->id}}">{{$category->content}}</option>');
+															}
+														</script>
+													@endforeach
+              									@endif
+              									</select>
+				                            </div>
+				                           
+				
+				                            {{ Form::submit('Search', array('class' => 'btn btn-primary')) }}
+				                           
+				                        {{ Form::close() }}
+				                        
+				                    </div>
+				                    
 				                </div>
 				            </div>
        					 </div>
