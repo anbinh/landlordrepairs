@@ -1986,6 +1986,8 @@ public function watingAcceptJobs()
 			$extend_builder->on_holiday = $on_holiday;
 			$extend_builder->working_from = $input['working_from'];
 			$extend_builder->working_to = $input['working_to'];
+			$extend_builder->working_day_from = $input['working_day_from'];
+			$extend_builder->working_day_to = $input['working_day_to'];
 			
 			
 			$extend_builder->about = $about;
@@ -2197,8 +2199,10 @@ public function watingAcceptJobs()
 		$email_old = $input['email'];
 		if (Input::get('on_holiday') === NULL) {
 			$on_holiday = 0;
+			$on_holiday_reason = "";
 		} else {
 			$on_holiday = 1;
+			$on_holiday_reason = Input::get('on_holiday_reason');
 		}
 		DB::table('users')
 			->where('id', '=', Auth::user()->id)
@@ -2234,7 +2238,10 @@ public function watingAcceptJobs()
 			'miles_covered' => $input['miles_covered'],
 			'working_from' => $input['working_from'],
 			'working_to' => $input['working_to'],
+			'working_day_from' => $input['working_day_from'],
+			'working_day_to' => $input['working_day_to'],
 			'on_holiday' => $on_holiday,
+			'on_holiday_reason' => $on_holiday_reason,
 			'site_link' => $input['site_link'],
 			'social_link' => $input['social_link'],
 			'social_link_twitter' => $input['social_link_twitter'],

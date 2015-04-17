@@ -258,7 +258,7 @@
                         </div>
                         <div class="form-group">
                            <label>About</label>
-                           {{ Form::text('about', $builder[0]->about, array('placeholder' => 'Type about you','class' => 'form-control')) }}
+                           {{ Form::textarea('about', $builder[0]->about, array('placeholder' => 'Type about you','class' => 'form-control')) }}
                         </div>
                         <div class="form-group">
                            <label>Started At</label>
@@ -327,7 +327,9 @@
 	                              <div class = "col-lg-12">
 	                                 <div class="checkbox">
 	                                    @for ($i = 0; $i < count($associations); $i++)
+	                                    <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
 	                                    <label>
+	                                    
 	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
 	                                    </label>
 	                                    @endfor
@@ -337,7 +339,9 @@
 	                              <div class = "col-lg-12">
 	                                 <div class="checkbox">
 	                                    @for ($i = 0; $i < 2; $i++)
+	                                    <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
 	                                    <label>
+	                                    
 	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
 	                                    </label>
 	                                    @endfor
@@ -346,7 +350,9 @@
 	                              <div class = "col-lg-12 listAss" hidden>
 	                                 <div class="checkbox">
 	                                    @for ($i = 2; $i < count($associations); $i++)
+	                                    <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$associations[$i]->association_src}}"/>
 	                                    <label>
+	                                    
 	                                    <input type="checkbox" name = "check_builders_ass[]" value = "{{$associations[$i]->id}}" @foreach ($builder as $buildere) @if( $buildere->association_id == $associations[$i]->id) checked @endif @endforeach > {{$associations[$i]->association_name}}
 	                                    </label>
 	                                    @endfor
@@ -374,11 +380,26 @@
 	                           
 	                           <label>On Holiday</label>
 	                           @if ($builder[0]->on_holiday == 1)
-	                           		On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1" checked>
+	                           		&nbsp &nbsp&nbsp<input type="checkbox" class = "checkbox_ass" name="on_holiday" value="1" id = "detail1" checked>
 	                           @else
-	                           		On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
+	                           		&nbsp &nbsp&nbsp<input type="checkbox" class = "checkbox_ass" name="on_holiday" value="1" id = "detail1">
 	                           @endif
+	                           <div class = "on_holiday_reason"  <?php if ($builder[0]->on_holiday != '1'){echo 'hidden';}?>>
+	                    
+		                           <label>Reason</label>
+		                           {{ Form::textarea('on_holiday_reason', $builder[0]->on_holiday_reason, array('placeholder' => 'Your reason','class' => 'form-control')) }}
+                        
+	                           </div>
+	                           <script>
 	                           
+	                           $(".checkbox_ass").change(function() {
+	                        	    if(this.checked) { 
+	                        	        $(".on_holiday_reason").show();
+	                        	    } else {
+	                        	    	$(".on_holiday_reason").hide();
+		                        	}
+	                        	});
+	                           </script>
 	                        </div>
 	                        <div class="form-group">
 	                           
@@ -386,6 +407,34 @@
 						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
 						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
 	                        </div>
+	                       <div class="form-group">
+	                       
+	                           
+						   Working from day:
+						   <select name="working_day_from">
+								  <option value="monday" <?php if($builder[0]->working_day_from == 'monday'){echo 'selected';}?>>Monday</option>
+								  <option value="tuesday" <?php if ($builder[0]->working_day_from == 'tuesday'){echo 'selected';}?>>Tuesday</option>
+								  <option value="wednesday" <?php if($builder[0]->working_day_from == 'wednesday'){echo 'selected';}?>>Wednesday</option>
+								  <option value="thursday" <?php if($builder[0]->working_day_from == 'thursday'){echo 'selected';}?>>Thursday</option>
+								  <option value="friday" <?php if($builder[0]->working_day_from == 'friday'){echo 'selected';}?>>Friday</option>
+								  <option value="saturday" <?php if($builder[0]->working_day_from == 'saturday'){echo 'selected';}?>>Saturday</option>
+								  <option value="sunday" <?php if($builder[0]->working_day_from == 'sunday'){echo 'selected';}?>>Sunday</option>
+								  
+							</select>     
+						   <br>		
+						   Working to day:
+						   <select name="working_day_to">
+								  <option value="monday" <?php if($builder[0]->working_day_to == 'monday'){echo 'selected';}?>>Monday</option>
+								  <option value="tuesday" <?php if ($builder[0]->working_day_to == 'tuesday'){echo 'selected';}?>>Tuesday</option>
+								  <option value="wednesday" <?php if($builder[0]->working_day_to == 'wednesday'){echo 'selected';}?>>Wednesday</option>
+								  <option value="thursday" <?php if($builder[0]->working_day_to == 'thursday'){echo 'selected';}?>>Thursday</option>
+								  <option value="friday" <?php if($builder[0]->working_day_to == 'friday'){echo 'selected';}?>>Friday</option>
+								  <option value="saturday" <?php if($builder[0]->working_day_to == 'saturday'){echo 'selected';}?>>Saturday</option>
+								  <option value="sunday" <?php if($builder[0]->working_day_to == 'sunday'){echo 'selected';}?>>Sunday</option>
+								  
+							</select>
+	                        </div> 
+	                        
                         
                         {{ Form::submit('Save', array('class' => 'btn btn-primary')) }}
                         {{ Form::close() }}

@@ -480,6 +480,31 @@
 						   Working from: <input type="number" name="working_from" value="0"/></br>
 						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="24" />
 						
+					</div>
+					<div class="form-control-wrapper" >
+					Working from day:
+						   <select name="working_day_from">
+								  <option value="monday" selected>Monday</option>
+								  <option value="tuesday">Tuesday</option>
+								  <option value="wednesday">Wednesday</option>
+								  <option value="thursday">Thursday</option>
+								  <option value="friday">Friday</option>
+								  <option value="saturday">Saturday</option>
+								  <option value="sunday">Sunday</option>
+								  
+							</select>     
+						   <br>		
+						   Working to day:
+						   <select name="working_day_to">
+								  <option value="monday">Monday</option>
+								  <option value="tuesday">Tuesday</option>
+								  <option value="wednesday">Wednesday</option>
+								  <option value="thursday">Thursday</option>
+								  <option value="friday">Friday</option>
+								  <option value="saturday">Saturday</option>
+								  <option value="sunday" selected>Sunday</option>
+								  
+							</select>
 					</div>			
 				</div>
                <div class="pad-top">

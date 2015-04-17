@@ -311,6 +311,36 @@
 							   
 								
 						</div>
+						<div class="pad-top">
+								<div class="form-control-wrapper" >
+								
+								<div class = "col-lg-12">
+								On Holiday:
+								@if ($builder[0]->on_holiday == 1)
+	                           		Yes<br>
+	                           		Reason: {{$builder[0]->on_holiday_reason}}</p>
+	                           		
+	                           @else
+	                           		No
+	                           @endif
+								</div>
+				
+								
+								</div>
+	
+							   
+								
+						</div>
+						<div class="form-group">
+	                           
+	                           
+						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
+						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
+						   </br>
+						   Working day from: <input type="number" name="working_day_from" value="{{$builder[0]->working_day_from}}"/></br>
+						   Working day to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_day_to" value="{{$builder[0]->working_day_to}}" />
+	                        </div>
+						
 			                    </div>	
 			                </div>
 			            </div>
