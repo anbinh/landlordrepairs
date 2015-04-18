@@ -737,6 +737,8 @@
                   </div>
                   <hr>
                   @endforeach
+                  @else
+                  	No have job
                   @endif
                </div>
             </div>
