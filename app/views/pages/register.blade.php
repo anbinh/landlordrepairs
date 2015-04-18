@@ -427,8 +427,79 @@
 										  </label>
 									</div>
 									<div id="contact-time-detail" hidden>
-									   From: <input type="number" name="contact-from" value="0"/></br>
-									   To:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="contact-to" value="24" />
+									   
+							
+								
+								
+								<div class = "col-lg-4">
+								From:
+								</div>
+								<div class = "col-lg-8">
+									<select name = "contact-from" class="form-control">
+										<option name="contact-from" value = "0am">0 am</option>
+										<option name="contact-from" value = "1am">1 am </option>
+										<option name="contact-from" value = "2am ">2 am </option>
+										<option name="contact-from" value = "3am">3 am</option>
+										<option name="contact-from" value = "4am">4 am</option>
+										<option name="contact-from" value = "5am">5 am</option>
+										<option name="contact-from" value = "6am">6 am</option>
+										<option name="contact-from" value = "7am">7 am</option>
+										<option name="contact-from" value = "8am">8 am</option>
+										<option name="contact-from" value = "9am">9 am</option>
+										<option name="contact-from" value = "10am">10 am</option>
+										<option name="contact-from" value = "11am">11 am</option>
+										<option name="contact-from" value = "12am">12 am</option>
+										
+										<option name="contact-from" value = "1pm">1 pm </option>
+										<option name="contact-from" value = "2pm ">2 pm </option>
+										<option name="contact-from" value = "3pm">3 pm</option>
+										<option name="contact-from" value = "4pm">4 pm</option>
+										<option name="contact-from" value = "5pm">5 pm</option>
+										<option name="contact-from" value = "6pm">6 pm</option>
+										<option name="contact-from" value = "7pm">7 pm</option>
+										<option name="contact-from" value = "8pm">8 pm</option>
+										<option name="contact-from" value = "9pm">9 pm</option>
+										<option name="contact-from" value = "10pm">10 pm</option>
+										<option name="contact-from" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>
+									<div class = "col-lg-4">
+								To:
+								</div>
+								<div class = "col-lg-8">
+									<select name = "contact-to" class="form-control">
+										<option name="contact-to" value = "0am">0 am</option>
+										<option name="contact-to" value = "1am">1 am </option>
+										<option name="contact-to" value = "2am ">2 am </option>
+										<option name="contact-to" value = "3am">3 am</option>
+										<option name="contact-to" value = "4am">4 am</option>
+										<option name="contact-to" value = "5am">5 am</option>
+										<option name="contact-to" value = "6am">6 am</option>
+										<option name="contact-to" value = "7am">7 am</option>
+										<option name="contact-to" value = "8am">8 am</option>
+										<option name="contact-to" value = "9am">9 am</option>
+										<option name="contact-to" value = "10am">10 am</option>
+										<option name="contact-to" value = "11am">11 am</option>
+										
+										<option name="contact-to" value = "1pm">1 pm </option>
+										<option name="contact-to" value = "2pm ">2 pm </option>
+										<option name="contact-to" value = "3pm">3 pm</option>
+										<option name="contact-to" value = "4pm">4 pm</option>
+										<option name="contact-to" value = "5pm">5 pm</option>
+										<option name="contact-to" value = "6pm">6 pm</option>
+										<option name="contact-to" value = "7pm">7 pm</option>
+										<option name="contact-to" value = "8pm">8 pm</option>
+										<option name="contact-to" value = "9pm">9 pm</option>
+										<option name="contact-to" value = "10pm">10 pm</option>
+										<option name="contact-to" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>		
+							
+									   
 									</div>
 									<script>
 										$(document).ready(function(){

@@ -476,14 +476,80 @@
 				</div>
                <div class="pad-top">
 					<div class="form-control-wrapper" >
-						
-						   Working from: <input type="number" name="working_from" value="0"/></br>
-						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="24" />
+						<div class = "col-lg-4">
+								Working from:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_from" class="form-control">
+										<option name="working_from" value = "0am">0 am</option>
+										<option name="working_from" value = "1am">1 am </option>
+										<option name="working_from" value = "2am">2 am </option>
+										<option name="working_from" value = "3am">3 am</option>
+										<option name="working_from" value = "4am" >4 am</option>
+										<option name="working_from" value = "5am">5 am</option>
+										<option name="working_from" value = "6am">6 am</option>
+										<option name="working_from" value = "7am" >7 am</option>
+										<option name="working_from" value = "8am">8 am</option>
+										<option name="working_from" value = "9am">9 am</option>
+										<option name="working_from" value = "10am">10 am</option>
+										<option name="working_from" value = "11am">11 am</option>
+										<option name="working_from" value = "12am">12 am</option>
+										
+										<option name="working_from" value = "1pm">1 pm </option>
+										<option name="working_from" value = "2pm">2 pm </option>
+										<option name="working_from" value = "3pm">3 pm</option>
+										<option name="working_from" value = "4pm">4 pm</option>
+										<option name="working_from" value = "5pm">5 pm</option>
+										<option name="working_from" value = "6pm">6 pm</option>
+										<option name="working_from" value = "7pm">7 pm</option>
+										<option name="working_from" value = "8pm">8 pm</option>
+										<option name="working_from" value = "9pm">9 pm</option>
+										<option name="working_from" value = "10pm">10 pm</option>
+										<option name="working_from" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>
+						   <div class = "col-lg-4">
+								Working to:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_to" class="form-control">
+										<option name="working_to" value = "0am">0 am</option>
+										<option name="working_to" value = "1am">1 am </option>
+										<option name="working_to" value = "2am">2 am </option>
+										<option name="working_to" value = "3am">3 am</option>
+										<option name="working_to" value = "4am">4 am</option>
+										<option name="working_to" value = "5am">5 am</option>
+										<option name="working_to" value = "6am">6 am</option>
+										<option name="working_to" value = "7am">7 am</option>
+										<option name="working_to" value = "8am">8 am</option>
+										<option name="working_to" value = "9am">9 am</option>
+										<option name="working_to" value = "10am">10 am</option>
+										<option name="working_to" value = "11am">11 am</option>
+										<option name="working_to" value = "12am">12 am</option>
+										
+										<option name="working_to" value = "1pm">1 pm </option>
+										<option name="working_to" value = "2pm">2 pm </option>
+										<option name="working_to" value = "3pm">3 pm</option>
+										<option name="working_to" value = "4pm">4 pm</option>
+										<option name="working_to" value = "5pm">5 pm</option>
+										<option name="working_to" value = "6pm">6 pm</option>
+										<option name="working_to" value = "7pm">7 pm</option>
+										<option name="working_to" value = "8pm">8 pm</option>
+										<option name="working_to" value = "9pm">9 pm</option>
+										<option name="working_to" value = "10pm">10 pm</option>
+										<option name="working_to" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>
+						   
 						
 					</div>
 					<div class="form-control-wrapper" >
 					Working from day:
-						   <select name="working_day_from">
+						   <select name="working_day_from" class="form-control">
 								  <option value="monday" selected>Monday</option>
 								  <option value="tuesday">Tuesday</option>
 								  <option value="wednesday">Wednesday</option>
@@ -495,7 +561,7 @@
 							</select>     
 						   <br>		
 						   Working to day:
-						   <select name="working_day_to">
+						   <select name="working_day_to" class="form-control">
 								  <option value="monday">Monday</option>
 								  <option value="tuesday">Tuesday</option>
 								  <option value="wednesday">Wednesday</option>

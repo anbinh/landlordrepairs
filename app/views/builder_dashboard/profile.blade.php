@@ -404,14 +404,82 @@
 	                        <div class="form-group">
 	                           
 	                           
-						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
-						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
+						   
+						   <div class = "col-lg-4">
+								Working from:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_from" class="form-control">
+										<option name="working_from" value = "0am" <?php if($builder[0]->working_from == "0am"){echo "selected";}?>>0 am</option>
+										<option name="working_from" value = "1am" <?php if($builder[0]->working_from == "1am"){echo "selected";}?>>1 am </option>
+										<option name="working_from" value = "2am" <?php if($builder[0]->working_from == "2am"){echo "selected";}?>>2 am </option>
+										<option name="working_from" value = "3am" <?php if($builder[0]->working_from == "3am"){echo "selected";}?>>3 am</option>
+										<option name="working_from" value = "4am" <?php if($builder[0]->working_from == "4am"){echo "selected";}?>>4 am</option>
+										<option name="working_from" value = "5am" <?php if($builder[0]->working_from == "5am"){echo "selected";}?>>5 am</option>
+										<option name="working_from" value = "6am" <?php if($builder[0]->working_from == "6am"){echo "selected";}?>>6 am</option>
+										<option name="working_from" value = "7am" <?php if($builder[0]->working_from == "7am"){echo "selected";}?>>7 am</option>
+										<option name="working_from" value = "8am" <?php if($builder[0]->working_from == "8am"){echo "selected";}?>>8 am</option>
+										<option name="working_from" value = "9am" <?php if($builder[0]->working_from == "9am"){echo "selected";}?>>9 am</option>
+										<option name="working_from" value = "10am" <?php if($builder[0]->working_from == "10am"){echo "selected";}?>>10 am</option>
+										<option name="working_from" value = "11am" <?php if($builder[0]->working_from == "11am"){echo "selected";}?>>11 am</option>
+										<option name="working_from" value = "12am" <?php if($builder[0]->working_from == "12am"){echo "selected";}?>>12 am</option>
+										
+										<option name="working_from" value = "1pm" <?php if($builder[0]->working_from == "1pm"){echo "selected";}?>>1 pm </option>
+										<option name="working_from" value = "2pm" <?php if($builder[0]->working_from == "2pm"){echo "selected";}?>>2 pm </option>
+										<option name="working_from" value = "3pm" <?php if($builder[0]->working_from == "3pm"){echo "selected";}?>>3 pm</option>
+										<option name="working_from" value = "4pm" <?php if($builder[0]->working_from == "4pm"){echo "selected";}?>>4 pm</option>
+										<option name="working_from" value = "5pm" <?php if($builder[0]->working_from == "5pm"){echo "selected";}?>>5 pm</option>
+										<option name="working_from" value = "6pm" <?php if($builder[0]->working_from == "6pm"){echo "selected";}?>>6 pm</option>
+										<option name="working_from" value = "7pm" <?php if($builder[0]->working_from == "7pm"){echo "selected";}?>>7 pm</option>
+										<option name="working_from" value = "8pm" <?php if($builder[0]->working_from == "8pm"){echo "selected";}?>>8 pm</option>
+										<option name="working_from" value = "9pm" <?php if($builder[0]->working_from == "9pm"){echo "selected";}?>>9 pm</option>
+										<option name="working_from" value = "10pm" <?php if($builder[0]->working_from == "10pm"){echo "selected";}?>>10 pm</option>
+										<option name="working_from" value = "11pm" <?php if($builder[0]->working_from == "11pm"){echo "selected";}?>>11 pm</option>
+										
+										
+									</select>
+								</div>
+								<div class = "col-lg-4">
+								Working to:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_to" class="form-control">
+										<option name="working_to" value = "0am" <?php if($builder[0]->working_to == "0am"){echo "selected";}?>>0 am</option>
+										<option name="working_to" value = "1am" <?php if($builder[0]->working_to == "1am"){echo "selected";}?>>1 am </option>
+										<option name="working_to" value = "2am" <?php if($builder[0]->working_to == "2am"){echo "selected";}?>>2 am </option>
+										<option name="working_to" value = "3am" <?php if($builder[0]->working_to == "3am"){echo "selected";}?>>3 am</option>
+										<option name="working_to" value = "4am" <?php if($builder[0]->working_to == "4am"){echo "selected";}?>>4 am</option>
+										<option name="working_to" value = "5am" <?php if($builder[0]->working_to == "5am"){echo "selected";}?>>5 am</option>
+										<option name="working_to" value = "6am" <?php if($builder[0]->working_to == "6am"){echo "selected";}?>>6 am</option>
+										<option name="working_to" value = "7am" <?php if($builder[0]->working_to == "7am"){echo "selected";}?>>7 am</option>
+										<option name="working_to" value = "8am" <?php if($builder[0]->working_to == "8am"){echo "selected";}?>>8 am</option>
+										<option name="working_to" value = "9am" <?php if($builder[0]->working_to == "9am"){echo "selected";}?>>9 am</option>
+										<option name="working_to" value = "10am" <?php if($builder[0]->working_to == "10am"){echo "selected";}?>>10 am</option>
+										<option name="working_to" value = "11am" <?php if($builder[0]->working_to == "11am"){echo "selected";}?>>11 am</option>
+										<option name="working_to" value = "12am" <?php if($builder[0]->working_to == "12am"){echo "selected";}?>>12 am</option>
+										
+										<option name="working_to" value = "1pm" <?php if($builder[0]->working_to == "1pm"){echo "selected";}?>>1 pm </option>
+										<option name="working_to" value = "2pm" <?php if($builder[0]->working_to == "2pm"){echo "selected";}?>>2 pm </option>
+										<option name="working_to" value = "3pm" <?php if($builder[0]->working_to == "3pm"){echo "selected";}?>>3 pm</option>
+										<option name="working_to" value = "4pm" <?php if($builder[0]->working_to == "4pm"){echo "selected";}?>>4 pm</option>
+										<option name="working_to" value = "5pm" <?php if($builder[0]->working_to == "5pm"){echo "selected";}?>>5 pm</option>
+										<option name="working_to" value = "6pm" <?php if($builder[0]->working_to == "6pm"){echo "selected";}?>>6 pm</option>
+										<option name="working_to" value = "7pm" <?php if($builder[0]->working_to == "7pm"){echo "selected";}?>>7 pm</option>
+										<option name="working_to" value = "8pm" <?php if($builder[0]->working_to == "8pm"){echo "selected";}?>>8 pm</option>
+										<option name="working_to" value = "9pm" <?php if($builder[0]->working_to == "9pm"){echo "selected";}?>>9 pm</option>
+										<option name="working_to" value = "10pm" <?php if($builder[0]->working_to == "10pm"){echo "selected";}?>>10 pm</option>
+										<option name="working_to" value = "11pm" <?php if($builder[0]->working_to == "11pm"){echo "selected";}?>>11 pm</option>
+										
+										
+									</select>
+								</div>
+						  
 	                        </div>
 	                       <div class="form-group">
 	                       
 	                           
 						   Working from day:
-						   <select name="working_day_from">
+						   <select name="working_day_from" class="form-control">
 								  <option value="monday" <?php if($builder[0]->working_day_from == 'monday'){echo 'selected';}?>>Monday</option>
 								  <option value="tuesday" <?php if ($builder[0]->working_day_from == 'tuesday'){echo 'selected';}?>>Tuesday</option>
 								  <option value="wednesday" <?php if($builder[0]->working_day_from == 'wednesday'){echo 'selected';}?>>Wednesday</option>
@@ -423,7 +491,7 @@
 							</select>     
 						   <br>		
 						   Working to day:
-						   <select name="working_day_to">
+						   <select name="working_day_to" class="form-control">
 								  <option value="monday" <?php if($builder[0]->working_day_to == 'monday'){echo 'selected';}?>>Monday</option>
 								  <option value="tuesday" <?php if ($builder[0]->working_day_to == 'tuesday'){echo 'selected';}?>>Tuesday</option>
 								  <option value="wednesday" <?php if($builder[0]->working_day_to == 'wednesday'){echo 'selected';}?>>Wednesday</option>
