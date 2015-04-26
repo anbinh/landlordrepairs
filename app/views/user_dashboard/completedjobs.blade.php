@@ -19,7 +19,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 				</div>
 
 			</div>
@@ -179,13 +179,7 @@
 			 		<td>{{$job->description}}</td>
 			 		<td>{{$job->status}}</td>
 			 		<td>
-				 		<form method = "post" action = "leave-feedback">
-					 		<input name = "job_id" value = "{{$job->job_id}}" hidden>
-					 		<input name = "builder_id" value = "{{$job->builder_id}}" hidden>
-					 		<input type="date" name = "feedback_created_at" value="<?php echo date('Y-m-d'); ?>" hidden/>
-					 		<textarea cols = "20" rows = "3" placeholder = "Type feedback" name = "feedback_content" ></textarea>
-					 		<button class="btn btn-danger">Leave Feedback</button>
-				 		</form>
+				 		<a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
 			 		</td>
 			 		
 			 	</tr>	

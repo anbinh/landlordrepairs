@@ -19,7 +19,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 				</div>
 
 			</div>
@@ -177,12 +177,17 @@
 			 		<td>{{$job->local}}</td>
 			 		<td>{{$job->description}}</td>
 			 		<td >
-			 		<form method = "post" action = "customer-action-cancelled" >
+			 		@if ($job->request_admin_cancelled == '1')
+			 			Request cancel has been sent
+			 		@else
+			 		<form method = "post" action = "customer-action-cancelled-request-admin" >
 				 		<input name = "job_id" value = "{{$job->job_id}}" hidden>
 				 		<input name = "builder_id" value = "{{$job->builder_id}}" hidden>
 				 		<input type="date" name = "date_cancelled" value="<?php echo date('Y-m-d'); ?>" hidden/>
-				 		<button class="btn btn-danger">Cancelled</button>
+				 		<textarea name = "reason_cancelled" placeholder = "Type your reason want cancell this job to admin" request rows = "5"></textarea>
+				 		<button class="btn btn-danger">Sent request cancel</button>
 			 		</form>
+			 		@endif
 			 		</td>
 			 		
 			 	</tr>	

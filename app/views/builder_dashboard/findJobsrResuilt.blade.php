@@ -17,11 +17,11 @@
 					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
+					  
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					  <a href="{{URL::route('get-reviews')}}" class="list-group-item">Get review</a>
 					  
 				</div>
 
@@ -196,10 +196,10 @@
 			    	<td>{{$job_resuilt->local}}</td>
 			    	<td>{{$job_resuilt->local_code}}</td>
 			    	<td>@if($isHasNum) {{$job_resuilt->num_invite_sent}} @else 0 @endif</td>
-			    	<td class="date-sort"><em><a href="view-detail-job-alert/{{$job_resuilt->job_id}},{{$job_resuilt->user_id}}">View</></em> <span>&nbsp;</span></td>
+			    	<td class="date-sort"><em><a href="../view-detail-job-alert/{{$job_resuilt->job_id}},{{$job_resuilt->user_id}}">View</></em> <span>&nbsp;</span></td>
 			    	<td>
 			    	@if ($mode == 1)
-			    	<form action="vote-job" method="post">
+			    	<form action="{{URL::route('vote-job')}}" method="post">
 	  					<input type = "number" name = "quotePrice" value = ""/>
 	  					<input hidden name = "job_id" value = "{{$job_resuilt->job_id}}"/>
 	  					<input hidden name = "user_id" value = "{{$job_resuilt->user_id}}"/>

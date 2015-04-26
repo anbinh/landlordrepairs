@@ -10,18 +10,18 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
-					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
-					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
-					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
-					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
-					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
-					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
-					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
-					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
-					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
-					   <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
-					   <a href="{{URL::route('request-cancelledjobs')}}" class="list-group-item">Request cancel job</a>
+					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
+					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
+					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
+					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
+					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
+					  
+					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
+					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
+					  <a href="{{URL::route('get-reviews')}}" class="list-group-item">Get review</a>
 				</div>
 
 			</div>
@@ -156,44 +156,60 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      
-			      	<th class="date-sort"><em>Job Tittle</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Status</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>From User</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>To Builder</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Created At</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Sent Invite At</em> <span>&nbsp;</span></th>
-			      
+			      	<th><em>Message from</em> <span>&nbsp;</span></th>
+			     	<th><em>Message content</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort" ><em>Readed</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Delete</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Answer</em> <span>&nbsp;</span></th>
+  
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($jobs_process != null)
-			  	@for ($i = 0; $i < count($jobs_process); $i++)
-	
-			  		<tr>
-			  			<td>{{$jobs[$i]->tittle}}</td>
-			  			<td>{{$jobs_process[$i]->status_process}}
-			  			<td>{{$users[$i]->username}}
-			  			<span>&nbsp;</span>
-			  			<em><a href="view-detail-info-user/{{$users[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			
-			  			<td>
-			  				{{$builders[$i]->username}}
-			  				<span>&nbsp;</span><em><a href="admin-view-detail-info-builder/{{$builders[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			<td>{{$jobs[$i]->created_at}}</td>
-			  			<td>{{$jobs_process[$i]->updated_at}}</td>
-			  			
-		  			</tr>
-		  		
-			  	@endfor
-              @endif
-
+			  @if($messages != null)
+			  
+              @foreach($messages as $message)
+			 	<tr>
+			    	<td>{{$message->username}}</td>
+			    	<td>{{$message->message_content}}</td>
+			      	<td class="date-sort" >
+			      		<form action="readed-message" method="post">
+	  						<input hidden name = "job_id" value = "{{$message->job_id}}"/>
+	  						<input hidden name = "message_id" value = "{{$message->message_id}}"/>
+	  						<input type="submit" value="Delete">
+						</form>
+					</th>
+			      	
+			      	
+			      	
+			      	<td class="date-sort">
+							
+						<form action="delete-message" method="post">
+	  						<input hidden name = "job_id" value = "{{$message->job_id}}"/>
+	  						<input hidden name = "message_id" value = "{{$message->message_id}}"/>
+	  						<input type="submit" value="Delete">
+						</form>
+								      	
+			      	</td>
+			      	<td class="date-sort">
+							
+							
+								      	
+			      	</td>
+			 	</tr>	
+				@endforeach
+				 
+  
 			</table>
-
+			@else
+			 	</table>
+			 	<p>Have zero message for you</p>
+			 @endif
+			 
+			
+			
     </div>
+    
 
     <!-- end change phone number -->
 </div>

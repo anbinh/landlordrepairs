@@ -1,6 +1,91 @@
 
 @extends('layouts.default')
 @section('content')
+<style>
+							
+
+*:before, *:after {
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+
+.clearfix {
+  clear:both;
+}
+
+.text-center {text-align:center;}
+
+pre {
+display: block;
+padding: 9.5px;
+margin: 0 0 10px;
+font-size: 13px;
+line-height: 1.42857143;
+color: #333;
+word-break: break-all;
+word-wrap: break-word;
+background-color: #F5F5F5;
+border: 1px solid #CCC;
+border-radius: 4px;
+}
+
+
+.success-box {
+  margin:50px 0;
+  padding:10px 10px;
+  border:1px solid #eee;
+  background:#f9f9f9;
+}
+
+.success-box img {
+  margin-right:10px;
+  display:inline-block;
+  vertical-align:top;
+}
+
+.success-box > div {
+  vertical-align:top;
+  display:inline-block;
+  color:#888;
+}
+
+
+
+/* Rating Star Widgets Style */
+.rating-stars ul {
+  list-style-type:none;
+  padding:0;
+  
+  -moz-user-select:none;
+  -webkit-user-select:none;
+}
+.rating-stars ul > li.star {
+  display:inline-block;
+  
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+  font-size:1em; /* Change the size of the stars */
+  color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+  color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+  color:#FF912C;
+}
+.rating-widget{
+	padding: 0 0;
+	width: 50%;
+	float:left;
+}							
+</style>
 	<div class="container" style= "margin-bottom: 230px;">
 			<div class="row">
 				<h1 class="text-center">Dashboard</h1>
@@ -19,7 +104,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 					  
 					  
 					  
@@ -258,14 +343,7 @@
 		                                {{$builder[0]->created_at}}
 		                                
 		                            </div>
-		                            <!-- <div class="form-group">
-		                                <label>Association</label>
-		                                <img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$builder[0]->association_src}}"/>
-		                                {{$builder[0]->association_name}}
-				                        @if ($builder[0]->association_name === "Gas")
-				                        	Gas number: {{$builder[0]->gas_number}}
-				                        @endif        
-				                    </div>-->
+		                            
 				                    <div class="pad-top">
 								<div class="form-control-wrapper" >
 								
@@ -407,15 +485,142 @@
 		                            	<div class="form-group">
 		                                <label>Feedback:</label>
 		                                </br>
-		                          
+		                          		@if($feedbacks_created_at != "")
+		                          		
 		                                @for ($i = 0; $i < count($feedbacks_created_at[$buildere->job_id]); $i++)
-		                                	---{{$feedbacks_created_at[$buildere->job_id][$i]}}---</br>
-		                                	{{$feedbacks_content[$buildere->job_id][$i]}}</br>
-		                                	Post by: <a>{{$feedbacks_by_user[$buildere->job_id][$i]->username}}</a>
+		                                	Date leave: {{$feedbacks_created_at[$buildere->job_id][$i]}}</br>
+		                                	Post by: <a>{{$feedbacks_by_user[$buildere->job_id][$i]->username}}</a></br>
+		                                	Ratings:</br>
+		                                	<div class = "rows">
+											<section class='rating-widget'>
+											  <!-- Rating Stars Box -->
+											  
+											  <div class='rating-stars text-center'>
+											  Timeliness
+											    <ul id='stars1' class = "stars">
+											      <li class='star1 star <?php if($feedbacks_rating_1[$buildere->job_id][$i] >= 1){echo "selected";}?>' title='Poor' data-value='1'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star1 star <?php if($feedbacks_rating_1[$buildere->job_id][$i] >= 2){echo "selected";}?>' title='Fair' data-value='2' >
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star1 star <?php if($feedbacks_rating_1[$buildere->job_id][$i] >= 3){echo "selected";}?>' title='Good' data-value='3'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star1 star <?php if($feedbacks_rating_1[$buildere->job_id][$i] >= 4){echo "selected";}?>' title='Excellent' data-value='4'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star1 star <?php if($feedbacks_rating_1[$buildere->job_id][$i] >= 5){echo "selected";}?>' title='WOW!!!' data-value='5'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											    </ul>
+											  </div>
+											  
+											  <div class='success-box' hidden>
+											    
+											    <input name = "rating_1" class='text-message1' value = "0"/>
+											    
+											  </div>
+											</section>
+											<section class='rating-widget'>
+											  <!-- Rating Stars Box -->
+											  
+											  <div class='rating-stars text-center'>
+											  Services Quality
+											    <ul id='stars2' class = "stars">
+											      <li class='star2 star <?php if($feedbacks_rating_2[$buildere->job_id][$i] >= 1){echo "selected";}?>' title='Poor' data-value='1'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star2 star <?php if($feedbacks_rating_2[$buildere->job_id][$i] >= 2){echo "selected";}?>' title='Fair' data-value='2' >
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star2 star <?php if($feedbacks_rating_2[$buildere->job_id][$i] >= 3){echo "selected";}?>' title='Good' data-value='3'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star2 star <?php if($feedbacks_rating_2[$buildere->job_id][$i] >= 4){echo "selected";}?>' title='Excellent' data-value='4'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star2 star <?php if($feedbacks_rating_2[$buildere->job_id][$i] >= 5){echo "selected";}?>' title='WOW!!!' data-value='5'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											    </ul>
+											  </div>
+											  
+											  <div class='success-box' hidden>
+											    
+											    <input name = "rating_2" class='text-message2' value = "0"/>
+											    
+											  </div>
+											</section>
+											</div>
+											<div class="rows">
+											<section class='rating-widget'>
+											  <!-- Rating Stars Box -->
+											  <div class='rating-stars text-center'>
+											  Comunication
+											    <ul id='stars3' class = "stars">
+											      <li class='star3 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 1){echo "selected";}?>' title='Poor' data-value='1'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star3 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 2){echo "selected";}?>' title='Fair' data-value='2' >
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star3 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 3){echo "selected";}?>' title='Good' data-value='3'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star3 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 4){echo "selected";}?>' title='Excellent' data-value='4'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star3 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 5){echo "selected";}?>' title='WOW!!!' data-value='5'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											    </ul>
+											  </div>
+											  
+											  <div class='success-box' hidden>
+											    
+											    <input name = "rating_3" class='text-message3' value = "0"/>
+											    
+											  </div>
+											</section>
+											<section class='rating-widget'>
+											  <!-- Rating Stars Box -->
+											  <div class='rating-stars text-center'>
+											  Value
+											    <ul id='stars4' class = "stars">
+											      <li class='star4 star <?php if($feedbacks_rating_4[$buildere->job_id][$i] >= 1){echo "selected";}?>' title='Poor' data-value='1'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star4 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 2){echo "selected";}?>' title='Fair' data-value='2' >
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star4 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 3){echo "selected";}?>' title='Good' data-value='3'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star4 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 4){echo "selected";}?>' title='Excellent' data-value='4'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											      <li class='star4 star <?php if($feedbacks_rating_3[$buildere->job_id][$i] >= 5){echo "selected";}?>' title='WOW!!!' data-value='5'>
+											        <i class='fa fa-star fa-fw'></i>
+											      </li>
+											    </ul>
+											  </div>
+											  
+											  <div class='success-box' hidden>
+											    
+											    
+											    <input name = "rating_4" class='text-message4' value = "0"/>
+											    
+											  </div>
+											</section>
+											</div>
+		                                	Feedback content: {{$feedbacks_content[$buildere->job_id][$i]}}</br>
 		                                	
 		                                	<hr>
 		                                @endfor
-		                                
+		                                @else
+		                                	No have feedback
+		                                @endif
 		                            	</div>
 		                            @endif
 		                            

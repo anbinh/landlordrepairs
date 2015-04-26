@@ -20,6 +20,7 @@
 					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
 					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
 					   <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
+					   <a href="{{URL::route('request-cancelledjobs')}}" class="list-group-item">Request cancel job</a>
       </div>
    </div>
    <div class="col-md-10">

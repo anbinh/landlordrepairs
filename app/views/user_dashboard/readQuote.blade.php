@@ -7,21 +7,19 @@
 			</div>
 			<div class="col-md-2">
 				<div class="list-group">
-					  <a href="#" class="list-group-item active">
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
-					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
-					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
-					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
-					  <a href="{{URL::route('admin-new-builders')}}" class="list-group-item">New Builders</a>
-					  <a href="{{URL::route('admin-invites-sent-by-users')}}" class="list-group-item">Invites Sent</a>
-					  <a href="{{URL::route('admin-manage-associations')}}" class="list-group-item">Manage Associaion</a>
-					  <a href="{{URL::route('admin-non-reply-email')}}" class="list-group-item">Non Rely Email</a>
-					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
-					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
-					   <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
-					   <a href="{{URL::route('request-cancelledjobs')}}" class="list-group-item">Request cancel job</a>
+					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
+					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
+					  
 				</div>
 
 			</div>
@@ -156,44 +154,47 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      
-			      	<th class="date-sort"><em>Job Tittle</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Status</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>From User</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>To Builder</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Created At</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Sent Invite At</em> <span>&nbsp;</span></th>
-			      
+			      	<th><em>Builder</em> <span>&nbsp;</span></th>
+			     	<th><em>View Detail Builder</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort" ><em>Quote</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Accept</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Cancel</em> <span>&nbsp;</span></th>
+  
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($jobs_process != null)
-			  	@for ($i = 0; $i < count($jobs_process); $i++)
-	
-			  		<tr>
-			  			<td>{{$jobs[$i]->tittle}}</td>
-			  			<td>{{$jobs_process[$i]->status_process}}
-			  			<td>{{$users[$i]->username}}
-			  			<span>&nbsp;</span>
-			  			<em><a href="view-detail-info-user/{{$users[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			
-			  			<td>
-			  				{{$builders[$i]->username}}
-			  				<span>&nbsp;</span><em><a href="admin-view-detail-info-builder/{{$builders[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			<td>{{$jobs[$i]->created_at}}</td>
-			  			<td>{{$jobs_process[$i]->updated_at}}</td>
-			  			
-		  			</tr>
-		  		
-			  	@endfor
-              @endif
-
+			  @if($quotes != null)
+			  
+              @foreach($quotes as $quote)
+			 	<tr>
+			    	<td>{{$quote->username}}</td>
+			    	<td class="date-sort"><em><a href="../view-detail-info-builder/{{$quote->builder_id}}" tag target="_blank">View</></em> <span>&nbsp;</span></td>
+			    	<td>
+			    	{{$quote->vote}}
+			    	</td>
+			      	
+						<td class="date-sort"><em><a href="../accept-vote/{{$quote->builder_id}},{{$quote->job_id}}">Accept</a></em> <span>&nbsp;</span>
+						</td>			    
+									
+						<td class="date-sort"><em><a href="../cancel-vote/{{$quote->builder_id}},{{$quote->job_id}}">Cancel</a></em> <span>&nbsp;</span>
+						</td>		      	
+			      
+			      	
+			 	</tr>	
+				@endforeach
+				 
+  
 			</table>
-
+			@else
+			 	</table>
+			 	<p>Have zero message for you</p>
+			 @endif
+			 
+			
+			
     </div>
+    
 
     <!-- end change phone number -->
 </div>

@@ -21,6 +21,7 @@
 					  <a href="{{URL::route('admin-manage-faq')}}" class="list-group-item">FAQs</a>
 					  <a href="{{URL::route('admin-manage-category')}}" class="list-group-item">Categorys</a>
 					   <a href="{{URL::route('admin-manage-charges')}}" class="list-group-item">Charges</a>
+					   <a href="{{URL::route('request-cancelledjobs')}}" class="list-group-item">Request cancel job</a>
 				</div>
 
 			</div>
@@ -260,6 +261,42 @@
 				      			
 				      			<form method = "post" action = "admin-change-content-email">
 				      				<input name = "email_id" value = "email_user_accept_vote_content" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		
+				 		<tr>
+				    		<td>Admin Accept Request Cancel Job From User</td>
+				 
+				      		<td>{{$email_admin_accept_request_cancel_job_from_user}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_admin_accept_request_cancel_job_from_user" hidden>
+							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
+							 		
+							 		<button type = "submit" class="btn btn-success">Change</button>
+						 		</form>
+						 	
+						 		
+						 		
+				      		</td>
+				 		</tr>
+				 		
+				 		<tr>
+				    		<td>Admin Decline Request Cancel Job From User</td>
+				 
+				      		<td>{{$email_admin_decline_request_cancel_job_from_user}}</td>
+				      		<td>
+				      			
+				      			<form method = "post" action = "admin-change-content-email">
+				      				<input name = "email_id" value = "email_admin_decline_request_cancel_job_from_user" hidden>
 							 		<textarea name = "email_content" rows="4" cols="50"></textarea>
 							 		
 							 		<button type = "submit" class="btn btn-success">Change</button>

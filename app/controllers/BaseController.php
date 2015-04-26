@@ -625,7 +625,7 @@ class BaseController extends Controller {
 			$job->lng = $input['lng'];
 			
 			$job->user_id = $userpostjob->id;
-			$job->status = 'openjob';
+			$job->status = 'waitingOpen';
 			$job->property = $input['property'];
 			$job->category_id = $input['category_id'];
 			if (Input::hasFile('photo_1')) {
@@ -654,19 +654,26 @@ class BaseController extends Controller {
 			
 		
 			//------select list builders from DB:: where matching the condition with Input::----//
-			
+			/*Conditions: 
+			 * + Builders not yet been Invited or invited this job
+			 * */
 		$builders_beforecheck = "";
-
-        $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+		$date = date('Y-m-d');
+        $builders_beforecheck = DB::table('users')
+        	->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
         	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
         	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->where('users.email_confirm', '=', "")
+        	->where('users.phone_confirm', '=', "")
+        	->where('users.active_until', '>=', $date)
         	->get();
+        	
         $price_invite = DB::table('charges')
         	->where('id','=','4')
         	->first();
         
 		
-		//---make list Builders enought credit----//
+		
 		$builders = "";
 		$array_radius = "";
 		if ($builders_beforecheck != null) {
@@ -704,7 +711,13 @@ class BaseController extends Controller {
 					}
 				 }	
 			}
-		
+			
+			/*//---Condition 2: Builders not yet been Invited or invited this job----//
+			$builders_invited = DB::table('job_process')
+	        	->where('job_id', '=', $input['job_id'])
+	        	->get();
+			
+	        var_dump($builders_invited); die;*/
 			//calculate the radius:
 			function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
 			    $theta = $longitude1 - $longitude2;
@@ -726,13 +739,17 @@ class BaseController extends Controller {
 		} 
 		
 			//------------------------------//
-			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $job->id)) ;
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $job->id,'num_builder_sent_invite'=>'0')) ;
 			//--------------------------------//
 			return Redirect::to('postjob')->with("success", "1");
 		} else {
 			return Redirect::to('postjob')->withErrors($v);
 		}
 	}
+	
+	
+	
+	
 	//------------------------test-------------------
 	public function redirectpconfirm( $id_code )
 	{
@@ -809,7 +826,7 @@ class BaseController extends Controller {
 	} 
 	
 	public function postListbuilders() 
-	{
+	{	$num_builder_can_invite = 3 - Input::get('num_builder_sent_invite');
 		$input = Input::all();
 		$check_builders = Input::get('check_builders');
 		$radius = Input::get('radius');
@@ -836,8 +853,32 @@ class BaseController extends Controller {
 				foreach($transactions as $transaction) {
 					$credits += ($transaction->charge_type)*($transaction->charge_value); 
 				} //var_dump($price_invite); die;
-				 if($credits >= $price_invite->charge_value_newest) { 
-				 	$builders[$i] = $builders_beforecheck[$i];
+				 if($credits >= $price_invite->charge_value_newest) {
+
+				 	
+				 $builders_last_check = "";
+				 	 $builders_last_check = DB::table('job_process')
+			        	->where('job_process.builder_id', '=', $builders_beforecheck[$i]->builder_id)
+			        	->where('job_process.job_id', '=', $input['job_id'])
+			        	->get();
+			        	$isExist = false;
+			        	if ($builders_last_check != ""){
+				        	foreach ($builders_last_check as $builder_last_check) {
+				        		if ($builders_beforecheck[$i]->builder_id == $builder_last_check->builder_id) {
+				        			$isExist = true;
+				        		}
+				        	}	
+			        	}
+			        	
+			        	if ($isExist == false) {
+			        		$builders[$i] = $builders_beforecheck[$i];	
+			        	}
+				 	
+				 	
+				 	
+				 	
+				 	
+				 	
 				 } else {
 				 	//sent email alert low credit
 				 	try {
@@ -868,8 +909,6 @@ class BaseController extends Controller {
 		//select builders matching condition from submit post_jobs.
 		//check number of checked builder
 		
-	    
-	     
 	    if (count($builders) <= "3") { //sent invite to all Builders in list $array_builder_id
 	    	$i = 0;
 	    	foreach( $builders as $builder ) {
@@ -918,6 +957,8 @@ class BaseController extends Controller {
 						'charge_value' => $charge_value->charge_value_newest,
 						'created_at' => $date, 
 					));
+				
+				
 				
 			}
 
@@ -1006,7 +1047,8 @@ class BaseController extends Controller {
 								'charge_value' => $charge_value->charge_value_newest,
 								'created_at' => $date, 
 							)); 
-						} 
+						}
+						
 			        break;
 			        
 			        
@@ -1064,7 +1106,8 @@ class BaseController extends Controller {
 								'charge_type' => '-1',
 								'charge_value' => $charge_value->charge_value_newest,
 								'created_at' => $date, 
-							)); 
+							));
+						
 					} 
 						
 					
@@ -1176,7 +1219,8 @@ class BaseController extends Controller {
 								'charge_type' => '-1',
 								'charge_value' => $charge_value->charge_value_newest,
 								'created_at' => $date, 
-							)); 
+							));
+						
 					} 
 		        	 break;
 			    default:
@@ -1191,10 +1235,10 @@ class BaseController extends Controller {
 						'status' => 'openjob'
 					));
 			
-			return Redirect::to('myinvites');
+			return Redirect::to('openjobs');
 	    }
 	}
-		return Redirect::to('myinvites');
+		return Redirect::to('openjobs');
 	}
 			
 		
@@ -1365,17 +1409,25 @@ class BaseController extends Controller {
 	public function getOpenJobs()
 	{
 		if(Auth::check()) {
-			
-			$jobs = DB::table('jobs')
-				->join('category','jobs.category_id','=','category.id')
+			$jobs = "";
+			$jobs = DB::table('category')
+				->join('jobs','jobs.category_id','=','category.id')
 				->having('jobs.user_id', '=',Auth::user()->id)
-				->having('jobs.status','<>','completed')
+				->having('jobs.status','<>','completed')//success
+				->having('jobs.status','<>','closejob')//jon onworking with builder
+				->having('jobs.status','<>','cancelled')//not been selected
 				
-				//->having('jobs.status','<>','closed')
 				->get();
-				
-			
-			return View::make('user_dashboard.openjobs')->with('jobs', $jobs);
+			$messages = "";
+			$messages =	DB::table('message')
+				->having('user_id','=',Auth::user()->id)//not been selected
+				->where ('builder_to_user','=', '1')
+				->get();	
+			$quotes =	DB::table('job_process')
+				->having('user_id','=',Auth::user()->id)//not been selected
+				->where ('vote','<>', '0')
+				->get();
+			return View::make('user_dashboard.openjobs')->with(array('jobs'=>$jobs,'messages'=> $messages,'quotes'=>$quotes));
 		}
 		return Redirect::to('login');
 
@@ -1400,13 +1452,14 @@ class BaseController extends Controller {
 	
 	public function getCancelledJobs()
 	{
-		if(Auth::check()) {
-			
-			$cancelledJobs = DB::table('jobs')
-		    	 ->join('job_process', 'jobs.id', '=', 'job_process.job_id')
-		    	 ->join('category', 'jobs.category_id', '=', 'category.id')
-		    	 ->where('job_process.user_id', '=', Auth::user()->id)
-		    	 ->where('job_process.status_process', '=', 'cancelled')
+		if(Auth::check()) {		
+			$cancelledJobs = DB::table('category')
+		    	 //->join('job_process', 'jobs.id', '=', 'job_process.job_id')
+		    	 ->join('jobs', 'jobs.category_id', '=', 'category.id')
+		    	 //->where('job_process.user_id', '=', Auth::user()->id)
+		    	 //->where('job_process.status_process', '=', 'cancelled')
+		    	 //plus bellow
+		    	 ->where('jobs.status', '=', 'cancelled')
 		    	 ->get();
 		    	 
 		 	
@@ -1417,76 +1470,39 @@ class BaseController extends Controller {
 
 	}
 	
-public function postCustomerActionCancelled()
+	public function postCustomerActionCancelled()
 	{  
 		if(Auth::check()) {
 		$input = Input::all();
-		
-		/*
-		 * Update Database:
-		 */
-		for($code_length = 25, $newcode = ''; strlen($newcode) < $code_length; $newcode .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
-		//var_dump($newcode); die;
 			
+		DB::table('jobs')
+			->where('id', '=', Input::get('job_id'))
+        	->update(array(
+				'status' => 'cancelled',
+		));
 		DB::table('job_process')
 			->where('job_id', '=', Input::get('job_id'))
-			->where('builder_id', '=', Input::get('builder_id'))
         	->update(array(
-			'status_process' => 'cancelled',
-        	'cancelled_confirm' => $newcode,
-			));
-		/*
-		 * Sent Alert by Email & Phone to Customer
-		 */
-		//--set email and phone to Customer----//
-	
-		$builder = DB::table('users')
-			->where('id', '=', Input::get('builder_id'))
-        	->first();
-        //$job_id = Input::get('job_id')
-        //var_dump($customer); die;
-			$data = array(
-					'email'     => $builder->email,
-					'clickUrl'  => URL::to('/') . '/cancelledjobconfirm/'.Input::get("user_id").','. $newcode
-			);
-			 
-			//---new send email----//
-			try {
-				Mail::send('emails.cancelledjob', $data, function($message)
-				{
-					$message->to(Input::get('email'))->subject('Cancelled Job');
-				});
-	
+				'status_process' => 'user_cancelled',
+		));
+		$job_infos = DB::table('job_process')
+			->where('job_id', '=', Input::get('job_id'))
+        	->get();
+        	
+       if ($job_infos != ""){
+	       foreach ($job_infos as $job_infos_e){
+				DB::table('log_job_cancelled')
+					->insert(array(
+					'job_id' => $job_infos_e->job_id,
+					'builder_id' => $job_infos_e->builder_id,
+					'user_id' => Auth::user()->id,
+					'log_builder_invite_user' => $job_infos_e->builder_invite_user 
+					));
+				
 			}
-			catch (Exception $e){
-				$to      = $builder->email;
-				$subject = 'Cancelled Job';
-				$message = View::make('emails.cancelledjob', $data)->render();
-				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-						'X-Mailer: PHP/' . phpversion() . "\r\n" .
-						'MIME-Version: 1.0' . "\r\n" .
-						'Content-Type: text/html; charset=ISO-8859-1\r\n';
-	
-				mail($to, $subject, $message, $headers);
-	
-			}
-			
-			
-			//----send sms----//
-			
-			
-			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
-			$token = "d94d47547950d199f065f365a51111a4"; 
-			$client = new Services_Twilio($sid, $token);
-			$message = "Customer has been cancelled your job, please check email to approve it.";
-			$client->account->messages->sendMessage(
-					'+441544430006', // the text will be sent from your Twilio number
-					$builder->phone_number, // the phone number the text will be sent to
-					$message // the body of the text message
-			);
-			
-		return Redirect::to('ongoingjobs');
+       } 	 
+		
+		return Redirect::to('openjobs');
 		}
 		return Redirect::to('login');
 	}
@@ -1516,6 +1532,7 @@ public function postCustomerActionCancelled()
 				->join('job_process', 'job_process.job_id', '=', 'jobs.id')
 				->having('jobs.user_id', '=',Auth::user()->id)
 				->having('jobs.status','=','completed')
+				->having('job_process.status_process','=','completed')
 				->get();
 			
 			return View::make('user_dashboard.completedjobs')->with('jobs', $jobs);
@@ -1663,6 +1680,10 @@ public function watingAcceptJobs()
         	$feedbacks_content = "";
         	$feedbacks_created_at = "";
         	$feedbacks_by_user = "";
+        	$feedbacks_rating_1 = "";
+        	$feedbacks_rating_2 = "";
+        	$feedbacks_rating_3 = "";
+        	$feedbacks_rating_4 = "";
         	foreach ($builder_jobs as $builder_job) {
         		if($builder_job->status_process == "completed") {
 	        		$i = 0;
@@ -1671,7 +1692,11 @@ public function watingAcceptJobs()
 		        		->get();
 		        		
 		        	foreach ($feedbacks_user as $feedback) {
-		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_content;
+		        		$feedbacks_rating_1[$builder_job->job_id][$i] = $feedback->timeliness;
+		        		$feedbacks_rating_2[$builder_job->job_id][$i] = $feedback->services_quality;
+		        		$feedbacks_rating_3[$builder_job->job_id][$i] = $feedback->comunication;
+		        		$feedbacks_rating_4[$builder_job->job_id][$i] = $feedback->value;
+		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_description;
 		        		$feedbacks_created_at[$builder_job->job_id][$i] = $feedback->feedback_created_at;
 		        		$feedbacks_by_user[$builder_job->job_id][$i] = DB::table('users')
 		        			->where('id','=',$builder_job->user_id)
@@ -1684,7 +1709,16 @@ public function watingAcceptJobs()
         	}
         		
         		
-        	return View::make('user_dashboard.builder_profile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user,'builder_categorys'=>$builder_categorys));
+        	return View::make('user_dashboard.builder_profile')->with(array(
+        		'builder' => $builder,'builder_jobs'=>$builder_jobs, 
+        		'feedbacks_content'=>$feedbacks_content, 
+        		'feedbacks_created_at'=>$feedbacks_created_at,
+        		'feedbacks_by_user'=>$feedbacks_by_user,
+        		'feedbacks_rating_1'=>$feedbacks_rating_1,
+        		'feedbacks_rating_2'=>$feedbacks_rating_2,
+        		'feedbacks_rating_3'=>$feedbacks_rating_3,
+        		'feedbacks_rating_4'=>$feedbacks_rating_4,
+        		'builder_categorys'=>$builder_categorys));
 		}
 		return Redirect::to('login');
 
@@ -2491,7 +2525,7 @@ public function watingAcceptJobs()
 	public function getViewDetailJobAlert($job_id,$user_id)
 	{ 
 		if(Auth::check()) {
-			if (Auth::user()->role == '1' ) {
+			
 				//GET USER INFO
 				$userInfo=  "";
 				$userInfo = DB::table('users')->having('id', '=', $user_id )->first();
@@ -2507,9 +2541,8 @@ public function watingAcceptJobs()
 				$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
 				
 			return View::make('builder_dashboard.viewDetailJobAlert')->with(array('userInfo'=>$userInfo,'jobInfo'=>$jobInfo,'jobProcess'=>$jobProcess));	
-			} else {
-				return Redirect::to('login');
-			}
+			
+			
 			
 		    
 		}
@@ -2534,13 +2567,13 @@ public function watingAcceptJobs()
 			$credits += ($transaction->charge_type)*($transaction->charge_value); 
 		}
 		
-		//hao
+
 		 	$date = new DateTime('today');
 			$date =  $date->format('Y-m-d');
-			
+	
 			if (Auth::user()->active_until >= $date ) { 
-		 	
-		 	  if (Input::get('isAddToJobProcess') == 'true') {
+		
+		 	  if (Input::get('isAddToJobProcess') == 'true') { 
 	    	/*
 	    	 * Update database: Create a row of Table "Job_process"
 	    	 */ 
@@ -2576,6 +2609,7 @@ public function watingAcceptJobs()
 				->where('job_id', '=', Input::get('job_id'))
 	        	->update(array(
 					'num_invite_sent' => $num_invite_sent_count,
+	        		
 				));
         			
         	
@@ -2599,8 +2633,14 @@ public function watingAcceptJobs()
 					->update(array(
 						'status' => 'openjob',
 						));
-	
-			}
+				/*DB::table('log_job_cancelled')
+					->insert(array(
+					'job_id' => Input::get('job_id'), 
+					'builder_id' => Auth::user()->id,
+					'user_id' => Input::get('user_id'),
+					'log_builder_invite_user' => '1',
+					));*/
+		}
 			
 			
 		DB::table('job_process')
@@ -2608,8 +2648,13 @@ public function watingAcceptJobs()
 			->where('builder_id', '=', Auth::user()->id)
         	->update(array(
 			'vote' => Input::get('quotePrice'),
+        	'builder_invite_user' => '1',
 			));
-
+		
+		
+	 	
+			
+			
 		$customer = DB::table('users')
 			->where('id', '=', Input::get('user_id'))
         	->first();
@@ -2638,11 +2683,9 @@ public function watingAcceptJobs()
 				mail($to, $subject, $message, $headers);
 	
 			}
-			
-			
+	
 			//----send sms----//
-			
-			
+
 			$sid = 'AC461fe2ea8ef7e0a8a864bb3a982142f7';
 			$token = "d94d47547950d199f065f365a51111a4"; 
 			$client = new Services_Twilio($sid, $token);
@@ -2662,8 +2705,7 @@ public function watingAcceptJobs()
 				'charge_value' => $price_invite->charge_value_newest,
 				'created_at' => $date,
 				));
-		 	
-		 	
+	
 		 	
 		 } else { 
 		 	//sent email alert low credit
@@ -2688,13 +2730,6 @@ public function watingAcceptJobs()
 					
 			}
 		 }	
-
-				 
-				 
-				 
-				 
-				 
-	    
 			//----------------//
 			
 			//--End send email and phone to Customer----//
@@ -3673,6 +3708,8 @@ public function watingAcceptJobs()
 				 $email_changepass_request_root = $base_root.'changepassrequest.blade.php';
 				 $email_newpass_root = $base_root.'newpass.blade.php';
 				 $email_alert_low_credit_root = $base_root.'alertLowCredit.blade.php';
+				 $email_admin_accept_request_cancel_job_from_user = $base_root.'adminAcceptRequestCancelJobFromUser.blade.php';
+				 $email_admin_decline_request_cancel_job_from_user = $base_root.'adminDeclineRequestCancelJobFromUser.blade.php';
 				 
 				 
 				 $email_register_content = file_get_contents($email_register_root);
@@ -3683,6 +3720,8 @@ public function watingAcceptJobs()
 				 $email_changepass_request_content = file_get_contents($email_changepass_request_root);
 				 $email_newpass_content = file_get_contents($email_newpass_root);
 				 $email_alert_low_credit_content = file_get_contents($email_alert_low_credit_root);
+				 $email_admin_accept_request_cancel_job_from_user = file_get_contents($email_admin_accept_request_cancel_job_from_user);
+				 $email_admin_decline_request_cancel_job_from_user = file_get_contents($email_admin_decline_request_cancel_job_from_user);
 				 
 		   		return View::make('admin_dashboard.nonReplyEmails')
 		   			->with(array(
@@ -3694,6 +3733,8 @@ public function watingAcceptJobs()
 			   			'email_changepass_request_content'=> $email_changepass_request_content,
 			   			'email_newpass_content'=> $email_newpass_content,
 		   				'email_alert_low_credit_content'=>$email_alert_low_credit_content,
+		   				'email_admin_accept_request_cancel_job_from_user'=>$email_admin_accept_request_cancel_job_from_user,
+		   				'email_admin_decline_request_cancel_job_from_user'=>$email_admin_decline_request_cancel_job_from_user,
 			   
 		   			));
 			}
@@ -3727,6 +3768,13 @@ public function watingAcceptJobs()
         case 'email_newpass_content':
 	        file_put_contents($base_root.'newpass.blade.php',Input::get('email_content'));
 	        break;
+	    case 'email_admin_accept_request_cancel_job_from_user':
+	        file_put_contents($base_root.'adminAcceptRequestCancelJobFromUser.blade.php',Input::get('email_content'));
+	        break;
+	    case 'email_admin_decline_request_cancel_job_from_user':
+	        file_put_contents($base_root.'adminDeclineRequestCancelJobFromUser.blade.php',Input::get('email_content'));
+	        break;   
+	            
 	    default:
 	    	var_dump(Input::get('email_id'));die;
        	}
@@ -4037,7 +4085,8 @@ public function getAdminPlusFAQ($type)
 				 	'status' => 'waitingOpen'
 				 	));
 		
-		return Redirect::to('waiting-openjobs');			
+		//return Redirect::to('waiting-openjobs');
+		return Redirect::to('openjobs');			
 	
 	}
 	
@@ -4045,14 +4094,15 @@ public function getAdminPlusFAQ($type)
 	{   
 		if(Auth::check()) { 
 			if ( Auth::user()->role == '0') {
-				 
-				$waitingOpenJobs = DB::table('category')
-					->join('jobs','category.id','=','jobs.category_id')
-					->where('user_id','=', Auth::user()->id)
-					->where('status','=','waitingOpen')
-			    	->get(); 
-				return View::make('user_dashboard.waitingJobs')
-					->with(array('waitingOpenJobs' => $waitingOpenJobs));	
+				$jobs = DB::table('jobs')
+					->join('job_process','job_process.job_id','=','jobs.id')
+					->where('jobs.user_id','=',Auth::user()->id)
+					->where('job_process.status_process','=','completed')					
+					->get();
+				//var_dump($jobs);die;	
+				 return View::make('user_dashboard.pendingreview')
+					->with(array('jobs' => $jobs));	
+				
 			}
 		}
 		return Redirect::to('login');			
@@ -4069,14 +4119,23 @@ public function getAdminPlusFAQ($type)
 	
 	public function postWaitingJobFindBuilder()	
 	{   				 
-			//------select list builders from DB:: where matching the condition with Input::----//
 		$input = Input::all();
+		$builder_sent_invite = DB::table('job_process')
+        	->where('job_id', '=', $input['job_id'])
+        	->get();
+        $num_builder_sent_invite = count($builder_sent_invite);
+        if ($num_builder_sent_invite >= 3) {
+        	return View::make('pages.listbuilders')->with(array('builders' =>'','array_radius' => '', 'category_id' =>'','job_id'=> '','num_builder_sent_invite'=>'3')) ;
+        } 
+        $date = date('Y-m-d');
 		$builders_beforecheck = "";
-
-        $builders_beforecheck = DB::table('users')
+        $builders_beforecheck = DB::table('extend_builders_category')
+        	->join('users', 'users.id', '=', 'extend_builders_category.builder_id')	
         	->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
-        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
         	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->where('users.email_confirm', '=', "")
+        	->where('users.phone_confirm', '=', "")
+        	->where('users.active_until', '>=', $date)
         	->get();
         $price_invite = DB::table('charges')
         	->where('id','=','4')
@@ -4091,9 +4150,27 @@ public function getAdminPlusFAQ($type)
 				
 				$date = new DateTime('today');
 				$date =  $date->format('Y-m-d');
-			
-				if ($builders_beforecheck[$i]->active_until >= $date ) { 
-				 	$builders[$i] = $builders_beforecheck[$i];
+			//echo $builders_beforecheck[$i]->builder_id; die;
+				if ($builders_beforecheck[$i]->active_until >= $date ) {					 
+				 	$builders_last_check = "";
+				 	 $builders_last_check = DB::table('job_process')
+			        	->where('job_process.builder_id', '=', $builders_beforecheck[$i]->builder_id)
+			        	->where('job_process.job_id', '=', $input['job_id'])
+			        	->get();
+			        	$isExist = false;
+			        	if ($builders_last_check != ""){
+				        	foreach ($builders_last_check as $builder_last_check) {
+				        		if ($builders_beforecheck[$i]->builder_id == $builder_last_check->builder_id) {
+				        			$isExist = true;
+				        		}
+				        	}	
+			        	}
+			        	
+			        	if ($isExist == false) {
+			        		$builders[$i] = $builders_beforecheck[$i];	
+			        	}
+			        	
+			        	//var_dump($builders_last_check); die;
 				 } else {
 				 	//sent email alert low credit
 				 	try {
@@ -4131,14 +4208,17 @@ public function getAdminPlusFAQ($type)
 			}
 			
 			
-			
-		    foreach( $builders as $builder ) {
-		  			
-			$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
-		    }
-		} 
+			if ($builders != "") {
+				foreach( $builders as $builder ) {	
+					$array_radius[$builder->id] = get_distance_between_points($input['lat'], $input['lng'], $builder->lat, $builder->lng);
+			    }	
+			}
+		    
+		}
+		//var_dump($builders); die;
+		 
 			//------------------------------//
-			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $input['job_id'])) ;
+			return View::make('pages.listbuilders')->with(array('builders' =>$builders,'array_radius' => $array_radius, 'category_id' =>$input['category_id'],'job_id'=> $input['job_id'],'num_builder_sent_invite'=>$num_builder_sent_invite)) ;
 			
 					
 	
@@ -4392,17 +4472,26 @@ public function getAdminPlusFAQ($type)
 	}
 	
 	public function postLeaveFeedback()	
-	{   				
+	{   
+		$date = new DateTime('today');
+		$date =  $date->modify('+5 day')->format('Y-m-d');				
 		DB::table('feedback')->insert(array(
 				'builder_id' => Input::get('builder_id'), 
 				'job_id' => Input::get('job_id'),
 				'user_id' => Auth::user()->id,
-				'builder_id' => Input::get('builder_id'),
-				'feedback_created_at' => Input::get('feedback_created_at'),
-				'feedback_content' => Input::get('feedback_content')
-			));
-		
-		return Redirect::to('completedjobs');			
+				'timeliness' => Input::get('rating_1'),
+				'services_quality' => Input::get('rating_2'),
+				'comunication' => Input::get('rating_3'),
+				'value' => Input::get('rating_4'),
+				'feedback_description' => Input::get('feedback_description'),
+				'feedback_created_at' => $date));
+		DB::table('job_process')
+			->where('builder_id','=',Input::get('builder_id'))
+			->where('job_id','=', Input::get('job_id')) 
+			->update(array(
+			'user_leave_feedback' => '1',
+		));
+		return Redirect::to('pending-reviews');			
 	
 	}
 	
@@ -4481,7 +4570,7 @@ public function getAdminPlusFAQ($type)
 
 	}
 	
-	public function getMyPreviews()
+	public function getGetReviews()
 	{  
 		if(Auth::check()) {
 			if(Auth::user()->role == '1') {	
@@ -4491,12 +4580,406 @@ public function getAdminPlusFAQ($type)
 			    	 ->where('feedback.builder_id', '=', Auth::user()->id)
 			    	 ->get();
 			    //var_dump($previews); die;
-				return View::make('builder_dashboard.myPreviews')->with(array('previews'=> $previews));
+				return View::make('builder_dashboard.getReviews')->with(array('previews'=> $previews));
 			}
 			return Redirect::to('login');
 		}
 		return Redirect::to('login');
 	}
+
+
+	public function postEditJob()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '0') {
+				$categorys = DB::table('category')
+				->get(); 
+				$jobInfo = "";
+				$jobInfo = DB::table('category')
+					->join('jobs','category.id','=','jobs.category_id')
+					->having('jobs.id', '=', Input::get('job_id')) 
+					->first();
+			return View::make('user_dashboard.editJob')->with(array('jobInfo'=>$jobInfo, 'categorys' => $categorys));				
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postSubmitEditJob() {
+		$input = Input::all(); 
+		$rules = array('price'  => 'numeric');
+		$des_root_1 = "";
+		$des_root_2 = "";
+		$des_root_3 = "";
+		$des_root_4 = "";
+		$des_root_5 = "";
+		
+		$v = Validator::make($input, $rules);
+		if($v->passes())
+		{
+			$filename = "";
+		    $extension = "";
+			$base_root = asset(str_replace(public_path(), '' , 'uploads'));
+		    if (Input::hasFile('photo_1')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_1 = Input::file('photo_1');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_1->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_1')->move($destinationPath, $filename.'.'.$extension);
+		        }
+			} 
+			
+			$des_root_1 = $base_root."/".$filename.'.'.$extension;
+
+			if (Input::hasFile('photo_2')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_2 = Input::file('photo_2');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_2->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_2')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_2 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_3')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_3 = Input::file('photo_3');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_3->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_3')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_3 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_4')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_4 = Input::file('photo_4');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_4->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_4')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_4 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			if (Input::hasFile('photo_5')) 
+		    {	
+		        $allowedext = array("png","jpg","jpeg","gif");
+		        $photo_5 = Input::file('photo_5');
+		        $destinationPath = public_path().'/uploads';
+				$filename = str_random(12);
+		        $extension = $photo_5->getClientOriginalExtension();
+		
+		        if(in_array($extension, $allowedext ))
+		        {
+		            $upload_success = Input::file('photo_5')->move($destinationPath, $filename.'.'.$extension);
+		        }
+		        $des_root_5 = $base_root."/".$filename.'.'.$extension;
+			} 
+			
+			
+			
+			
+			$userpostjob = User::where('id', '=', Auth::user()->id)->first();
+		
+			
+			DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'tittle' => $input['tittle'],
+					'description' => $input['description'],
+					'price' => $input['price'],
+					'timeoption' => $input['timeoption'],
+					
+					'date' => $input['date'],
+					'local' => $input['local'],
+					'local_code' => $input['local_code'],
+					'lat' => $input['lat'],
+					'lng' => $input['lng'],
+					
+					'user_id' => $userpostjob->id,
+					'status' => 'openjob',
+					'property' => $input['property'],
+					'category_id' => $input['category_id'],
+					'attachment_src_1' => $des_root_1,
+					'attachment_src_2' => $des_root_2,
+					'attachment_src_3' => $des_root_3,
+					'attachment_src_4' => $des_root_4,
+					'attachment_src_5' => $des_root_5,
+					'contact_time' => Input::get('contact-time'),
+					'contact_from' => Input::get('contact-from'),
+					'contact_to' => Input::get('contact-to'),
+					));
+
+			return Redirect::to('openjobs');
+	}
+	return Redirect::to('login');
+	}
+	
+	public function postRepostJob()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '0') {
+				//var_dump(Input::get('option_repost_job')); die;
+				if (Input::get('option_repost_job') == null) {
+					DB::table('jobs')
+						->where('id', '=', Input::get('job_id'))
+						->update(array(
+						'status' => 'postRepostJob',
+					));	
+				} else {
+					echo"sa";
+				}
+				
+				/*DB::table('job_process')
+					->where('id', '=', Input::get('user_id'))
+					->update(array(
+					'status' => 'openjob',
+					));*/
+				return Redirect::to('openjobs');			
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postBuilderSendMessageToUser()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '1') {
+				$date = new DateTime('today');
+		    	$date =  $date->modify('+5 day')->format('Y-m-d');
+				DB::table('message')
+					->insert(array(
+						'user_id' => Input::get('user_id'),	
+						'builder_id' => Auth::user()->id,
+						'job_id' => Input::get('job_id'),
+						'message_content' => Input::get('message_content'),
+						'builder_to_user' => '1',
+						'created_at' => $date, 
+					));
+				
+				return Redirect::to('customer-invited');			
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
+	
+	public function postUserSendMessageToBuilder()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '0') {
+				$date = new DateTime('today');
+		    	$date =  $date->modify('+5 day')->format('Y-m-d');
+				DB::table('message')
+					->insert(array(
+						'user_id' => Auth::user()->id,	
+						'builder_id' => Input::get('builder_id'),
+						'job_id' => Input::get('job_id'),
+						'message_content' => Input::get('message_content'),
+						'builder_to_user' => '0',
+						'created_at' => $date, 
+					));
+				
+				return Redirect::to('read-message/'.Input::get("job_id"));			
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getReadMessage($job_id)
+	{  
+		if(Auth::check()) {
+			$messages = DB::table('message')
+				->join('users', 'users.id', '=', 'message.builder_id')
+	        	->where ('job_id','=', $job_id)
+	        	->where ('user_id','=', Auth::user()->id)
+	        	->where ('builder_to_user','=', '1')
+	        	->get();	
+        	return View::make('user_dashboard.readMessage')->with(array('messages'=>$messages));
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postDeleteMessage()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '0') {
+				DB::table('message')->where('message_id', '=', Input::get('message_id'))
+					->delete();
+				return Redirect::to('read-message/'.Input::get("job_id"));			
+			}
+			return Redirect::to('login');
+		}
+		return Redirect::to('login');
+	}
+	
+	
+	public function postReadedMessage()
+	{  
+		if(Auth::check()) {
+			
+				DB::table('message')
+					->where('message_id', '=', Input::get('message_id'))
+					->update(array(
+					'readed' => '1',
+				));
+				
+				return Redirect::to('read-message/'.Input::get("job_id"));
+			
+		
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getReadQuote($job_id)
+	{  
+		if(Auth::check()) {
+			$quotes = DB::table('job_process')
+				->join('users', 'users.id', '=', 'job_process.builder_id')
+	        	->where ('job_id','=', $job_id)
+	        	->where ('user_id','=', Auth::user()->id)
+	        	->where ('vote','<>', '0')
+	        	->where ('status_process','<>', 'ongoing')
+	        	->where ('status_process','<>', 'miss')
+	        	->where ('status_process','<>', 'closed')
+	        	->get();	
+        	return View::make('user_dashboard.readQuote')->with(array('quotes'=>$quotes));
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postCustomerActionCancelledRequestAdmin()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '0') {
+				DB::table('job_process')
+					->where('job_id', '=', Input::get('job_id'))
+					->where('builder_id', '=', Input::get('builder_id'))
+					->update(array(
+					'request_admin_cancelled' => '1',
+					'reason_cancelled' => Input::get('reason_cancelled'),
+				));
+				
+				return Redirect::to('ongoingjobs');
+			
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	public function getRequestAdminCancelledJob()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '2') {
+				$requestCancelledJobs = "";
+				$requestCancelledJobs = DB::table('job_process')
+					->where('request_admin_cancelled', '=', '1')
+					->get();
+					
+				
+				return View::make('admin_dashboard.requestCancelledJob')->with(array('requestCancelledJobs'=>$requestCancelledJobs));
+			
+			}
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function getViewJobDetail($job_id)
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '2') {
+				echo $job_id; die;
+				return View::make('admin_dashboard.viewDetailJob')->with(array('requestCancelledJobs'=>$requestCancelledJobs));
+			
+			}
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function postAdminAcceptCancelledJob()
+	{  
+		if(Auth::check()) {
+			if(Auth::user()->role == '2') {
+				DB::table('job_process')
+					->where('id', '=', Input::get('job_process_id'))
+					->update(array(
+					'request_admin_cancelled' => '0',
+					'status_process' => 'cancelled',
+				));
+				
+				DB::table('jobs')
+					->where('id', '=', Input::get('job_id'))
+					->update(array(
+					'status' => 'cancelled',
+				));
+				$builder = DB::table('users')
+					->where('id','=',Input::get('builder_id'))
+					->first();
+				//sent email to Builder.
+			try {
+				Mail::send('emails.adminAcceptRequestCancelJobFromUser', function($message)
+				{
+					$message->to($builder->email)->subject('Alert Low Credit');
+				});
+	
+			}
+			catch (Exception $e){
+				$to      = $builder->email;
+				$subject = 'Admin accept your request';
+				$message = View::make('emails.adminAcceptRequestCancelJobFromUser')->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+					
+			}
+				
+				return Redirect::to('request-cancelledjobs');
+			
+			}
+		}
+		return Redirect::to('login');
+	}
+	
+	
+	
+	
 }
 
 

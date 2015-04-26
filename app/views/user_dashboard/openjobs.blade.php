@@ -10,7 +10,7 @@
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item active">
 					    Dashboard
 					  </a>
-					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
 					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
 					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
 					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
@@ -19,7 +19,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 				</div>
 
 			</div>
@@ -150,7 +150,7 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
+			 
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
@@ -158,9 +158,15 @@
 			      <th class="date-sort" ><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Category</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Cancel job</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Invite Builders</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>View Job Details</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>View Message</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>View Quote</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Edit job</em> <span>&nbsp;</span></th>
+			      
+			      
+			     
 			      
 			    </tr>
 			  </thead>
@@ -173,9 +179,61 @@
 			    	<td>{{$job->property}}</td>
 			    	<td>{{$job->content}}</td>
 			    	<td>{{$job->price}}</td>
-			 		<td>{{$job->timeoption}}</td>
-			 		<td>{{$job->local}}</td>
-			 		<td>{{$job->description}}</td>
+			    	
+			 		<td>
+						<form method = "post" action = "customer-action-cancelled" >
+					 		<input name = "job_id" value = "{{$job->id}}" hidden>
+					 		
+					 		<input type="date" name = "date_cancelled" value="<?php echo date('Y-m-d'); ?>" hidden/>
+					 		<button class="btn btn-danger">Cancel</button>
+				 		</form>
+					</td>
+					<td>
+						<form action = "waitingjob-find-builders" method = "post">
+			 				<input name = "category_id" value = "{{$job->category_id}}" hidden>
+			 				<input name = "job_id" value = "{{$job->id}}" hidden>
+			 				<input name = "lat" value = "{{$job->lat}}" hidden>
+			 				<input name = "lng" value = "{{$job->lng}}" hidden>
+			 				<input name = "job_id" value = "{{$job->id}}" hidden>
+			 				
+							<button type = "submit" class = "btn btn-success"> Find Builders </button>
+			 			</form>
+					</td>
+					<td>
+					<a href = "view-detail-job-alert/{{$job->id}},{{Auth::user()->id}}">View</a>
+					</td>
+					<td>
+					
+					<script>
+					 	var num_message = 0;
+					</script>
+					 @foreach ($messages as $message)
+					 	@if (($message->job_id == $job->id) && ($message->readed == "0"))
+					 		<script>num_message++</script>
+					 	@endif					 	
+					 @endforeach
+					 <a href = "read-message/{{$job->id}}">Message(<script>document.write(num_message);</script>)</a>
+					</td>
+					<td>
+					<script>
+					 	var num_quote = 0;
+					</script>
+						@foreach ($quotes as $quote)
+						 	@if (($quote->job_id == $job->id) && ($quote->status_process != 'miss'))
+						 		<script>num_quote++</script>
+						 	@endif					 	
+						 @endforeach
+						 <a href = "read-quote/{{$job->id}}">Quotes(<script>document.write(num_quote);</script>)</a>
+					</td>
+					<td>
+					
+					<form action = "edit-jobs" method = "post">
+						<input name = "job_id" value = "{{$job->id}}" hidden>
+						<input type = "submit" value = "Edit">
+					</form>
+					
+					</td>
+			 		
 			 		
 			 		
 			 	</tr>	
@@ -188,7 +246,7 @@
 			 	<p>Have zero jobs posted</p>
 			 @endif
 			 
-			{{ Form::close() }}
+		
 			
     </div>
     

@@ -27,7 +27,7 @@
                     <li class="page-scroll">
                         @if(Auth::check())
                         	@if(Auth::user()->role == 0)
-                        		<a href="profile">
+                        		<a href="{{URL::route('profile')}}">
                         			dashboard
                         		</a>
                         	@else

@@ -7,21 +7,18 @@
 			</div>
 			<div class="col-md-2">
 				<div class="list-group">
-					  <a href="#" class="list-group-item active">
+					  <a href="{{URL::route('customer-invited')}}" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('builder-profile')}}" class="list-group-item">Profile</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Job Alerts</a>
-					  <a href="{{URL::route('builder-find-jobs')}}" class="list-group-item">Find Jobs</a>
-					  <a href="{{URL::route('builder-ongoing-jobs')}}" class="list-group-item">Ongoing Jobs</a>
-					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
-					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
-					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
-					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
-					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					 <a href="{{URL::route('profile')}}" class="list-group-item">My Profile</a>
+					  <a href="{{URL::route('openjobs')}}" class="list-group-item">Open Jobs</a>
+					  <a href="{{URL::route('ongoingjobs')}}" class="list-group-item">Ongoing Jobs</a>
+					  <a href="{{URL::route('cancelledjobs')}}" class="list-group-item">Cancelled Jobs</a>
+					  <a href="{{URL::route('completedjobs')}}" class="list-group-item">Completed Jobs</a>
+					  <a href="{{URL::route('myinvites')}}" class="list-group-item">My Invites</a>
+					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
+					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
+					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
 					  
 				</div>
 
@@ -157,43 +154,62 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      <th><em>Job tittle</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Preview content</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>User post</em> <span>&nbsp;</span></th>
-			      <th class="date-sort" ><em>Job Detailt</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Create at</em> <span>&nbsp;</span></th>
+			      	<th><em>Message from</em> <span>&nbsp;</span></th>
+			     	<th><em>Message content</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort" ><em>Readed</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Delete</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Answer</em> <span>&nbsp;</span></th>
+  
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			@if($previews != null)
-			  @foreach($previews as $preview)
+			  @if($messages != null)
+			  
+              @foreach($messages as $message)
 			 	<tr>
-			    	<td>{{$preview->tittle}}</td>
-			    	<td>{{$preview->feedback_content}}</td>
-			   		<td>
-			   		{{$preview->username}}
-			   		</td>
-			    	
-			 		
-			 		
-			 		
-			 		<td class="date-sort"><em><a href="view-detail-job-alert/{{$preview->job_id}},{{$preview->user_id}}">View</></em> <span>&nbsp;</span>
-			 		</td>
-			 		
-			 		<td>{{$preview->created_at}}</td>
-			 		
-			 		
-			 		
-			 		
+			    	<td>{{$message->username}}</td>
+			    	<td>{{$message->message_content}}</td>
+			      	<td class="date-sort" >
+						@if ($message->readed == '0')
+							<form action="{{URL::route('readed-message')}}" method = "post">
+	  						<input hidden name = "job_id" value = "{{$message->job_id}}"/>
+	  						<input hidden name = "message_id" value = "{{$message->message_id}}"/>
+	  						<input type="submit" value = "Mark readed">
+						</form>
+						@endif			    
+			      		
+					</th>
+			      	
+			      	
+			      	
+			      	<td class="date-sort">
+							
+						<form action="{{URL::route('delete-message')}}" method = "post">
+	  						<input  hidden name = "job_id" value = "{{$message->job_id}}"/>
+	  						<input  hidden name = "message_id" value = "{{$message->message_id}}"/>
+	  						<input type="submit" value="Delete">
+						</form>
+								      	
+			      	</td>
+			      	<td class="date-sort">
+						<form action="{{URL::route('user-sent-message-to-builder')}}" method = "post">
+	  						<input  hidden name = "builder_id" value = "{{$message->builder_id}}"/>
+	  						<input  hidden name = "job_id" value = "{{$message->job_id}}"/>
+	  						<textarea name = "message_content" placeholder = "Tyoe message"></textarea>
+	  						<input type="submit" value="Send">
+						</form>	
+							
+								      	
+			      	</td>
 			 	</tr>	
 				@endforeach
-			   
-			   
+				 
+  
 			</table>
 			@else
 			 	</table>
-			 	<p>Have zero jobs posted</p>
+			 	<p>Have zero message for you</p>
 			 @endif
 			 
 			
@@ -206,8 +222,7 @@
 			</div>
 		</div>
 		
-		
-
+	
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
 		<!-- Bootstrap JavaScript -->

@@ -165,7 +165,7 @@ Route::get('builder-cancelled-jobs', array('as'=>'builder-cancelled-jobs','uses'
 
 Route::get('builder-completed-jobs', array('as'=>'builder-completed-jobs','uses' => 'BaseController@getBuilderCompletedJobs' ));
 
-Route::get('my-previews', array('as'=>'my-previews','uses' => 'BaseController@getMyPreviews' ));
+Route::get('get-reviews', array('as'=>'get-reviews','uses' => 'BaseController@getGetReviews' ));
 
 Route::post( 'builder-action-completed', array( 'uses' => 'BaseController@getBuilderActionCompleted' ));
 
@@ -177,8 +177,7 @@ Route::post( 'builder-submit-job-details', array( 'uses' => 'BaseController@post
 
 Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
 
-Route::post('vote-job', 'BaseController@postVoteJob');
-
+Route::post('vote-job', array('as'=>'vote-job','uses' => 'BaseController@postVoteJob' ));
 
 
 /*
@@ -340,3 +339,32 @@ Route::post('leave-feedback', array('as'=>'leave-feedback','uses' => 'BaseContro
 
 
 Route::get('public-info-builder/{builder_id}', array('uses' => 'BaseController@getPublicInfoBuilder' ));
+
+Route::post('edit-jobs', array('as'=>'edit-jobs','uses' => 'BaseController@postEditJob'));
+
+Route::post('submit-edit-jobs', array('as'=>'submit-edit-jobs','uses' => 'BaseController@postSubmitEditJob'));
+
+Route::post('repost-job', array('as'=>'repost-job','uses' => 'BaseController@postRepostJob'));
+
+Route::post('builder-sent-message-to-user', array('as'=>'builder-sent-message-to-user','uses' => 'BaseController@postBuilderSendMessageToUser'));
+
+Route::post('user-sent-message-to-builder', array('as'=>'user-sent-message-to-builder','uses' => 'BaseController@postUserSendMessageToBuilder'));
+
+Route::get('read-message/{job_id}', array('uses' => 'BaseController@getReadMessage' ));
+
+Route::post('delete-message', array('as'=>'delete-message','uses' => 'BaseController@postDeleteMessage'));
+
+Route::post('readed-message', array('as'=>'readed-message','uses' => 'BaseController@postReadedMessage'));
+
+Route::get('read-quote/{job_id}', array('uses' => 'BaseController@getReadQuote' ));
+
+Route::post('customer-action-cancelled-request-admin', array( 'uses' => 'BaseController@postCustomerActionCancelledRequestAdmin'));
+
+Route::get('request-cancelledjobs', array('as'=>'request-cancelledjobs','uses' => 'BaseController@getRequestAdminCancelledJob' ));
+
+Route::get('view-job-detail/{job_id}', array('as'=>'view-job-detail','uses' => 'BaseController@getViewJobDetail' ));
+
+Route::post('admin-accept-cancelled-job', array('as'=>'admin-accept-cancelled-job','uses' => 'BaseController@postAdminAcceptCancelledJob'));
+
+Route::post('admin-decline-cancelled-job', array('as'=>'admin-decline-cancelled-job','uses' => 'BaseController@postAdminDeclineCancelledJob'));
+

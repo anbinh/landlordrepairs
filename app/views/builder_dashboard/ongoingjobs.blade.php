@@ -17,11 +17,11 @@
 					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
+					 
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					  <a href="{{URL::route('get-reviews')}}" class="list-group-item">Get review</a>
 				</div>
 
 			</div>
@@ -185,13 +185,14 @@
 				 		The date completed:<input type="date" name = "date_completed" value="<?php echo date('Y-m-d'); ?>" />
 				 		<button class="btn btn-success" type = "submit">Completed</button>
 			 		</form>
-			 		
+			 		<!-- 
 			 		<form method = "post" action = "builder-action-cancelled" >
 				 		<input name = "job_id" value = "{{$OngoingJob->job_id}}" hidden>
 				 		<input name = "user_id" value = "{{$OngoingJob->user_id}}" hidden>
 				 		<input type="date" name = "date_cancelled" value="<?php echo date('Y-m-d'); ?>" hidden/>
 				 		<button class="btn btn-danger">Cancelled</button>
 			 		</form>
+			 		 -->
 			 		</td>
 			 		
 			 	</tr>	

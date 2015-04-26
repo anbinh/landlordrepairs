@@ -10,7 +10,7 @@
 					  <a href="#" class="list-group-item active">
 					    Dashboard
 					  </a>
-					  <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
+					 <a href="{{URL::route('admin-manage-builders')}}" class="list-group-item">Builders Profile</a>
 					  <a href="{{URL::route('admin-manage-users')}}" class="list-group-item">Users Profile</a>
 					  <a href="{{URL::route('admin-today-jobs')}}" class="list-group-item">Today jobs</a>
 					  <a href="{{URL::route('admin-new-users')}}" class="list-group-item">New Users</a>
@@ -156,44 +156,53 @@
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
-			      
-			      	<th class="date-sort"><em>Job Tittle</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Status</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>From User</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>To Builder</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Job Created At</em> <span>&nbsp;</span></th>
-			      	<th class="date-sort"><em>Sent Invite At</em> <span>&nbsp;</span></th>
-			      
+			      	<th><em>Name of User</em> <span>&nbsp;</span></th>
+			     	<th><em>Name of Builder</em> <span>&nbsp;</span></th>
+			     	<th><em>Job</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Reason</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Action</em> <span>&nbsp;</span></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			
-			  @if($jobs_process != null)
-			  	@for ($i = 0; $i < count($jobs_process); $i++)
-	
-			  		<tr>
-			  			<td>{{$jobs[$i]->tittle}}</td>
-			  			<td>{{$jobs_process[$i]->status_process}}
-			  			<td>{{$users[$i]->username}}
-			  			<span>&nbsp;</span>
-			  			<em><a href="view-detail-info-user/{{$users[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			
-			  			<td>
-			  				{{$builders[$i]->username}}
-			  				<span>&nbsp;</span><em><a href="admin-view-detail-info-builder/{{$builders[$i]->id}}">View Details</></em> 
-			  			</td>
-			  			<td>{{$jobs[$i]->created_at}}</td>
-			  			<td>{{$jobs_process[$i]->updated_at}}</td>
-			  			
-		  			</tr>
-		  		
-			  	@endfor
-              @endif
-
+			  @if($requestCancelledJobs != null)
+			  	@foreach ($requestCancelledJobs as $requestCancelledJob)
+	              	
+				 		<tr>
+				    		
+				    		<td class="date-sort"><em><a href="view-detail-info-user/{{$requestCancelledJob->user_id}}">View</></em> <span>&nbsp;</span></td>
+				    		<td class="date-sort"><em><a href="admin-view-detail-info-builder/{{$requestCancelledJob->builder_id}}">View</></em> <span>&nbsp;</span></td>
+				      		<td class="date-sort"><em><a href="view-job-detail/{{$requestCancelledJob->job_id}}">View</></em> <span>&nbsp;</span></td>
+				      		<td class="date-sort">
+				      		{{$requestCancelledJob->reason_cancelled}}
+				      		</td>
+				      		<td>
+				      			<form method = "post" action = "{{URL::route('admin-accept-cancelled-job')}}" >
+							 		<input name = "job_process_id" value = "{{$requestCancelledJob->id}}" hidden>
+							 		<input name = "job_id" value = "{{$requestCancelledJob->job_id}}" hidden>
+							 		<input name = "builder_id" value = "{{$requestCancelledJob->builder_id}}" hidden>
+							 		<button class="btn btn-danger">Accept</button>
+						 		</form>
+						 		
+						 		<form method = "post" action = "{{URL::route('admin-decline-cancelled-job')}}">
+							 		<input name = "job_process_id" value = "{{$requestCancelledJob->id}}" hidden>
+							 		<input name = "user_id" value = "{{$requestCancelledJob->user_id}}" hidden>
+							 		<button class="btn btn-success">Decline</button>
+						 		</form>
+						 		
+				      		</td>
+				 		</tr>	
+					
+			@endforeach
 			</table>
-
+			@else
+			</table>
+			<p>No have jobs want cancelled</p>
+			 @endif
+			
+			
     </div>
+    
 
     <!-- end change phone number -->
 </div>

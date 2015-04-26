@@ -17,11 +17,11 @@
 					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					  
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
+					  
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					  <a href="{{URL::route('get-reviews')}}" class="list-group-item">Get review</a>
 					  
 				</div>
 

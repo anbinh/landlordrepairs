@@ -17,11 +17,11 @@
 					  <a href="{{URL::route('builder-lost-jobs')}}" class="list-group-item">Lost jobs</a>					 
 					  <a href="{{URL::route('builder-won-jobs')}}" class="list-group-item">Won jobs</a>
 					  <a href="{{URL::route('builder-cancelled-jobs')}}" class="list-group-item">Cancelled jobs</a>
-					  <a href="#" class="list-group-item">Pending reviews</a>
+					  
 					  <a href="{{URL::route('builder-completed-jobs')}}" class="list-group-item">Completed jobs</a>
 					  <a href="{{URL::route('customer-invited')}}" class="list-group-item">Invite jobs</a>
 					  <a href="{{URL::route('credit')}}" class="list-group-item">Credit</a>
-					  <a href="{{URL::route('my-previews')}}" class="list-group-item">My Preview</a>
+					  <a href="{{URL::route('get-reviews')}}" class="list-group-item">Get review</a>
 				</div>
 
 			</div>
@@ -165,6 +165,7 @@
 			      	<th class="date-sort"><em>Mobile verified</em> <span>&nbsp;</span></th>
 			      
 			      	<th class="date-sort"><em>Detail Info</em> <span>&nbsp;</span></th>
+			      	<th class="date-sort"><em>Sent Message</em> <span>&nbsp;</span></th>
 			      	<th class="date-sort"><em>Quote</em> <span>&nbsp;</span></th>
   
 			    </tr>
@@ -184,6 +185,16 @@
 			      	<td class="date-sort"><em>{{$customers[$invite->user_id][0]->phone_number}}</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em>Yes</em> <span>&nbsp;</span></td>
 			      	<td class="date-sort"><em><a href="view-detail-job-alert/{{$invite->job_id}},{{$invite->user_id}}">View</></em> <span>&nbsp;</span></td>
+			      	<td class="date-sort">
+							
+						<form action="builder-sent-message-to-user" method="post">
+	  						<textarea rows = "5" name = "message_content" placeholder = "Type message"></textarea>
+	  						<input hidden name = "job_id" value = "{{$invite->job_id}}"/>
+	  						<input hidden name = "user_id" value = "{{$invite->user_id}}"/>
+	  						<input type="submit" value="Send">
+						</form>
+								      	
+			      	</td>
 			      	<td class="date-sort">
 							
 							<form action="vote-job" method="post">

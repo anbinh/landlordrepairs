@@ -19,7 +19,7 @@
 					  <a href="{{URL::route('myfavorites')}}" class="list-group-item">My favorites Builders</a>
 					  <a href="{{URL::route('postjob-page')}}" class="list-group-item">Post a Job</a>
 					  <a href="{{URL::route('pending-reviews')}}" class="list-group-item">Pending reviews</a>
-					  <a href="{{URL::route('waiting-accept-jobs')}}" class="list-group-item">Waiting accept jobs</a>
+					  
 				</div>
 
 			</div>
@@ -150,7 +150,7 @@
 			  font-size: 12px;
 			}
 			</style>
-			 {{ Form::open(array('url' => '')) }}
+			
 			<table id="country-list" class="sortable-table">
 			  <thead>
 			    <tr class="country-table-head">
@@ -160,8 +160,8 @@
 			     
 			      <th class="date-sort" ><em>Time Option</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Local</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Description</em> <span>&nbsp;</span></th>
-			      <th class="date-sort"><em>Status</em> <span>&nbsp;</span></th>
+			      <th class="date-sort" ><em>Repost this job</em> <span>&nbsp;</span></th>
+			      
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -175,14 +175,19 @@
 			    	
 			 		<td>{{$cancelledJob->timeoption}}</td>
 			 		<td>{{$cancelledJob->local}}</td>
-			 		<td>{{$cancelledJob->description}}</td>
-			 		
-			 		<td>@if ( $cancelledJob->cancelled_confirm != "")
-			 				Waiting customer approve
-			 			@else
-			 				Approved
-			 			@endif
+			 		<td>
+			 			Repost this job
+			 			<form action = "repost-job" method = "post">
+			 			When reposting, automatically re-invite:</br>
+				 			<input type = "checkbox" name = "option_repost_job[]" value = "1">Builders who i previously invited to my old job</br>
+				 			<input type = "checkbox" name = "option_repost_job[]" value = "2">Builders who subimitted proposals my old jobs
+				 			<input name = "job_id" value = "{{$cancelledJob->id}}" >
+				 			<button type = "submit">Repost</button>
+			 			</form>
 			 		</td>
+			 		
+			 		
+			 		
 	
 			 	</tr>	
 				@endforeach
@@ -195,7 +200,7 @@
 			
 			
 			 
-			{{ Form::close() }}
+			
 			
     </div>
     

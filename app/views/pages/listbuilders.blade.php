@@ -162,7 +162,11 @@ $(document).ready(function(){
 </table>
  <input hidden name = "category_id" value = "{{$category_id}}"/> 
  <input hidden name = "job_id" value = "{{$job_id}}"/>
-  {{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
+ <input name = "num_builder_sent_invite" value = "{{$num_builder_sent_invite}}" >
+ @if($num_builder_sent_invite <	 3)
+ 	{{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
+ @endif
+  
 {{ Form::close() }}
 <form action = "add-to-schedule-waitingjobs" method = "post">
 	<input name = "job_id" value = "{{$job_id}}" hidden>
