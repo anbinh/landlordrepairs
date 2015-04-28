@@ -179,8 +179,8 @@
 			 			Repost this job
 			 			<form action = "repost-job" method = "post">
 			 			When reposting, automatically re-invite:</br>
-				 			<input type = "checkbox" name = "option_repost_job[]" value = "1">Builders who i previously invited to my old job</br>
-				 			<input type = "checkbox" name = "option_repost_job[]" value = "2">Builders who subimitted proposals my old jobs
+				 			<input type = "checkbox" name = "option_1" value = "1">Builders who i previously invited to my old job</br>
+				 			<input type = "checkbox" name = "option_2" value = "2">Builders who subimitted proposals my old jobs
 				 			<input name = "job_id" value = "{{$cancelledJob->id}}" >
 				 			<button type = "submit">Repost</button>
 			 			</form>

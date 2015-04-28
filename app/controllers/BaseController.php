@@ -826,7 +826,8 @@ class BaseController extends Controller {
 	} 
 	
 	public function postListbuilders() 
-	{	$num_builder_can_invite = 3 - Input::get('num_builder_sent_invite');
+	{	//$num_builder_can_invite = 3 - Input::get('num_builder_sent_invite');
+	if (Input::get('num_builder_sent_invite') == 0 ){//Not have invited Builders
 		$input = Input::all();
 		$check_builders = Input::get('check_builders');
 		$radius = Input::get('radius');
@@ -1224,10 +1225,12 @@ class BaseController extends Controller {
 					} 
 		        	 break;
 			    default:
-			    	
 			        return Redirect::to('myinvites');
 			}
 			
+			
+	    }
+	}
 			DB::table('jobs')
 				->where('id','=', Input::get('job_id'))
 				->update(
@@ -1236,8 +1239,693 @@ class BaseController extends Controller {
 					));
 			
 			return Redirect::to('openjobs');
+	} else {
+		if (Input::get('num_builder_sent_invite') == 1){
+		$input = Input::all();
+		$check_builders = Input::get('check_builders');
+		$radius = Input::get('radius');
+		
+		$builders_beforecheck = "";
+
+        $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->get();
+        $price_invite = DB::table('charges')
+        	->where('id','=','4')
+        	->first();
+        
+		//var_dump($builders); die;
+		//---make list Builders enought credit----//
+		$builders = "";
+		if ($builders_beforecheck != null) {
+			for ($i = 0; $i < count($builders_beforecheck); $i++) {
+				$transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
+					->get();
+					$credits = "0";
+				foreach($transactions as $transaction) {
+					$credits += ($transaction->charge_type)*($transaction->charge_value); 
+				} //var_dump($price_invite); die;
+				 if($credits >= $price_invite->charge_value_newest) {
+
+				 	
+				 $builders_last_check = "";
+				 	 $builders_last_check = DB::table('job_process')
+			        	->where('job_process.builder_id', '=', $builders_beforecheck[$i]->builder_id)
+			        	->where('job_process.job_id', '=', $input['job_id'])
+			        	->get();
+			        	$isExist = false;
+			        	if ($builders_last_check != ""){
+				        	foreach ($builders_last_check as $builder_last_check) {
+				        		if ($builders_beforecheck[$i]->builder_id == $builder_last_check->builder_id) {
+				        			$isExist = true;
+				        		}
+				        	}	
+			        	}
+			        	
+			        	if ($isExist == false) {
+			        		$builders[$i] = $builders_beforecheck[$i];	
+			        	}
+				 	
+				 	
+				 	
+				 	
+				 	
+				 	
+				 } else {
+				 	//sent email alert low credit
+				 	try {
+						Mail::send('emails.alertLowCredit', function($message)
+						{
+							$message->to(Input::get('email'))->subject('Alert Low Credit');
+						});
+			
+					}
+					catch (Exception $e){
+						$to      = Input::get('email');
+						$subject = 'Alert Low Credit';
+						$message = View::make('emails.alertLowCredit')->render();
+						$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+								'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+								'X-Mailer: PHP/' . phpversion() . "\r\n" .
+								'MIME-Version: 1.0' . "\r\n" .
+								'Content-Type: text/html; charset=ISO-8859-1\r\n';
+			
+						mail($to, $subject, $message, $headers);
+							
+					}
+				 }	
+			}
+		
+		$num_of_checked_builders = count($check_builders);	
+			
+		//select builders matching condition from submit post_jobs.
+		//check number of checked builder
+		
+	    if (count($builders) <= "2") { //sent invite to all Builders in list $array_builder_id
+	    	$i = 0;
+	    	foreach( $builders as $builder ) {
+				
+				
+			    try {
+					Mail::send('emails.newpass', $data, function($message) use ($data)
+					{
+						$message->to($builder->email)->subject('Invite from Users');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = $builder->email;
+					$subject = 'Invite from Users';
+					$message = "User Invited you quote your jobs";
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
+
+				//-----Save to DB::job_process--//
+				$job_process = new JobProcess();
+				$job_process->job_id = Input::get('job_id');
+				$job_process->user_id = Auth::user()->id;
+				$job_process->builder_id = $builder->builder_id;
+				$job_process->num_invite_sent = count($builders)+1;
+				$job_process->status_process = 'inviting';
+				$job_process->radius = $radius[$i];
+				$job_process->save();
+				
+				DB::table('job_process')
+					->where('job_id','=', Input::get('job_id'))
+					->update(
+						array(
+							'num_invite_sent' => count($builders)+1
+						));
+				
+				
+				$i++;
+				//--Insert new row in transactions table
+				$charge_value = DB::table('charges')
+					->where('id','=','4')//receive invite
+					->first();
+				$date = date('Y-m-d');
+				DB::table('transactions')
+					->insert(array(
+						'builder_id' => $builder->builder_id, 
+						'charge_type' => '-1',
+						'charge_value' => $charge_value->charge_value_newest,
+						'created_at' => $date, 
+					));
+				
+				
+				
+			}
+
+			
+			
+	    } else {
+    	$array_builder_id = array();
+	    foreach( $builders as $builder ) {
+	    	//forgot check survival BUILDERS_CHECKED
+	    	if ($num_of_checked_builders == 0){
+	    		array_push($array_builder_id, $builder->builder_id);
+	    	} else {
+	    		if ($num_of_checked_builders == 1) {
+	    			if ($builder->builder_id != $check_builders[0]) {
+	    				array_push($array_builder_id, $builder->builder_id);
+	    			}
+	    		} else {//$num_of_checked_builders == 2
+	    			if (($builder->builder_id != $check_builders[0]) && ($builder->builder_id != $check_builders[1])) {
+	    				array_push($array_builder_id, $builder->builder_id);
+	    			}
+	    		}
+	    	}
+    		
+	    }
+	    	$array_id = array();
+	    	
+		    switch ($num_of_checked_builders) {
+			    case '0':
+				    //select random 2 elements from $array_builder_id;
+				    //$array_id_sent_invite = array_rand($array_builder_id,2);
+				  
+					$array_id_sent_invite = array_rand($array_builder_id, 2);
+				    //var_dump($array_builder_id[$array_id_sent_invite[2]]); die;
+				    
+				    for ($x = 0; $x <= 1; $x++) {
+				    	//$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
+				    	$builders = DB::table('users')
+				    		->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				    		->where('extend_builders.builder_id', '=', $array_builder_id[$array_id_sent_invite[$x]])
+				    		->get();
+					//echo $builders[0]->email; die;
+					//echo $builders[0]->email; die;
+					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->num_invite_sent = '3';
+					$job_process->status_process = 'inviting';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
+					DB::table('job_process')
+						->where('job_id','=', Input::get('job_id'))
+						->update(
+							array(
+								'num_invite_sent' => '3'
+							));
+					
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
+						}
+						
+			        break;
+			        
+			        
+			    case '1':
+			    	//send mail to check
+			    	$array_id_sent_invite = array();
+			    	$array_id_sent_invite[0] = $check_builders[0];
+			    	$array_id_sent_invite_random = array_rand($array_builder_id, 2);
+			    	$array_id_sent_invite[1] = $array_builder_id[$array_id_sent_invite_random[0]];
+			    	//$array_id_sent_invite[2] = $array_builder_id[$array_id_sent_invite_random[1]];
+			    	
+			    	// send 2 email random
+			    	
+			    	for ($x = 0; $x <= 1; $x++) {
+				    	//$builders = DB::table('builders')->having('id', '=',$array_id_sent_invite[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $array_id_sent_invite[$x])->get();
+						//var_dump($builders); die;
+						//echo $builders[0]->email; die;
+					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->status_process = 'inviting';
+					$job_process->num_invite_sent = '3';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
+					
+					DB::table('job_process')
+						->where('job_id','=', Input::get('job_id'))
+						->update(
+							array(
+								'num_invite_sent' => '3'
+							));
+							
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							));
+						
+					} 
+						
+					
+			        break;
+			    case '2':
+			    	for ($x = 0; $x <= 1; $x++) {
+				    	//$builders = DB::table('builders')->having('id', '=',$check_builders[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $check_builders[$x])->get();
+						//echo $builders[0]->email; die;
+						//echo $builders[0]->email; die;
+						$job_process = new JobProcess();
+						$job_process->job_id = Input::get('job_id');
+						$job_process->user_id = Auth::user()->id;
+						$job_process->builder_id = $builders[0]->builder_id;
+						$job_process->num_invite_sent = '3';
+						$job_process->status_process = 'inviting';
+						$job_process->radius = $radius[$x];
+						$job_process->save();
+						DB::table('job_process')
+						->where('job_id','=', Input::get('job_id'))
+						->update(
+							array(
+								'num_invite_sent' => '3'
+							));
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							));
+						
+					} 
+		        	 break;
+			        
+			        
+		        
+			    default:
+			    	
+			        return Redirect::to('myinvites');
+			}
+			
+			
+			DB::table('jobs')
+				->where('id','=', Input::get('job_id'))
+				->update(
+					array(
+						'status' => 'openjob'
+					));
+			return Redirect::to('openjobs');
 	    }
 	}
+		} else {//Input::get('num_builder_sent_invite')==2
+		$input = Input::all();
+		$check_builders = Input::get('check_builders');
+		$radius = Input::get('radius');
+		
+		$builders_beforecheck = "";
+
+        $builders_beforecheck = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+        	->join('extend_builders_category', 'users.id', '=', 'extend_builders_category.builder_id')
+        	->where('extend_builders_category.category_id', '=', $input['category_id'])
+        	->get();
+        $price_invite = DB::table('charges')
+        	->where('id','=','4')
+        	->first();
+        
+		//var_dump($builders); die;
+		//---make list Builders enought credit----//
+		$builders = "";
+		if ($builders_beforecheck != null) {
+			for ($i = 0; $i < count($builders_beforecheck); $i++) {
+				$transactions = DB::table('transactions')
+					->where('transactions.builder_id','=',$builders_beforecheck[$i]->builder_id)
+					->get();
+					$credits = "0";
+				foreach($transactions as $transaction) {
+					$credits += ($transaction->charge_type)*($transaction->charge_value); 
+				} //var_dump($price_invite); die;
+				 if($credits >= $price_invite->charge_value_newest) {
+
+				 	
+				 $builders_last_check = "";
+				 	 $builders_last_check = DB::table('job_process')
+			        	->where('job_process.builder_id', '=', $builders_beforecheck[$i]->builder_id)
+			        	->where('job_process.job_id', '=', $input['job_id'])
+			        	->get();
+			        	$isExist = false;
+			        	if ($builders_last_check != ""){
+				        	foreach ($builders_last_check as $builder_last_check) {
+				        		if ($builders_beforecheck[$i]->builder_id == $builder_last_check->builder_id) {
+				        			$isExist = true;
+				        		}
+				        	}	
+			        	}
+			        	
+			        	if ($isExist == false) {
+			        		$builders[$i] = $builders_beforecheck[$i];	
+			        	}
+				 	
+				 	
+				 	
+				 	
+				 	
+				 	
+				 } else {
+				 	//sent email alert low credit
+				 	try {
+						Mail::send('emails.alertLowCredit', function($message)
+						{
+							$message->to(Input::get('email'))->subject('Alert Low Credit');
+						});
+			
+					}
+					catch (Exception $e){
+						$to      = Input::get('email');
+						$subject = 'Alert Low Credit';
+						$message = View::make('emails.alertLowCredit')->render();
+						$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+								'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+								'X-Mailer: PHP/' . phpversion() . "\r\n" .
+								'MIME-Version: 1.0' . "\r\n" .
+								'Content-Type: text/html; charset=ISO-8859-1\r\n';
+			
+						mail($to, $subject, $message, $headers);
+							
+					}
+				 }	
+			}
+		
+		$num_of_checked_builders = count($check_builders);	
+			
+		//select builders matching condition from submit post_jobs.
+		//check number of checked builder
+		
+	    if (count($builders) == "1") { //sent invite to all Builders in list $array_builder_id
+	    	$i = 0;
+	    	foreach( $builders as $builder ) {
+				
+				
+			    try {
+					Mail::send('emails.newpass', $data, function($message) use ($data)
+					{
+						$message->to($builder->email)->subject('Invite from Users');
+					});
+		
+				}
+				catch (Exception $e){
+					$to      = $builder->email;
+					$subject = 'Invite from Users';
+					$message = "User Invited you quote your jobs";
+					$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+							'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+							'X-Mailer: PHP/' . phpversion() . "\r\n" .
+							'MIME-Version: 1.0' . "\r\n" .
+							'Content-Type: text/html; charset=ISO-8859-1\r\n';
+		
+					mail($to, $subject, $message, $headers);
+		
+				}
+
+				//-----Save to DB::job_process--//
+				$job_process = new JobProcess();
+				$job_process->job_id = Input::get('job_id');
+				$job_process->user_id = Auth::user()->id;
+				$job_process->builder_id = $builder->builder_id;
+				$job_process->num_invite_sent = count($builders)+2;
+				$job_process->status_process = 'inviting';
+				$job_process->radius = $radius[$i];
+				$job_process->save();
+				
+				DB::table('job_process')
+					->where('job_id','=', Input::get('job_id'))
+					->update(
+						array(
+							'num_invite_sent' => count($builders)+2
+						));
+				
+				
+				$i++;
+				//--Insert new row in transactions table
+				$charge_value = DB::table('charges')
+					->where('id','=','4')//receive invite
+					->first();
+				$date = date('Y-m-d');
+				DB::table('transactions')
+					->insert(array(
+						'builder_id' => $builder->builder_id, 
+						'charge_type' => '-1',
+						'charge_value' => $charge_value->charge_value_newest,
+						'created_at' => $date, 
+					));
+				
+				
+				
+			}
+
+			
+			
+	    } else { 
+    	$array_builder_id = array();
+	    foreach( $builders as $builder ) {
+	    	//forgot check survival BUILDERS_CHECKED
+	    	if ($num_of_checked_builders == 0){
+	    		array_push($array_builder_id, $builder->builder_id);
+	    	} else {
+	    		if ($num_of_checked_builders == 1) {
+	    			if ($builder->builder_id != $check_builders[0]) {
+	    				array_push($array_builder_id, $builder->builder_id);
+	    			}
+	    		} 
+	    	}
+    		
+	    }
+	    	$array_id = array();
+	    	
+		    switch ($num_of_checked_builders) {
+			    case '0':
+				  
+					$array_id_sent_invite = array_rand($array_builder_id, 2);
+				    //var_dump($array_builder_id[$array_id_sent_invite[2]]); die;
+				    
+				    for ($x = 0; $x <= 0; $x++) {
+				    	//$builders = DB::table('builders')->having('id', '=',$array_builder_id[$array_id_sent_invite[$x]])->get();
+				    	$builders = DB::table('users')
+				    		->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
+				    		->where('extend_builders.builder_id', '=', $array_builder_id[$array_id_sent_invite[$x]])
+				    		->get();
+					//echo $builders[0]->email; die;
+					//echo $builders[0]->email; die;
+					$job_process = new JobProcess();
+					$job_process->job_id = Input::get('job_id');
+					$job_process->user_id = Auth::user()->id;
+					$job_process->builder_id = $builders[0]->builder_id;
+					$job_process->num_invite_sent = '3';
+					$job_process->status_process = 'inviting';
+					$job_process->radius = $radius[$x];
+					$job_process->save();
+					DB::table('job_process')
+						->where('job_id','=', Input::get('job_id'))
+						->update(
+							array(
+								'num_invite_sent' => '3'
+							));
+					
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							)); 
+						}
+						
+			        break;
+			        
+			    case '1':
+			    	for ($x = 0; $x <= 0; $x++) {
+				    	//$builders = DB::table('builders')->having('id', '=',$check_builders[$x])->get();
+				    	$builders = DB::table('users')->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')->where('extend_builders.builder_id', '=', $check_builders[$x])->get();
+						//echo $builders[0]->email; die;
+						//echo $builders[0]->email; die;
+						$job_process = new JobProcess();
+						$job_process->job_id = Input::get('job_id');
+						$job_process->user_id = Auth::user()->id;
+						$job_process->builder_id = $builders[0]->builder_id;
+						$job_process->num_invite_sent = '3';
+						$job_process->status_process = 'inviting';
+						$job_process->radius = $radius[$x];
+						$job_process->save();
+						DB::table('job_process')
+						->where('job_id','=', Input::get('job_id'))
+						->update(
+							array(
+								'num_invite_sent' => '3'
+							));
+				    	try {
+							Mail::send('emails.newpass', $data, function($message) use ($data)
+							{
+								$message->to($builders[0]->email)->subject('Invite from Users');
+							});
+				
+						}
+						catch (Exception $e){
+							$to      = $builders[0]->email;
+							$subject = 'Invite from Users';
+							$message = "update soon";
+							$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+									'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+									'X-Mailer: PHP/' . phpversion() . "\r\n" .
+									'MIME-Version: 1.0' . "\r\n" .
+									'Content-Type: text/html; charset=ISO-8859-1\r\n';
+				
+							mail($to, $subject, $message, $headers);
+				
+						}
+						//--Insert new row in transactions table
+						$charge_value = DB::table('charges')
+							->where('id','=','4')//receive invite
+							->first();
+						$date = date('Y-m-d');
+						DB::table('transactions')
+							->insert(array(
+								'builder_id' => $builders[0]->builder_id, 
+								'charge_type' => '-1',
+								'charge_value' => $charge_value->charge_value_newest,
+								'created_at' => $date, 
+							));
+						
+					} 
+		        	 break;
+			        
+			        
+		        
+			    default:
+			    	
+			        return Redirect::to('myinvites');
+			}
+			
+	    }
+	}    
+	
+	
+			DB::table('jobs')
+				->where('id','=', Input::get('job_id'))
+				->update(
+					array(
+						'status' => 'openjob'
+					));
+			
+			return Redirect::to('openjobs');
+	
+	
+		}
+	}
+		
 		return Redirect::to('openjobs');
 	}
 			
@@ -1483,7 +2171,7 @@ class BaseController extends Controller {
 		DB::table('job_process')
 			->where('job_id', '=', Input::get('job_id'))
         	->update(array(
-				'status_process' => 'user_cancelled',
+				'status_process' => 'cancelled',
 		));
 		$job_infos = DB::table('job_process')
 			->where('job_id', '=', Input::get('job_id'))
@@ -4707,7 +5395,7 @@ public function getAdminPlusFAQ($type)
 			
 			
 			$userpostjob = User::where('id', '=', Auth::user()->id)->first();
-		
+		    
 			
 			DB::table('jobs')
 					->where('id', '=', $input['job_id'])
@@ -4727,41 +5415,125 @@ public function getAdminPlusFAQ($type)
 					'status' => 'openjob',
 					'property' => $input['property'],
 					'category_id' => $input['category_id'],
-					'attachment_src_1' => $des_root_1,
-					'attachment_src_2' => $des_root_2,
-					'attachment_src_3' => $des_root_3,
-					'attachment_src_4' => $des_root_4,
-					'attachment_src_5' => $des_root_5,
 					'contact_time' => Input::get('contact-time'),
 					'contact_from' => Input::get('contact-from'),
 					'contact_to' => Input::get('contact-to'),
 					));
-
+			if(Input::hasFile('photo_1') == true){
+				DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'attachment_src_1' => $des_root_1,
+					));
+			}
+			if(Input::hasFile('photo_2') == true){
+				DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'attachment_src_2' => $des_root_2,
+					));
+			}
+			if(Input::hasFile('photo_3') == true){
+				DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'attachment_src_3' => $des_root_3,
+					));
+			}
+			if(Input::hasFile('photo_4') == true){
+				DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'attachment_src_4' => $des_root_4,
+					));
+			}
+			if(Input::hasFile('photo_5') == true){
+				DB::table('jobs')
+					->where('id', '=', $input['job_id'])
+					->update(array(
+					'attachment_src_5' => $des_root_5,
+					));
+			}
 			return Redirect::to('openjobs');
 	}
 	return Redirect::to('login');
 	}
 	
 	public function postRepostJob()
-	{  
+	{ 
 		if(Auth::check()) {
 			if(Auth::user()->role == '0') {
-				//var_dump(Input::get('option_repost_job')); die;
-				if (Input::get('option_repost_job') == null) {
+		    	$date = date('Y-m-d');
+		    	
+				if ((Input::get('option_1') == null) && (Input::get('option_2') == null)) {
 					DB::table('jobs')
 						->where('id', '=', Input::get('job_id'))
 						->update(array(
-						'status' => 'postRepostJob',
-					));	
+						'status' => 'waitingOpen',
+					));
+					
+					DB::table('job_process')
+						->where('job_id', '=', Input::get('job_id'))
+						->delete();
+							
 				} else {
-					echo"sa";
+					DB::table('jobs')
+							->where('id', '=', Input::get('job_id'))
+							->update(array(
+							'status' => 'openjob',
+							'created_at' => $date,
+						));
+					//delete rest job_process
+					if(Input::get('option_1') == null){
+						DB::table('job_process')
+						->where('job_id', '=', Input::get('job_id'))
+						->where('builder_invite_user', '=', '0')
+						->delete();
+					}
+				 	if(Input::get('option_2') == null){
+						DB::table('job_process')
+						->where('job_id', '=', Input::get('job_id'))
+						->where('builder_invite_user', '=', '1')
+						->delete();
+					}	
+					$num_invited = DB::table('job_process')
+						->where('job_id', '=', Input::get('job_id'))
+						->get();
+					if(Input::get('option_1') != null){
+						
+						DB::table('job_process')
+							->where('job_id', '=', Input::get('job_id'))
+							->where('builder_invite_user', '=', '0')
+							->update(array(
+							'status_process' => 'inviting',
+							'user_leave_feedback' => '0',
+							'request_admin_cancelled' => '0',
+							'reason_cancelled'=>'',
+							'vote'=>'0',
+							'num_invite_sent' => count($num_invited),
+							'created_at' => $date,
+							
+						));
+					}
+					if(Input::get('option_2') != null){
+						DB::table('job_process')
+							->where('job_id', '=', Input::get('job_id'))
+							->where('builder_invite_user', '=', '1')
+							->update(array(
+							'status_process' => 'inviting',
+							'user_leave_feedback' => '0',
+							'request_admin_cancelled' => '0',
+							'reason_cancelled' => '',
+							'builder_invite_user' => '0',
+							'vote'=>'0',
+							'num_invite_sent' => count($num_invited),
+							'created_at' => $date,
+							
+						));
+					}
+					
+					
 				}
-				
-				/*DB::table('job_process')
-					->where('id', '=', Input::get('user_id'))
-					->update(array(
-					'status' => 'openjob',
-					));*/
 				return Redirect::to('openjobs');			
 			}
 			return Redirect::to('login');

@@ -431,45 +431,46 @@
 							
 									   
 									</div>
-									<script>
-										$(document).ready(function(){
-											$("#contact-time-detail").hide();
-											
-										    $("#show_contact-time").click(function(){
-										    	$("#contact-time-detail").show();
-										      
-										    });
-										    $("#hide_contact-time").click(function(){
-										    	$("#contact-time-detail").hide();
-										      
-										    });
-										    
-										});
-									</script>
+									
 								</div>			
 							</div>
 							
 							<div class="pad-top">
-							<script>
+							<!--<script>
 								function shownextfile(next) {
 									$("#"+next).show();	
 									}
-							</script>
+							</script>-->
 								<div class="form-control-wrapper" >
-									Image about Job (Max 5 pictures)		s		
-							  		<input type = "file" name = "photo_1" onchange = "shownextfile('2')">
+									Image about Job (Max 5 pictures)
+									@if($jobInfo->attachment_src_1 != "")
+									</br>Old Picture 1:<img src = "{{$jobInfo->attachment_src_1}}" style = "width:100px; height:100px;">				
+							  		@endif
+							  		<input type = "file" name = "photo_1">
 							  		
-							  		<div id = "2" hidden>				
-							  			<input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden>
+							  		<div id = "2">
+							  		@if($jobInfo->attachment_src_2 != "")
+									</br>Old Picture 2:<img src = "{{$jobInfo->attachment_src_2}}" style = "width:100px; height:100px;">				
+							  		@endif				
+							  			<input type = "file" name = "photo_2">
 							  		</div>
-							  		<div id = "3" hidden>				
-							  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden>
+							  		<div id = "3">
+							  		@if($jobInfo->attachment_src_3 != "")
+									</br>Old Picture 3:<img src = "{{$jobInfo->attachment_src_3}}" style = "width:100px; height:100px;">				
+							  		@endif				
+							  		<input type = "file" name = "photo_3">
 							  		</div>
-							  		<div id = "4" hidden>				
-							  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden>
+							  		<div id = "4">
+							  		@if($jobInfo->attachment_src_4 != "")
+									</br>Old Picture 4:<img src = "{{$jobInfo->attachment_src_4}}" style = "width:100px; height:100px;">				
+							  		@endif				
+							  		<input type = "file" name = "photo_4">
 							  		</div>				
-							  		<div id = "5" hidden>
-							  		<input type = "file" name = "photo_5" hidden>
+							  		<div id = "5">
+							  		@if($jobInfo->attachment_src_5 != "")
+									</br>Old Picture 5:<img src = "{{$jobInfo->attachment_src_5}}" style = "width:100px; height:100px;">				
+							  		@endif
+							  		<input type = "file" name = "photo_5">
 							  		</div>	
 								</div>			
 							</div>

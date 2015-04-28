@@ -177,7 +177,7 @@ $(document).ready(function () {
 
    $("input[name='check_builders[]']").change(function () {
 
-      var maxAllowed = 3;
+      var maxAllowed = 3 - <?php echo $num_builder_sent_invite; ?>;
 
       var cnt = $("input[name='check_builders[]']:checked").length;
 

@@ -167,6 +167,7 @@
 			      <th><em>Title</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Description</em> <span>&nbsp;</span></th>
 			      <th class="date-sort" ><em>Price</em> <span>&nbsp;</span></th>
+			      
 			      <th class="date-sort"><em>Property</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Category</em> <span>&nbsp;</span></th>
 			      <th class="date-sort"><em>Time Option</em> <span>&nbsp;</span></th>
