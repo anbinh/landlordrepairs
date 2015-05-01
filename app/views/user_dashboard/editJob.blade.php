@@ -441,36 +441,45 @@
 									$("#"+next).show();	
 									}
 							</script>-->
+							<script>
+							function clearImg(numImg){
+								   $('#img'+numImg).val("");
+								}
+							</script>
 								<div class="form-control-wrapper" >
 									Image about Job (Max 5 pictures)
 									@if($jobInfo->attachment_src_1 != "")
 									</br>Old Picture 1:<img src = "{{$jobInfo->attachment_src_1}}" style = "width:100px; height:100px;">				
 							  		@endif
-							  		<input type = "file" name = "photo_1">
-							  		
+							  		<input type = "file" name = "photo_1" id="img1">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(1)"/>
 							  		<div id = "2">
 							  		@if($jobInfo->attachment_src_2 != "")
 									</br>Old Picture 2:<img src = "{{$jobInfo->attachment_src_2}}" style = "width:100px; height:100px;">				
 							  		@endif				
-							  			<input type = "file" name = "photo_2">
+							  			<input type = "file" name = "photo_2" id="img2">
+							  			<input type = "button" id="clear" value = "Reset" onclick = "clearImg(2)"/>
 							  		</div>
 							  		<div id = "3">
 							  		@if($jobInfo->attachment_src_3 != "")
 									</br>Old Picture 3:<img src = "{{$jobInfo->attachment_src_3}}" style = "width:100px; height:100px;">				
 							  		@endif				
-							  		<input type = "file" name = "photo_3">
+							  		<input type = "file" name = "photo_3" id="img3">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(3)"/>
 							  		</div>
 							  		<div id = "4">
 							  		@if($jobInfo->attachment_src_4 != "")
 									</br>Old Picture 4:<img src = "{{$jobInfo->attachment_src_4}}" style = "width:100px; height:100px;">				
 							  		@endif				
-							  		<input type = "file" name = "photo_4">
+							  		<input type = "file" name = "photo_4" id="img4">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(4)"/>
 							  		</div>				
 							  		<div id = "5">
 							  		@if($jobInfo->attachment_src_5 != "")
 									</br>Old Picture 5:<img src = "{{$jobInfo->attachment_src_5}}" style = "width:100px; height:100px;">				
 							  		@endif
-							  		<input type = "file" name = "photo_5">
+							  		<input type = "file" name = "photo_5" id="img5">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(5)"/>
 							  		</div>	
 								</div>			
 							</div>

@@ -54,7 +54,8 @@ class BaseController extends Controller {
 					if (Auth::user()->role == '1') {
 						return Redirect::to('builder-profile');
 					} else {
-						return Redirect::route('postjob-page');
+						
+						return Redirect::route('openjobs');
 					}
 				}
 	
@@ -280,16 +281,7 @@ class BaseController extends Controller {
 					'email'     => $input['email'],
 					'clickUrl'  => URL::to('/') . '/redirectpconfirm/' . $newcode
 			);
-			 
-			//---new send email----//
-			try {
-				Mail::send('emails.signup', $data, function($message)
-				{
-					$message->to(Input::get('email'))->subject('Welcome');
-				});
-	
-			}
-			catch (Exception $e){
+
 				$to      = Input::get('email');
 				$subject = 'Welcome';
 				$message = View::make('emails.signup', $data)->render();
@@ -301,7 +293,7 @@ class BaseController extends Controller {
 	
 				mail($to, $subject, $message, $headers);
 	
-			}
+			
 			//redirect to confirmation alert
 			
 			return Redirect::to('login')->with("emailfirst", "1");
