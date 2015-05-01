@@ -34,6 +34,11 @@
                <div class="login-block" >
                   <div class="login-block" >
                      <div class="form-fields-wrapper">
+                     <div class="pad-top">
+                     <div class="form-control-wrapper" >
+                        <input name = "tittle" type="text" class="form-control" required placeholder = ' Company name'>
+                     </div>
+                  </div>
                         <div class="pad-top">
                            <div class="form-control-wrapper" id = "form-control-wrapper-plusCss" >
                               <input name = "username" type="text" class="form-control" required placeholder = ' Your full name'>
@@ -289,14 +294,179 @@
                         </div>
                      </div>
                   </div>
+                  <div class="pad-top">
+                	On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
+                	
+				</div>
+               <div class="pad-top">
+					<div class="form-control-wrapper" >
+						<div class = "col-lg-4">
+								Working from:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_from" class="form-control">
+										<option name="working_from" value = "0am">0 am</option>
+										<option name="working_from" value = "1am">1 am </option>
+										<option name="working_from" value = "2am">2 am </option>
+										<option name="working_from" value = "3am">3 am</option>
+										<option name="working_from" value = "4am" >4 am</option>
+										<option name="working_from" value = "5am">5 am</option>
+										<option name="working_from" value = "6am">6 am</option>
+										<option name="working_from" value = "7am" >7 am</option>
+										<option name="working_from" value = "8am">8 am</option>
+										<option name="working_from" value = "9am">9 am</option>
+										<option name="working_from" value = "10am">10 am</option>
+										<option name="working_from" value = "11am">11 am</option>
+										<option name="working_from" value = "12am">12 am</option>
+										
+										<option name="working_from" value = "1pm">1 pm </option>
+										<option name="working_from" value = "2pm">2 pm </option>
+										<option name="working_from" value = "3pm">3 pm</option>
+										<option name="working_from" value = "4pm">4 pm</option>
+										<option name="working_from" value = "5pm">5 pm</option>
+										<option name="working_from" value = "6pm">6 pm</option>
+										<option name="working_from" value = "7pm">7 pm</option>
+										<option name="working_from" value = "8pm">8 pm</option>
+										<option name="working_from" value = "9pm">9 pm</option>
+										<option name="working_from" value = "10pm">10 pm</option>
+										<option name="working_from" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>
+						   <div class = "col-lg-4">
+								Working to:
+						   </div>
+						   <div class = "col-lg-8">
+									<select name = "working_to" class="form-control">
+										<option name="working_to" value = "0am">0 am</option>
+										<option name="working_to" value = "1am">1 am </option>
+										<option name="working_to" value = "2am">2 am </option>
+										<option name="working_to" value = "3am">3 am</option>
+										<option name="working_to" value = "4am">4 am</option>
+										<option name="working_to" value = "5am">5 am</option>
+										<option name="working_to" value = "6am">6 am</option>
+										<option name="working_to" value = "7am">7 am</option>
+										<option name="working_to" value = "8am">8 am</option>
+										<option name="working_to" value = "9am">9 am</option>
+										<option name="working_to" value = "10am">10 am</option>
+										<option name="working_to" value = "11am">11 am</option>
+										<option name="working_to" value = "12am">12 am</option>
+										
+										<option name="working_to" value = "1pm">1 pm </option>
+										<option name="working_to" value = "2pm">2 pm </option>
+										<option name="working_to" value = "3pm">3 pm</option>
+										<option name="working_to" value = "4pm">4 pm</option>
+										<option name="working_to" value = "5pm">5 pm</option>
+										<option name="working_to" value = "6pm">6 pm</option>
+										<option name="working_to" value = "7pm">7 pm</option>
+										<option name="working_to" value = "8pm">8 pm</option>
+										<option name="working_to" value = "9pm">9 pm</option>
+										<option name="working_to" value = "10pm">10 pm</option>
+										<option name="working_to" value = "11pm">11 pm</option>
+										
+										
+									</select>
+								</div>
+						   
+						
+					</div>
+					<div class="form-control-wrapper" >
+					Working from day:
+						   <select name="working_day_from" class="form-control">
+								  <option value="monday" selected>Monday</option>
+								  <option value="tuesday">Tuesday</option>
+								  <option value="wednesday">Wednesday</option>
+								  <option value="thursday">Thursday</option>
+								  <option value="friday">Friday</option>
+								  <option value="saturday">Saturday</option>
+								  <option value="sunday">Sunday</option>
+								  
+							</select>     
+						   <br>		
+						   Working to day:
+						   <select name="working_day_to" class="form-control">
+								  <option value="monday">Monday</option>
+								  <option value="tuesday">Tuesday</option>
+								  <option value="wednesday">Wednesday</option>
+								  <option value="thursday">Thursday</option>
+								  <option value="friday">Friday</option>
+								  <option value="saturday">Saturday</option>
+								  <option value="sunday" selected>Sunday</option>
+								  
+							</select>
+					</div>			
+				</div>
+				   
+               <div class="pad-top">
+                  <div class="form-control-wrapper" >
+                     <div class="radio">
+                        <label onclick = "DetailPak1()">
+                        <input type="radio" name="package_builder" value="1" id = "detail1" checked >
+                        Package 1 (20£)
+                        </label>
+                        <label onclick = "DetailPak2()">
+                        <input type="radio" name="package_builder" value="2">
+                        Package 2 (50£)
+                        </label>
+                        <label onclick = "DetailPak3()">
+                        <input type="radio" name="package_builder" value="3">
+                        Package 3 (100£)
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div class="pad-top">
+                  <div class="form-control-wrapper" >
+                     <div id = "detail_pack_1" >
+                        <p>Details of Package 1</p>
+                     </div>
+                     <div id = "detail_pack_2" hidden>
+                        <p>Details of Package 2</p>
+                     </div>
+                     <div id = "detail_pack_3" hidden>
+                        <p>Details of Package 3</p>
+                     </div>
+                  </div>
+               </div>
+               <script>
+                  function DetailPak1() {
+                  	$("#detail_pack_1").show();
+                  	$("#detail_pack_2").hide();
+                  	$("#detail_pack_3").hide();
+                  }
+                  function DetailPak2() {
+                  	$("#detail_pack_1").hide();
+                  	$("#detail_pack_2").show();
+                  	$("#detail_pack_3").hide();
+                  }
+                  function DetailPak3() {
+                  	$("#detail_pack_1").hide();
+                  	$("#detail_pack_2").hide();
+                  	$("#detail_pack_3").show();
+                  }
+               </script>
+               <div class="form-fields-wrapper" id = "submit-div">
+                  <div class="form-steps-bottom"></div>
+                  <div class="pad-top">
+                     <div class="form-control-wrapper" >
+                        <div class="radio">
+                           <label>
+                           <input type="radio" name="package_pay_type" value="1" checked >
+                           Auto pay
+                           </label>
+                           <label>
+                           <input type="radio" name="package_pay_type" value="0">
+                           Manual
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  </div>
                   <div class="panel-heading">
                      <h3 class="panel-title" style = "text-align: center">About Service</h3>
                   </div>
-                  <div class="pad-top">
-                     <div class="form-control-wrapper" >
-                        <input name = "tittle" type="text" class="form-control" required placeholder = ' Company name'>
-                     </div>
-                  </div>
+                  
                   <div class="pad-top">
                      <div class="form-control-wrapper" >
                         <div class = "col-lg-12">
@@ -350,7 +520,7 @@
                         <input type = "button" onclick = "showAllCategory()" id = "show_all_category" value = "Show all"/>
                      </div>
                   </div>
-               </div>
+               
                
                <div class="pad-top">
                   <div class="form-control-wrapper" >
@@ -470,173 +640,7 @@
                      </div>
                   </div>
                   
-                <div class="pad-top">
-                	On Holiday: &nbsp &nbsp&nbsp<input type="checkbox" name="on_holiday" value="1" id = "detail1">
-                	
-				</div>
-               <div class="pad-top">
-					<div class="form-control-wrapper" >
-						<div class = "col-lg-4">
-								Working from:
-						   </div>
-						   <div class = "col-lg-8">
-									<select name = "working_from" class="form-control">
-										<option name="working_from" value = "0am">0 am</option>
-										<option name="working_from" value = "1am">1 am </option>
-										<option name="working_from" value = "2am">2 am </option>
-										<option name="working_from" value = "3am">3 am</option>
-										<option name="working_from" value = "4am" >4 am</option>
-										<option name="working_from" value = "5am">5 am</option>
-										<option name="working_from" value = "6am">6 am</option>
-										<option name="working_from" value = "7am" >7 am</option>
-										<option name="working_from" value = "8am">8 am</option>
-										<option name="working_from" value = "9am">9 am</option>
-										<option name="working_from" value = "10am">10 am</option>
-										<option name="working_from" value = "11am">11 am</option>
-										<option name="working_from" value = "12am">12 am</option>
-										
-										<option name="working_from" value = "1pm">1 pm </option>
-										<option name="working_from" value = "2pm">2 pm </option>
-										<option name="working_from" value = "3pm">3 pm</option>
-										<option name="working_from" value = "4pm">4 pm</option>
-										<option name="working_from" value = "5pm">5 pm</option>
-										<option name="working_from" value = "6pm">6 pm</option>
-										<option name="working_from" value = "7pm">7 pm</option>
-										<option name="working_from" value = "8pm">8 pm</option>
-										<option name="working_from" value = "9pm">9 pm</option>
-										<option name="working_from" value = "10pm">10 pm</option>
-										<option name="working_from" value = "11pm">11 pm</option>
-										
-										
-									</select>
-								</div>
-						   <div class = "col-lg-4">
-								Working to:
-						   </div>
-						   <div class = "col-lg-8">
-									<select name = "working_to" class="form-control">
-										<option name="working_to" value = "0am">0 am</option>
-										<option name="working_to" value = "1am">1 am </option>
-										<option name="working_to" value = "2am">2 am </option>
-										<option name="working_to" value = "3am">3 am</option>
-										<option name="working_to" value = "4am">4 am</option>
-										<option name="working_to" value = "5am">5 am</option>
-										<option name="working_to" value = "6am">6 am</option>
-										<option name="working_to" value = "7am">7 am</option>
-										<option name="working_to" value = "8am">8 am</option>
-										<option name="working_to" value = "9am">9 am</option>
-										<option name="working_to" value = "10am">10 am</option>
-										<option name="working_to" value = "11am">11 am</option>
-										<option name="working_to" value = "12am">12 am</option>
-										
-										<option name="working_to" value = "1pm">1 pm </option>
-										<option name="working_to" value = "2pm">2 pm </option>
-										<option name="working_to" value = "3pm">3 pm</option>
-										<option name="working_to" value = "4pm">4 pm</option>
-										<option name="working_to" value = "5pm">5 pm</option>
-										<option name="working_to" value = "6pm">6 pm</option>
-										<option name="working_to" value = "7pm">7 pm</option>
-										<option name="working_to" value = "8pm">8 pm</option>
-										<option name="working_to" value = "9pm">9 pm</option>
-										<option name="working_to" value = "10pm">10 pm</option>
-										<option name="working_to" value = "11pm">11 pm</option>
-										
-										
-									</select>
-								</div>
-						   
-						
-					</div>
-					<div class="form-control-wrapper" >
-					Working from day:
-						   <select name="working_day_from" class="form-control">
-								  <option value="monday" selected>Monday</option>
-								  <option value="tuesday">Tuesday</option>
-								  <option value="wednesday">Wednesday</option>
-								  <option value="thursday">Thursday</option>
-								  <option value="friday">Friday</option>
-								  <option value="saturday">Saturday</option>
-								  <option value="sunday">Sunday</option>
-								  
-							</select>     
-						   <br>		
-						   Working to day:
-						   <select name="working_day_to" class="form-control">
-								  <option value="monday">Monday</option>
-								  <option value="tuesday">Tuesday</option>
-								  <option value="wednesday">Wednesday</option>
-								  <option value="thursday">Thursday</option>
-								  <option value="friday">Friday</option>
-								  <option value="saturday">Saturday</option>
-								  <option value="sunday" selected>Sunday</option>
-								  
-							</select>
-					</div>			
-				</div>
-               <div class="pad-top">
-                  <div class="form-control-wrapper" >
-                     <div class="radio">
-                        <label onclick = "DetailPak1()">
-                        <input type="radio" name="package_builder" value="1" id = "detail1" checked >
-                        Package 1 (20£)
-                        </label>
-                        <label onclick = "DetailPak2()">
-                        <input type="radio" name="package_builder" value="2">
-                        Package 2 (50£)
-                        </label>
-                        <label onclick = "DetailPak3()">
-                        <input type="radio" name="package_builder" value="3">
-                        Package 3 (100£)
-                        </label>
-                     </div>
-                  </div>
-               </div>
-               <div class="pad-top">
-                  <div class="form-control-wrapper" >
-                     <div id = "detail_pack_1" >
-                        <p>Details of Package 1</p>
-                     </div>
-                     <div id = "detail_pack_2" hidden>
-                        <p>Details of Package 2</p>
-                     </div>
-                     <div id = "detail_pack_3" hidden>
-                        <p>Details of Package 3</p>
-                     </div>
-                  </div>
-               </div>
-               <script>
-                  function DetailPak1() {
-                  	$("#detail_pack_1").show();
-                  	$("#detail_pack_2").hide();
-                  	$("#detail_pack_3").hide();
-                  }
-                  function DetailPak2() {
-                  	$("#detail_pack_1").hide();
-                  	$("#detail_pack_2").show();
-                  	$("#detail_pack_3").hide();
-                  }
-                  function DetailPak3() {
-                  	$("#detail_pack_1").hide();
-                  	$("#detail_pack_2").hide();
-                  	$("#detail_pack_3").show();
-                  }
-               </script>
-               <div class="form-fields-wrapper" id = "submit-div">
-                  <div class="form-steps-bottom"></div>
-                  <div class="pad-top">
-                     <div class="form-control-wrapper" >
-                        <div class="radio">
-                           <label>
-                           <input type="radio" name="package_pay_type" value="1" checked >
-                           Auto pay
-                           </label>
-                           <label>
-                           <input type="radio" name="package_pay_type" value="0">
-                           Manual
-                           </label>
-                        </div>
-                     </div>
-                  </div>
+             
                   <input class="button btn-full push-top btn-primary" name="commit" type="submit" value="Register" id = "btn-submit" id = "btn-submit">
                </div>
          </div>

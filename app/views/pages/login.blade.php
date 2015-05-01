@@ -12,27 +12,27 @@
                 {{ Form::open(array('url' => 'login')) }}
                 @if(Session::get("message") == "0")
                 <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     Pleale login or register a account before post a job. Thanks
                 
                 </div>
                 @endif
                 @if(Session::get("emailfirst") == "1")
                 <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     An email is sent to your email address. please click the link to verify your email account and phone number before you can login.
                 
                 </div>
                 @endif
                 @if(Session::get("success") == "0")
                 <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     Wrong combination of email/password.
                 </div>
                 @endif
                 @if(Session::get("confirmed") == "1")
                 <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     Verification success. Now you can login.
                 </div>
                 @elseif(Session::get("confirmed") == "0")
@@ -43,20 +43,20 @@
                 @endif
                 @if(Session::get("changepass") == "1")
                 <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     Please check your email for new password.
                 </div>
                 @endif
                 @if(Session::get("facebook") == "1")
                 <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     There was an error communicating with Facebook.
                 </div>
                 @endif
                 
 				@if($errors->any())
 				<div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    
                     {{ implode('', $errors->all('<li class="error">:message</li>')) }}
                 </div>
 

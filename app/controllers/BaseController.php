@@ -59,8 +59,7 @@ class BaseController extends Controller {
 					}
 				}
 	
-			} else {
-	
+			} else {//register with Username
 				return Redirect::to('login')->with("success", "0");
 			}
 		}
@@ -3024,6 +3023,7 @@ public function watingAcceptJobs()
 				$invites = DB::table('job_process')
 					->having('builder_id', '=',Auth::user()->id )
 					->having('status_process', '=','inviting' )
+					->having('builder_invite_user', '=','0' )
 					->get();
 			   
 				$customers = "";
@@ -3050,6 +3050,50 @@ public function watingAcceptJobs()
 			    } 
 			
 			return View::make('builder_dashboard.invite')->with(array('invites'=>$invites,'customers'=>$customers,'categorys'=>$categorys));	
+			} else {
+				return Redirect::to('login');
+			}
+			
+		    
+		}
+		return Redirect::to('login');
+
+	}
+	
+	public function getMyJobInvites()
+	{
+		if(Auth::check()) {
+			if (Auth::user()->role == '1' ) {
+				$invites = DB::table('job_process')
+					->having('builder_id', '=',Auth::user()->id )
+					->having('status_process', '=','inviting' )
+					->having('builder_invite_user', '=','1' )
+					->get();
+			   
+				$customers = "";
+			    $categorys = "";
+				if ($invites != null) {
+			    foreach($invites as $invite){
+			    	
+			    	 $customer = DB::table('users')
+			    	 	->having('id', '=',$invite->user_id )
+			    	 	->get();
+			      
+	    			 $customers[$invite->user_id] = $customer;
+	    			 
+	    			 
+	    			 	
+	    			 $category = DB::table('jobs')
+	    			 	->join ('category','category.id','=','jobs.category_id')
+	    			 	->having('jobs.id', '=',$invite->job_id)
+	    			 	->get();	
+			      
+	    			 $categorys[$invite->user_id] = $category;
+			    	
+			    }
+			    } 
+			
+			return View::make('builder_dashboard.myJobInvite')->with(array('invites'=>$invites,'customers'=>$customers,'categorys'=>$categorys));	
 			} else {
 				return Redirect::to('login');
 			}
@@ -3803,6 +3847,7 @@ public function watingAcceptJobs()
 	
 	public function getAdminViewDetailInfoBuilder($builder_id)
 	{  
+		
 		if(Auth::check()) {
 			//echo($builder_id); die;
 			$builder = "";//haohao
@@ -3838,6 +3883,10 @@ public function watingAcceptJobs()
         	$feedbacks_content = "";
         	$feedbacks_created_at = "";
         	$feedbacks_by_user = "";
+        	$feedbacks_rating_1 = "";
+        	$feedbacks_rating_2 = "";
+        	$feedbacks_rating_3 = "";
+        	$feedbacks_rating_4 = "";
         	foreach ($builder_jobs as $builder_job) {
         		if($builder_job->status_process == "completed") {
 	        		$i = 0;
@@ -3846,7 +3895,11 @@ public function watingAcceptJobs()
 		        		->get();
 		        		
 		        	foreach ($feedbacks_user as $feedback) {
-		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_content;
+		        		$feedbacks_rating_1[$builder_job->job_id][$i] = $feedback->timeliness;
+		        		$feedbacks_rating_2[$builder_job->job_id][$i] = $feedback->services_quality;
+		        		$feedbacks_rating_3[$builder_job->job_id][$i] = $feedback->comunication;
+		        		$feedbacks_rating_4[$builder_job->job_id][$i] = $feedback->value;
+		        		$feedbacks_content[$builder_job->job_id][$i] = $feedback->feedback_description;
 		        		$feedbacks_created_at[$builder_job->job_id][$i] = $feedback->feedback_created_at;
 		        		$feedbacks_by_user[$builder_job->job_id][$i] = DB::table('users')
 		        			->where('id','=',$builder_job->user_id)
@@ -3859,7 +3912,16 @@ public function watingAcceptJobs()
         	}
         		
         		
-        	return View::make('admin_dashboard.viewBuilderProfile')->with(array('builder' => $builder,'builder_jobs'=>$builder_jobs, 'feedbacks_content'=>$feedbacks_content, 'feedbacks_created_at'=>$feedbacks_created_at,'feedbacks_by_user'=>$feedbacks_by_user,'builder_categorys'=>$builder_categorys));
+        	return View::make('admin_dashboard.viewBuilderProfile')->with(array(
+        		'builder' => $builder,'builder_jobs'=>$builder_jobs, 
+        		'feedbacks_content'=>$feedbacks_content, 
+        		'feedbacks_created_at'=>$feedbacks_created_at,
+        		'feedbacks_by_user'=>$feedbacks_by_user,
+        		'feedbacks_rating_1'=>$feedbacks_rating_1,
+        		'feedbacks_rating_2'=>$feedbacks_rating_2,
+        		'feedbacks_rating_3'=>$feedbacks_rating_3,
+        		'feedbacks_rating_4'=>$feedbacks_rating_4,
+        		'builder_categorys'=>$builder_categorys));
 		}
 		return Redirect::to('login');
 	}
