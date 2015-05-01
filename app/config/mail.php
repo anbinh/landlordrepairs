@@ -6,7 +6,7 @@ return array(
     'host' => 'smtp.gmail.com',
     'port' => 465,
     'from' => array('address' => 'codelution@gmail.com', 'name' => 'Admin Codelution'),
-    'encryption' => 'tls',
+    'encryption' => 'ssl',
     'username' => 'hieunguyen991989@gmail.com',
     'password' => 'q2w3e4r5t',
     'sendmail' => '/usr/sbin/sendmail -bs',
