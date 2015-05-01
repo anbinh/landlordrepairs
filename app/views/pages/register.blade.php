@@ -524,22 +524,31 @@
 								function shownextfile(next) {
 									$("#"+next).show();	
 									}
+								
+								function clearImg(numImg){
+									   $('#img'+numImg).val("");
+									}
+								
 							</script>
 								<div class="form-control-wrapper" >
 									Image about Job (Max 5 pictures)				
-							  		<input type = "file" name = "photo_1" onchange = "shownextfile('2')">
-							  		
+							  		<input type = "file" name = "photo_1" onchange = "shownextfile('2')" id="img1">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(1)"/>
 							  		<div id = "2" hidden>				
-							  			<input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden>
+							  			<input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden id="img2">
+							  			<input type = "button" id="clear" value = "Reset" onclick = "clearImg(2)"/>
 							  		</div>
 							  		<div id = "3" hidden>				
-							  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden>
+							  		<input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden id="img3">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(3)"/>
 							  		</div>
 							  		<div id = "4" hidden>				
-							  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden>
+							  		<input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden id="img4">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(4)"/>
 							  		</div>				
 							  		<div id = "5" hidden>
-							  		<input type = "file" name = "photo_5" hidden>
+							  		<input type = "file" name = "photo_5" hidden id="img5">
+							  		<input type = "button" id="clear" value = "Reset" onclick = "clearImg(5)"/>
 							  		</div>	
 								</div>			
 							</div>
