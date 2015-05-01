@@ -7,8 +7,8 @@ return array(
     'port' => 465,
     'from' => array('address' => 'codelution@gmail.com', 'name' => 'Admin Codelution'),
     'encryption' => 'ssl',
-    'username' => 'hieunguyen991989@gmail.com',
-    'password' => 'q2w3e4r5t',
+    'username' => 'jimmysscentaur@gmail.com',
+    'password' => 'googletamsasa',
     'sendmail' => '/usr/sbin/sendmail -bs',
     'pretend' => false,
  
