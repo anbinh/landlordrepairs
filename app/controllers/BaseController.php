@@ -400,14 +400,26 @@ class BaseController extends Controller {
 	
 	
 			//---new send email----//
-			
+			try {
 				Mail::send('emails.changepass', $data, function($message)
 				{
 					$message->to(Input::get('email'))->subject('Change password');
 				});
 	
-			
-			
+			}
+			catch (Exception $e){
+				$to      = Input::get('email');
+				$subject = 'Change password';
+				$message = View::make('emails.changepass', $data)->render();
+				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
+						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
+						'X-Mailer: PHP/' . phpversion() . "\r\n" .
+						'MIME-Version: 1.0' . "\r\n" .
+						'Content-Type: text/html; charset=ISO-8859-1\r\n';
+	
+				mail($to, $subject, $message, $headers);
+					
+			}
 			//redirect to changepass alert
 			return Redirect::to('forgetpass')->withErrors($v)->with("changepass", "0");
 	
