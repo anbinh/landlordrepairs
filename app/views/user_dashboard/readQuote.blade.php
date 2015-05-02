@@ -188,7 +188,7 @@
 			</table>
 			@else
 			 	</table>
-			 	<p>Have zero message for you</p>
+			 	<p>Have zero quote from builder for you</p>
 			 @endif
 			 
 			
