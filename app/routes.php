@@ -179,6 +179,8 @@ Route::post( 'builder-submit-job-details', array( 'uses' => 'BaseController@post
 
 Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
 
+Route::get( 'view-detail-job-alert/{id_code},{user_id}', array( 'uses' => 'BaseController@getViewDetailJobAlert' ));
+
 Route::post('vote-job', array('as'=>'vote-job','uses' => 'BaseController@postVoteJob' ));
 
 
@@ -342,6 +344,7 @@ Route::post('leave-feedback', array('as'=>'leave-feedback','uses' => 'BaseContro
 
 Route::get('public-info-builder/{builder_id}', array('uses' => 'BaseController@getPublicInfoBuilder' ));
 
+Route::get('edit-jobs', array('as'=>'edit-jobs','uses' => 'BaseController@getEditJob'));
 Route::post('edit-jobs', array('as'=>'edit-jobs','uses' => 'BaseController@postEditJob'));
 
 Route::post('submit-edit-jobs', array('as'=>'submit-edit-jobs','uses' => 'BaseController@postSubmitEditJob'));

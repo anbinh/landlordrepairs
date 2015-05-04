@@ -181,7 +181,7 @@
 			 			When reposting, automatically re-invite:</br>
 				 			<input type = "checkbox" name = "option_1" value = "1">Builders who i previously invited to my old job</br>
 				 			<input type = "checkbox" name = "option_2" value = "2">Builders who subimitted proposals my old jobs
-				 			<input name = "job_id" value = "{{$cancelledJob->id}}" >
+				 			<input name = "job_id" value = "{{$cancelledJob->id}}" hidden>
 				 			<button type = "submit">Repost</button>
 			 			</form>
 			 		</td>
@@ -194,7 +194,7 @@
 				</table>
 			 @else
 			 	</table>
-			 	<p>Have zero jobs posted</p>
+			 	<p>Have zero jobs cancelled</p>
 			 @endif
 			   
 			

@@ -47,8 +47,11 @@
 		                            	
 		                            </div>
 		                            <div class="form-group">
-		                                <label>Time Option</label>
-		                                <p>{{$jobInfo->timeoption}}</p>
+		                                <label>Time Option</label></br>
+		                                @if ($jobInfo->timeoption = "Emergency")
+		                                <img src="http://www.pennmanor.net/wp-content/uploads/2010/09/400px-Warning_icon.svg_.png" height="42" width="42">
+		                                @endif
+		                                <span>{{$jobInfo->timeoption}}</span>
 		                            	
 		                            </div>
 		                           
@@ -152,9 +155,7 @@
 							<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&libraries=places"></script>
 							
 						    <script>
-							// This example adds a search box to a map, using the Google Place Autocomplete
-							// feature. People can enter geographical searches. The search box will return a
-							// pick list containing a mix of places and predicted search terms.
+							
 							
 							function initialize() {
 							
@@ -281,13 +282,13 @@
                                 <label>Email</label>
                                 <p>{{$userInfo->email}}</p>
                             </div>
-                            
+                            @if ($canSeePhonenumber == "true")
                             <div class="form-group">
                                 <label>Phone number</label>
                                 <p>{{$userInfo->phone_number}}</p>
                             </div>
-                            
-                           <a class = "btn btn-primary" href = "{{URL::route('customer-invited')}}">Back</a>
+                            @endif
+                           
  
                     </div>
                 </div>
@@ -316,9 +317,11 @@
                 
             </div>
         </div>
+        <a class = "btn btn-success" href = "javascript:history.back()">Back</a>
     </div>
 </div>
 			</div>
+			
 		</div>
 		
 		

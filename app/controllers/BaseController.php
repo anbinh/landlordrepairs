@@ -228,8 +228,7 @@ class BaseController extends Controller {
 			$user = new User();
 			$user->username = $input['username'];
 			$user->email = $input['email'];
-			$user->user_city = $input['user_city'];
-			$user->user_post_code = $input['user_post_code'];
+			
 			$user->password = $password;
 			$user->phone_number = $to_phone_number;
 			$user->email_confirm = $newcode;
@@ -2334,14 +2333,9 @@ public function watingAcceptJobs()
 	public function getViewDetailInfoBuilder($builder_id)
 	{  
 		if(Auth::check()) {
-			//echo($builder_id); die;
+			
 			$builder = "";//haohao
-			/*$builder = DB::table('users')
-				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')			
-				->join('association_logo', 'association_logo.association_name', '=', 'extend_builders.association')	
-        		->where('users.id', '=', $builder_id)
-        		
-        		->get();*/
+			
         	$builder = DB::table('users')
 				->join('extend_builders', 'users.id', '=', 'extend_builders.builder_id')
 				
@@ -3272,8 +3266,23 @@ public function watingAcceptJobs()
 				//var_dump($jobInfo); die;
 				$jobProcess = "";
 				$jobProcess = DB::table('job_process')->having('job_id', '=', $job_id )->first();
+				$canSeePhonenumber = false;
 				
-			return View::make('builder_dashboard.viewDetailJobAlert')->with(array('userInfo'=>$userInfo,'jobInfo'=>$jobInfo,'jobProcess'=>$jobProcess));	
+				if (Auth::user()->role == "0"){
+					$canSeePhonenumber = true;	
+				} else {
+					if (Auth::user()->role == "1"){
+					$CheckBuilder = DB::table('job_process')
+					->having('job_id', '=', $job_id )
+					->having('user_id', '=', $user_id )
+					->having('builder_id', '=', Auth::user()->id)
+					->get();	
+					}
+					if ($CheckBuilder != null) {
+						$canSeePhonenumber = true;
+					}
+				}
+			return View::make('builder_dashboard.viewDetailJobAlert')->with(array('userInfo'=>$userInfo,'jobInfo'=>$jobInfo,'jobProcess'=>$jobProcess,'canSeePhonenumber'=>$canSeePhonenumber));	
 			
 			
 			
@@ -5357,6 +5366,9 @@ public function getAdminPlusFAQ($type)
 		return Redirect::to('login');
 	}
 	
+	public function getEditJob() {
+		return Redirect::to('openjobs');
+	}
 	public function postSubmitEditJob() {
 		$input = Input::all(); 
 		$rules = array('price'  => 'numeric');

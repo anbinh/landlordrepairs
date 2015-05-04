@@ -197,7 +197,7 @@
 			</table>
 			 @else
 			 	</table>
-			 	<p>Have zero jobs posted</p>
+			 	<p>Have zero jobs ongoing</p>
 			 @endif
 			 
 		

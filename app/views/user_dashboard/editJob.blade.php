@@ -38,6 +38,7 @@
 	
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
+								<tittle>Job tittle</tittle>
 									<input name = "tittle" type="text" class="form-control" required placeholder = 'Tittle' value = "{{$jobInfo->tittle}}">
 									
 								</div>			
@@ -85,23 +86,26 @@
 							
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
-									
-									<textarea rows="4" cols="50" name = "description" required placeholder = 'Description' class="form-control" value = "{{$jobInfo->description}}"> </textarea>
+									<tittle>Job description: </tittle>
+									<textarea rows="4" cols="50" name = "description" class="form-control" >{{$jobInfo->description}}</textarea>
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
+								<tittle>Price (£): </tittle>
 									<input name = "price" type="text" class="form-control" required placeholder = 'Price (£)' value = "{{$jobInfo->price}}">
 									
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
+								<tittle>City or County: </tittle>
 									<input name = "local" type="text" class="form-control" required placeholder = 'City or County' value = "{{$jobInfo->local}}">
 								</div>			
 							</div>
 							<div class="pad-top">
 								<div class="form-control-wrapper" >
+								<tittle>Post code: </tittle>
 									<input name = "local_code" id  = "local_code" type="text" class="form-control" required placeholder = 'Post code' style = "z-index:2; margin-left: -42px;" value = "{{$jobInfo->local_code}}">
 								</div>			
 							</div>

@@ -217,7 +217,7 @@
 			</table>
 			 @else
 			 	</table>
-			 	<p>Have zero jobs posted</p>
+			 	<p>Have zero favorite Builder</p>
 			 @endif
 			 
 			

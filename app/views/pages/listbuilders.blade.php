@@ -131,8 +131,7 @@ $(document).ready(function(){
       <th><em>Name of Builder</em> <span>&nbsp;</span></th>
       
       <th class="date-sort" ><em>Radius (miles)</em> <span>&nbsp;</span></th>
-      <th class="date-sort" ><em>City or County</em> <span>&nbsp;</span></th>
-      <th class="date-sort" ><em>Post Code</em> <span>&nbsp;</span></th>
+      
       <th class="date-sort"><em>Email</em> <span>&nbsp;</span></th>
       <th class="date-sort"><em>Phone number</em> <span>&nbsp;</span></th>
       <th class="date-sort"><em>View details</em> <span>&nbsp;</span></th>
@@ -148,9 +147,8 @@ $(document).ready(function(){
 	 	<tr>
 	    	<td>{{$builder->username}}</td>
 	    	
-	    	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{$array_radius[$builder->id]}}</td>
-	    	<td>{{$builder->local}}</td>
-	 		<td>{{$builder->local_code}}</td>
+	    	<td><input hidden name = "radius[]" value = "{{$array_radius[$builder->id]}}"/> {{round($array_radius[$builder->id],1)}}</td>
+	    	
 	 		<td>{{$builder->email}}</td>
 	 		<td>{{$builder->phone_number}}</td>
 	 		<td class="date-sort"><em><a href="view-detail-info-builder/{{$builder->builder_id}}" tag target="_blank">View</></em> <span>&nbsp;</span></td>
@@ -162,7 +160,8 @@ $(document).ready(function(){
 </table>
  <input hidden name = "category_id" value = "{{$category_id}}"/> 
  <input hidden name = "job_id" value = "{{$job_id}}"/>
- <input name = "num_builder_sent_invite" value = "{{$num_builder_sent_invite}}" >
+ <input name = "num_builder_sent_invite" value = "{{$num_builder_sent_invite}}" hidden>
+ Number of Builders invited: {{$num_builder_sent_invite}}</br>
  @if($num_builder_sent_invite <	 3)
  	{{ Form::submit('Submit', array('class' => 'btn btn-success')) }}
  @endif
@@ -185,7 +184,7 @@ $(document).ready(function () {
       {
          $(this).prop("checked", "");
 
-         alert('Select maximum ' + maxAllowed + ' technologies!');
+         alert('Select maximum ' + maxAllowed + ' Builders!');
 
      }
 

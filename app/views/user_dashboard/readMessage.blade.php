@@ -212,7 +212,7 @@
 			 	<p>Have zero message for you</p>
 			 @endif
 			 
-			
+			<a class = "btn btn-success" href = "javascript:history.back()">Back</a>
 			
     </div>
     

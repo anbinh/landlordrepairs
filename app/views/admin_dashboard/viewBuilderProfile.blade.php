@@ -119,32 +119,32 @@ border-radius: 4px;
 				            </div>
 			            <div class="panel-body">
 			                <div class="row">
-			                    <div class="col-lg-12">
+			                           <div class="col-lg-12">
 		                            <div class="form-group">
-		                                <label>Name</label>
+		                                <label>Name: </label>
 		                                {{$builder[0]->username}}
 		                                
 		                            </div>
 		                           
 		                            <div class="form-group">
-		                                <label>Email</label>
+		                                <label>Email: </label>
 		                                {{$builder[0]->email}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Company</label>
+		                                <label>Company: </label>
 		                                {{$builder[0]->tittle}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Local</label>
+		                                <label>Local: </label>
 		                                {{$builder[0]->local}}
 		                                
 		                            </div>
 		                            <div class="form-group">
-                           <label>Post code</label>
+                           <label>Post code: </label>
                            <input name = "local_code" id = "local_code" type="text" class="form-control" required placeholder = 'Post code'style = "z-index:2; margin-left: -42px;" value = "{{$builder[0]->local_code}}">
                         </div>
                         <div class="pad-top">
@@ -311,7 +311,7 @@ border-radius: 4px;
                         <!-- END GOOGLE MAP -->
 		                <div class="form-group">
                            
-                           <label>Miles covered</label>
+                           <label>Miles covered: </label>
                            {{ Form::text('miles_covered', $builder[0]->miles_covered, array('placeholder' => 'Type your miles covered','class' => 'form-control')) }}
                         </div>      
 		                            
@@ -320,25 +320,25 @@ border-radius: 4px;
                             
 		                            <div class="form-group">
 		                            <span class="fa-stack fa-lg"><i class="fa fa-dribbble fa-stack-1x"></i></span>
-		                                <label>Site Link</label>
+		                                <label>Site Link: </label>
 		                                {{$builder[0]->site_link}}
 		                                
 		                            </div>
 		                             <div class="form-group">
 		                             <span class="fa-stack fa-lg"><i class="fa fa-facebook fa-stack-1x"></i></span>
-		                                <label>Facebook</label>
+		                                <label>Facebook: </label>
 		                                {{$builder[0]->social_link}}
 		                                
 		                            </div>
 		                            <div class="form-group">
 		                            <span class="fa-stack fa-lg"><i class="fa fa-twitter fa-stack-1x"></i></span>
-		                                <label>Twitter</label>
+		                                <label>Twitter: </label>
 		                                {{$builder[0]->social_link_twitter}}
 		                                
 		                            </div>
 		                            
-		                             <div class="form-group">
-		                                <label>Started At</label>
+		                             <div class="col-lg-12">
+		                                <label>Started At: </label>
 		                                {{$builder[0]->created_at}}
 		                                
 		                            </div>
@@ -347,18 +347,21 @@ border-radius: 4px;
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-12">
-								Category:
+								<label>Category: </label>
+								
 								</div>
 								
 								
 								
 								
 								<div class = "col-lg-12">
+								<ul>
 								@foreach($builder_categorys as $builder_category)
 									
-									{{$builder_category->content}}</br>
+									<li>{{$builder_category->content}}</li>
 									
-								@endforeach  
+								@endforeach
+								</ul>  
 								</hr>
 									
 								</div>
@@ -371,16 +374,18 @@ border-radius: 4px;
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-12">
-								Association:
+								
+								<label>Association: </label>
 								</div>
 				
 								<div class = "col-lg-12">
+								<ul>
 								@foreach($builder as $buildere)
-									<img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$buildere->association_src}}"/>
+									<li><img style = "width: 50px; height: 50px; margin-left: 15px;" src="{{$buildere->association_src}}"/>
 									{{$buildere->association_name}}
-									
+									</li>
 								@endforeach 
-								
+								</ul>
 									
 								</div>
 								</div>
@@ -392,7 +397,8 @@ border-radius: 4px;
 								<div class="form-control-wrapper" >
 								
 								<div class = "col-lg-12">
-								On Holiday:
+								
+								<label>On Holiday:</label>
 								@if ($builder[0]->on_holiday == 1)
 	                           		Yes<br>
 	                           		Reason: {{$builder[0]->on_holiday_reason}}</p>
@@ -408,14 +414,22 @@ border-radius: 4px;
 							   
 								
 						</div>
-						<div class="form-group">
-	                           
-	                           
-						   Working from: <input type="number" name="working_from" value="{{$builder[0]->working_from}}"/></br>
-						   Working to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_to" value="{{$builder[0]->working_to}}" />
+						
+						<div class = "col-lg-12">
+	                       <label>Day working: </label>
+	                       </div>
+	                       <div class="col-lg-12">    
+	                       From: <input name="working_day_from" value="{{$builder[0]->working_day_from}}"/></br>
+						   To:&nbsp &nbsp&nbsp&nbsp&nbsp <input name="working_day_to" value="{{$builder[0]->working_day_to}}" />
+						   </div>
+						   <div class="col-lg-12">
+						   <label>Time working:</label>
+						   </div>
+						   <div class = "col-lg-12">    
+						   From: <input name="working_from" value="{{$builder[0]->working_from}}"/></br>
+						   To:&nbsp &nbsp&nbsp&nbsp&nbsp <input name="working_to" value="{{$builder[0]->working_to}}" />
 						   </br>
-						   Working day from: <input type="number" name="working_day_from" value="{{$builder[0]->working_day_from}}"/></br>
-						   Working day to:&nbsp &nbsp&nbsp&nbsp&nbsp <input type="number" name="working_day_to" value="{{$builder[0]->working_day_to}}" />
+						   
 	                        </div>
 						
 			                    </div>	
@@ -438,45 +452,45 @@ border-radius: 4px;
 			                    <div class="col-lg-12">
 
 		                            <div class="form-group">
-		                                <label>Jobs tittle</label>
+		                                <label>Jobs tittle:</label>
 		                                {{$buildere->tittle}}
 		                                
 		                            </div>
 		                            
 		                             <div class="form-group">
-		                                <label>Jobs property</label>
+		                                <label>Jobs property:</label>
 		                                {{$buildere->property}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Jobs category</label>
+		                                <label>Jobs category:</label>
 		                                {{$buildere->content}}
 		                                
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>Jobs decription</label>
+		                                <label>Jobs decription:</label>
 		                                {{$buildere->description}}
 		                                
 		                            </div>
 		                            <div class="form-group">
-		                                <label>User price</label>
+		                                <label>User price:</label>
 		                                {{$buildere->price}}
 		                                
 		                            </div>
 		                            <div class="form-group">
-		                                <label>Builder vote</label>
+		                                <label>Builder quote:</label>
 		                                {{$buildere->vote}}
 		                                
 		                            </div>
 		                            <div class="form-group">
-		                                <label>Created at</label>
+		                                <label>Created at:</label>
 		                                {{$buildere->created_at}}
 		                                
 		                            </div>
 		                            <div class="form-group">
-		                                <label>Job status</label>
+		                                <label>Job status:</label>
 		                                {{$buildere->status_process}}
 		                                
 		                            </div>

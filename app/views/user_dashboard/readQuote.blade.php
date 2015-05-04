@@ -191,7 +191,7 @@
 			 	<p>Have zero quote from builder for you</p>
 			 @endif
 			 
-			
+			<a class = "btn btn-success" href = "javascript:history.back()">Back</a>
 			
     </div>
     

@@ -243,7 +243,7 @@
 			</table>
 			@else
 			 	</table>
-			 	<p>Have zero jobs posted</p>
+			 	<p>Have zero jobs posted, go to <a href = "{{URL::route('postjob-page')}}">Post job</a> to continue</p>
 			 @endif
 			 
 		
