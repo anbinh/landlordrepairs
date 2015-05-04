@@ -178,7 +178,7 @@
 	      		</td>
 	      		<td>
 		      		
-	 					<input name = "type" value = "{{$type}}">
+	 					<input name = "type" value = "{{$type}}" hidden>
 			 			<button type = "submit" class="btn btn-success">Plus</button>
 		 			
 	      		</td>
