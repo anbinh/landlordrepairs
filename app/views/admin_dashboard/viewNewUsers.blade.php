@@ -212,7 +212,7 @@
 			</table>
 			@else
 			</table>
-			<p>No have new Builders</p>
+			<p>No have new Users</p>
 			 @endif
     </div>
 
