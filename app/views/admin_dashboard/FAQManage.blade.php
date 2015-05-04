@@ -168,7 +168,7 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			
+			<a href = "admin-plus-faq/0" ><button class = "btn btn-success">Plus FAQ</button></a>
 			  @if($FAQsUser != null)
 				 @foreach($FAQsUser as $FAQUser)
 				 		<tr>
@@ -197,7 +197,7 @@
 			 						<input name = "id" value = "{{$FAQUser->id}}" hidden>
 						 			<button type = "submit" class="btn btn-danger">Delete</button>
 					 			</form>	
-					 			<a href = "admin-plus-faq/0" ><button class = "btn btn-success">Plus</button></a>
+					 			
 					 		</td>
 				 		</tr>	
 				@endforeach
@@ -353,7 +353,7 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			
+			<a href = "admin-plus-faq/1" ><button class = "btn btn-success">Plus FAQ</button></a>
 			  @if($FAQsBuilder != null)
 				 @foreach($FAQsBuilder as $FAQBuilder)
 				 		<tr>
@@ -382,7 +382,7 @@
 			 						<input name = "id" value = "{{$FAQBuilder->id}}" hidden>
 						 			<button type = "submit" class="btn btn-danger">Delete</button>
 					 			</form>
-					 			<a href = "admin-plus-faq/1" ><button class = "btn btn-success">Plus</button></a>
+					 			
 					 		</td>
 				 		</tr>	
 				@endforeach
