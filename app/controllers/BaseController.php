@@ -3269,7 +3269,7 @@ public function watingAcceptJobs()
 				$canSeePhonenumber = false;
 				
 				if (Auth::user()->role == "0"){
-					$canSeePhonenumber = true;	
+					$canSeePhonenumber = false;	
 				} else {
 					if (Auth::user()->role == "1"){
 					$CheckBuilder = DB::table('job_process')
