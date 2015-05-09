@@ -58,7 +58,7 @@
 		                            </div>
 		                            
 		                            <div class="form-group">
-		                                <label>City</label>
+		                                <label>City or County</label>
 		                                {{ Form::text('user_city',$user->user_city, array('placeholder' => 'Type your City','class' => 'form-control')) }}
 		                            </div>
 		                            
