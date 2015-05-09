@@ -245,8 +245,8 @@ class BaseController extends Controller {
 			$job->timeoption = $input['timeoption'];
 			
 			$job->date = $input['date'];
-			$job->local = $input['local'];
-			$job->local_code = $input['local_code'];
+			$job->user_city = $input['local'];
+			$job->user_post_code = $input['local_code'];
 			$job->lat = $input['lat'];
 			$job->lng = $input['lng'];
 			$job->user_id = $userpostjob->id;
