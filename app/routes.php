@@ -22,6 +22,7 @@ Route::get('register', 'BaseController@getRegister');
 Route::post('register', 'BaseController@postRegister');
 Route::get( 'confirm/{id_code}', array( 'uses' => 'BaseController@confirm' ));
 Route::get('login', array('as'=>'login','uses' => 'BaseController@getLogin' ));
+Route::get('login/admin', array('as'=>'login/admin','uses' => 'BaseController@getLogin' ));
 Route::post('login','BaseController@postLogin');
 
 Route::get('phoneconfirm', 'BaseController@getPhoneconfirm');

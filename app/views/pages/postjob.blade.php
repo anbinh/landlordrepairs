@@ -74,6 +74,23 @@
                      </div>
                   </div>
                </div>
+              
+               <div class="pad-top">
+                  Set your Budget
+               </div>
+               <div class="pad-top">
+                  <div class="form-control-wrapper" >
+                     <input name = "price" type="text" class="form-control price-input" required placeholder = 'Price (£)'>
+                  </div>
+               </div>
+                <script>
+              
+               $('.price-input').on('keyup',function(){
+                   var oldstr=$('.price-input').val();
+                   var str=oldstr.replace(' (£)',''); 
+                   $('.price-input').val(str+' (£)');        
+               });
+               </script>
                <div class="pad-top">
                   Your address
                </div>
@@ -278,7 +295,7 @@
                         }).data("dateinput").setValue(0).show();
                         });
                         function test(){
-                        alert($('#date').val());
+                        	alert($('#date').val());
                         }
                      </script>
                      <script>
@@ -312,33 +329,51 @@
                <div class="pad-top">
                   <script>
                      function shownextfile(next) {
-                     	$("#"+next).show();	
-                     	}
+                         if (next != "6"){
+                        	 $("#"+next).show();
+                         }else{
+                        	 $(".danger-text").show();	
+                         }
+                     		
+                     }
                      function clearImg(numImg){
-                     	   $('#img'+numImg).val("");
+                         if(numImg != "5"){
+                        	 $('#img'+numImg).val("");
+                        	 $("#clear"+numImg).hide();
+                         }else{
+                        	 $('#img'+numImg).val("");
+                        	 $(".danger-text").hide();	
+                         }
+                     	  
                      	}
                      								
                   </script>
                   <div class="form-control-wrapper" >
                      Image about Job (Max 5 pictures)				
                      <input type = "file" name = "photo_1" onchange = "shownextfile('2')" id="img1">
-                     <input type = "button" id="clear" value = "Reset" onclick = "clearImg(1)"/>
-                     <div id = "2" hidden>				
+                     
+                     <div id = "2" hidden>
+                     	<input type = "button" id="clear1" value = "Reset" onclick = "clearImg(1)"/>				
                         <input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden id="img2">
-                        <input type = "button" id="clear" value = "Reset" onclick = "clearImg(2)"/>
+                        
                      </div>
-                     <div id = "3" hidden>				
+                     <div id = "3" hidden>
+                     	<input type = "button" id="clear2" value = "Reset" onclick = "clearImg(2)"/>				
                         <input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden id="img3">
-                        <input type = "button" id="clear" value = "Reset" onclick = "clearImg(3)"/>
+                        
                      </div>
-                     <div id = "4" hidden>				
+                     <div id = "4" hidden>
+                     	<input type = "button" id="clear3" value = "Reset" onclick = "clearImg(3)"/>				
                         <input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden id="img4">
-                        <input type = "button" id="clear" value = "Reset" onclick = "clearImg(4)"/>
+                        
                      </div>
                      <div id = "5" hidden>
-                        <input type = "file" name = "photo_5" hidden id="img5">>
-                        <input type = "button" id="clear" value = "Reset" onclick = "clearImg(5)"/>
+                     	<input type = "button" id="clear4" value = "Reset" onclick = "clearImg(4)"/>
+                        <input type = "file" name = "photo_5" hidden id="img5" onchange = "shownextfile('6')">
+                        <input type = "button" id="clear5" value = "Reset" onclick = "clearImg(5)"/>
+                        
                      </div>
+                     <p class="danger danger-text" hidden>You have hit the limit</p>
                   </div>
                </div>
                <div class="pad-top">
@@ -436,14 +471,7 @@
                      </script>
                   </div>
                </div>
-               <div class="pad-top">
-                  Set your Budget
-               </div>
-               <div class="pad-top">
-                  <div class="form-control-wrapper" >
-                     <input name = "price" type="text" class="form-control" required placeholder = 'Price (£)'>
-                  </div>
-               </div>
+               
             </div>
             <div class="form-fields-wrapper" id = "submit-div">
                <div class="form-steps-bottom"></div>

@@ -90,7 +90,11 @@ class BaseController extends Controller {
 	
 			    
 		//$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email');
-		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric','price'  => 'numeric');
+		$price = $input['price'];
+			
+		$input['price'] = substr($price, 0, -4);
+		
+		$rules = array('username' => 'required|unique:users', 'email' => 'required|unique:users|email','phone_number'  => 'numeric');
 		$v = Validator::make($input, $rules);
 			//----send sms----//
 			for($code_length = 5, $newcode_phone = ''; strlen($newcode_phone) < $code_length; $newcode_phone .= chr(!rand(0, 2) ? rand(48, 57) : (!rand(0, 1) ? rand(65, 90) : rand(97, 122))));
@@ -238,6 +242,7 @@ class BaseController extends Controller {
 			$user->save();
 				
 			$userpostjob = User::where('id', '=', $user->id)->first();
+			
 			$job = new Job();
 			$job->tittle = $input['tittle'];
 			$job->description = $input['description'];
@@ -245,8 +250,8 @@ class BaseController extends Controller {
 			$job->timeoption = $input['timeoption'];
 			
 			$job->date = $input['date'];
-			$job->user_city = $input['local'];
-			$job->user_post_code = $input['local_code'];
+			$job->local = $input['local'];
+			$job->local_code = $input['local_code'];
 			$job->lat = $input['lat'];
 			$job->lng = $input['lng'];
 			$job->user_id = $userpostjob->id;
@@ -281,26 +286,13 @@ class BaseController extends Controller {
 			);
 			 
 			//---new send email----//
-			try {
+			
 				Mail::send('emails.signup', $data, function($message)
 				{
 					$message->to(Input::get('email'))->subject('Welcome');
 				});
 	
-			}
-			catch (Exception $e){
-				$to      = Input::get('email');
-				$subject = 'Welcome';
-				$message = View::make('emails.signup', $data)->render();
-				$headers = 'From: admin@landlordrepairs.uk' . "\r\n" .
-						'Reply-To: admin@landlordrepairs.uk' . "\r\n" .
-						'X-Mailer: PHP/' . phpversion() . "\r\n" .
-						'MIME-Version: 1.0' . "\r\n" .
-						'Content-Type: text/html; charset=ISO-8859-1\r\n';
-	
-				mail($to, $subject, $message, $headers);
-	
-			}
+			
 			//redirect to confirmation alert
 			
 			return Redirect::to('login')->with("emailfirst", "1");
@@ -516,8 +508,11 @@ class BaseController extends Controller {
 	}
 	public function postPostjob()
 	{	
-		$input = Input::all(); 
-		$rules = array('price'  => 'numeric');
+		$input = Input::all();
+		$price = $input['price'];
+			
+		$input['price'] = substr($price, 0, -4); 
+		$rules = array();
 	
 		$v = Validator::make($input, $rules);
 		if($v->passes())
