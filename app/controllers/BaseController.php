@@ -5366,7 +5366,7 @@ public function getAdminPlusFAQ($type)
 	}
 	public function postSubmitEditJob() {
 		$input = Input::all(); 
-		$rules = array('price'  => 'numeric');
+		$rules = array();
 		$des_root_1 = "";
 		$des_root_2 = "";
 		$des_root_3 = "";
