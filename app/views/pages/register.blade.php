@@ -336,49 +336,86 @@
                      function shownextfile(next) {
                          if (next != "6"){
                         	 $("#"+next).show();
-                         }else{
+                         }
+                         $numImg = next-1;
+                         if ($('#img'+$numImg).val() != null){
+                        	 $("#clear"+$numImg).show();
+                         }
+
+                         /*Test is Show Limit Alert Text*/
+                         if (($('#img1').val() != "") && ($('#img2').val() != "") && ($('#img3').val() != "") && ($('#img4').val() != "")&& ($('#img5').val() != "")){
                         	 $(".danger-text").show();	
                          }
+                         
                      		
                      }
                      function clearImg(numImg){
+                    	 
                          if(numImg != "5"){
                         	 $('#img'+numImg).val("");
                         	 $("#clear"+numImg).hide();
                          }else{
                         	 $('#img'+numImg).val("");
-                        	 $(".danger-text").hide();	
+                        	 $("#clear"+numImg).hide();
+                        	 
                          }
-                     	  
+                         $(".danger-text").hide();	
+                    
                      	}
                      								
                   </script>
-                  <div class="form-control-wrapper" >
-                     Image about Job (Max 5 pictures)				
-                     <input type = "file" name = "photo_1" onchange = "shownextfile('2')" id="img1">
+                 <div class="form-control-wrapper" >
+                     Image about Job (Max 5 pictures)
+                     <div class="row" >
+	                  	 <div class="col-lg-10">
+	                     	<input type = "file" name = "photo_1" onchange = "shownextfile('2')" id="img1">
+	                     </div>
+	                     <div class="col-lg-2">
+	                     	<input hidden type = "button" id="clear1" value = "X" onclick = "clearImg(1)"/>
+	                     </div>
+                  	 </div>
+                  				
+                     <div class="row" id = "2" hidden>
+	                  	 <div class="col-lg-10">
+	                     	<input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden id="img2">
+	                     </div>
+	                     <div class="col-lg-2">
+	                     	<input hidden type = "button" id="clear2" value = "X" onclick = "clearImg(2)"/>
+	                     </div>
+                  	 </div>
+                  	 
+                  	 <div class="row" id = "3" hidden>
+	                  	 <div class="col-lg-10">
+	                     	<input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden id="img3">
+	                     </div>
+	                     <div class="col-lg-2">
+	                     	<input hidden type = "button" id="clear3" value = "X" onclick = "clearImg(3)"/>
+	                     </div>
+                  	 </div>
                      
-                     <div id = "2" hidden>
-                     	<input type = "button" id="clear1" value = "Reset" onclick = "clearImg(1)"/>				
-                        <input type = "file" name = "photo_2" onchange = "shownextfile('3')" hidden id="img2">
-                        
-                     </div>
-                     <div id = "3" hidden>
-                     	<input type = "button" id="clear2" value = "Reset" onclick = "clearImg(2)"/>				
-                        <input type = "file" name = "photo_3" onchange = "shownextfile('4')" hidden id="img3">
-                        
-                     </div>
-                     <div id = "4" hidden>
-                     	<input type = "button" id="clear3" value = "Reset" onclick = "clearImg(3)"/>				
-                        <input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden id="img4">
-                        
-                     </div>
-                     <div id = "5" hidden>
-                     	<input type = "button" id="clear4" value = "Reset" onclick = "clearImg(4)"/>
-                        <input type = "file" name = "photo_5" hidden id="img5" onchange = "shownextfile('6')">
-                        <input type = "button" id="clear5" value = "Reset" onclick = "clearImg(5)"/>
-                        
-                     </div>
-                     <p class="danger danger-text" hidden>You have hit the limit</p>
+                     <div class="row" id = "4" hidden>
+	                  	 <div class="col-lg-10">
+	                     	<input type = "file" name = "photo_4" onchange = "shownextfile('5')" hidden id="img4">
+	                     </div>
+	                     <div class="col-lg-2">
+	                     	<input hidden type = "button" id="clear4" value = "X" onclick = "clearImg(4)"/>
+	                     </div>
+                  	 </div>
+                  	 
+                  	 <div class="row" id = "5" hidden>
+	                  	 <div class="col-lg-10">
+	                     	<input type = "file" name = "photo_5" onchange = "shownextfile('6')" hidden id="img5">
+	                     </div>
+	                     <div class="col-lg-2">
+	                     	<input hidden type = "button" id="clear5" value = "X" onclick = "clearImg(5)"/>
+	                     </div>
+                  	 </div>
+                  	 
+                  	 
+                     
+                     
+                     
+                     <p class="danger danger-text" hidden style="color:red">You have hit the limit</p>
                   </div>
                </div>
                <div class="pad-top">

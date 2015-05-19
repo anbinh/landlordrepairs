@@ -10,7 +10,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="">LOGO</a>
+                
+                @if(Auth::check())
+                	@if(Auth::user()->role == 0)
+                		<a class="navbar-brand" href="{{URL::route('postjob-page')}}">LOGO</a>
+                	@endif
+                	@if(Auth::user()->role == 1)
+                		<a class="navbar-brand" href="{{URL::route('builder-profile')}}">LOGO</a>
+                	@endif
+                	@if(Auth::user()->role == 2)
+                		<a class="navbar-brand" href="{{URL::route('admin-manage-builders')}}">LOGO</a>
+                	@endif
+                    
+                @else
+                
+                @endif
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -27,7 +41,7 @@
                     <li class="page-scroll">
                         @if(Auth::check())
                         	@if(Auth::user()->role == 0)
-                        		<a href="{{URL::route('profile')}}">
+                        		<a href="{{URL::route('openjobs')}}">
                         			dashboard
                         		</a>
                         	@else
