@@ -84,18 +84,16 @@
                   Set your Budget
                </div>
                <div class="pad-top">
-                  <div class="form-control-wrapper" >
-                     <input name = "price" type="text" class="form-control price-input" required placeholder = 'Price (£)'>
+                  <div class="row" >
+                  	 <div class="col-lg-10">
+                     	<input name = "price" type="text" class="form-control price-input" required placeholder = 'Price'>
+                     </div>
+                     <div class="col-lg-2" style="top:10px;">
+                     	£
+                     </div>
                   </div>
-               </div>	
-               <script>
+               </div>
               
-               $('.price-input').on('keyup',function(){
-                   var oldstr=$('.price-input').val();
-                   var str=oldstr.replace(' (£)',''); 
-                   $('.price-input').val(str+' (£)');        
-               });
-               </script>
                <div class="pad-top">
                   Your address
                </div>
