@@ -329,8 +329,6 @@
                      function shownextfile(next) {
                          if (next != "6"){
                         	 $("#"+next).show();
-                         }else{
-                        	 $(".danger-text").show();	
                          }
                          $numImg = next-1;
                          if ($('#img'+$numImg).val() != null){
